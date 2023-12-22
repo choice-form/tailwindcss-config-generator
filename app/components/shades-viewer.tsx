@@ -71,38 +71,34 @@ const ShadesViewer = ({ shadesObject }: ShadesViewerProps) => {
                       darkenWarningState && shadeValueColor.luminance() < 0.01;
 
                     return (
-                      <>
-                        <div
-                          className="relative flex h-32 w-24 flex-shrink-0 flex-col items-center justify-center gap-2 whitespace-nowrap rounded-lg p-2"
-                          key={j}
-                          style={{
-                            color: readableColor(shadeValueColor).hex(),
-                            backgroundColor: `hsl(${shadeValue})`,
-                            backgroundImage: luminanceWarning
-                              ? "linear-gradient(135deg,rgba(0,0,0,0.2) 10%,#0000 0,#0000 50%,rgba(0,0,0,0.2) 0,rgba(0,0,0,0.2) 60%,#0000 0,#0000)"
-                              : darkenWarning
-                              ? "linear-gradient(135deg,rgba(255,255,255,0.3) 10%,#0000 0,#0000 50%,rgba(255,255,255,0.3) 0,rgba(255,255,255,0.3) 60%,#0000 0,#0000)"
-                              : "none",
-                            backgroundSize: "7.07px 7.07px",
-                          }}
+                      <div
+                        className="relative flex h-32 w-24 flex-shrink-0 flex-col items-center justify-center gap-2 whitespace-nowrap rounded-lg p-2"
+                        key={j}
+                        style={{
+                          color: readableColor(shadeValueColor).hex(),
+                          backgroundColor: `hsl(${shadeValue})`,
+                          backgroundImage: luminanceWarning
+                            ? "linear-gradient(135deg,rgba(0,0,0,0.2) 10%,#0000 0,#0000 50%,rgba(0,0,0,0.2) 0,rgba(0,0,0,0.2) 60%,#0000 0,#0000)"
+                            : darkenWarning
+                            ? "linear-gradient(135deg,rgba(255,255,255,0.3) 10%,#0000 0,#0000 50%,rgba(255,255,255,0.3) 0,rgba(255,255,255,0.3) 60%,#0000 0,#0000)"
+                            : "none",
+                          backgroundSize: "7.07px 7.07px",
+                        }}
+                      >
+                        {defaultShadeValue && <div className="ic-[lock]" />}
+                        <span
+                          className={classNames(
+                            "absolute right-2 top-2",
+                            luminanceWarning || darkenWarning
+                              ? "visible"
+                              : "invisible"
+                          )}
                         >
-                          {defaultShadeValue && <div className="ic-[lock]" />}
-                          <span
-                            className={classNames(
-                              "absolute right-2 top-2",
-                              luminanceWarning || darkenWarning
-                                ? "visible"
-                                : "invisible"
-                            )}
-                          >
-                            <div className="ic-[warning-sign]" />
-                          </span>
-                          <strong>{shadeName}</strong>
-                          <span className="text-xs">
-                            {shadeValueColor.hex()}
-                          </span>
-                        </div>
-                      </>
+                          <div className="ic-[warning-sign]" />
+                        </span>
+                        <strong>{shadeName}</strong>
+                        <span className="text-xs">{shadeValueColor.hex()}</span>
+                      </div>
                     );
                   })}
               </div>
