@@ -1,11 +1,11 @@
 "use client";
 
 import Header from "./components/header";
-import ShadesViewer from "./components/shades-viewer";
+import ShadesViewer from "./components/shades-viewer/shades-viewer";
 import Sidebar from "./components/sidebar/sidebar";
-import { generateShades, generateShadesProps } from "./swatch/generateShades";
-import { useAtomValue } from "jotai";
-import { shadesAtom } from "./atom";
+import {generateShades, generateShadesProps} from "./swatch/generateShades";
+import {useAtomValue} from "jotai";
+import {shadesAtom} from "./atom";
 
 export default function Home() {
   const shadesState = useAtomValue(shadesAtom);
@@ -15,12 +15,25 @@ export default function Home() {
   } as generateShadesProps);
 
   return (
-    <div className="w-screen h-screen flex flex-col overflow-auto">
+    <main className="w-screen min-h-screen flex flex-col">
       <Header />
+      <div className="p-8 flex-1 flex flex-col">
+        <div className="container mx-auto flex-1 flex flex-col">
+          <div className="flex min-w-0 gap-8">
+            <div>
+              <h1 className="text-4xl font-bold mb-4">Tailwind CSS Config Generator</h1>
+              <p className="text-lg">
+                Creation and customization of the Tailwind config file (tailwind.config.js), which
+                allows the fine-tuning of your project's design system including colors, typography,
+                spacing, and more, based on your specific requirements.
+              </p>
+              <ShadesViewer shadesObject={shadesObject} />
+            </div>
 
-      <ShadesViewer shadesObject={shadesObject} />
-
-      <Sidebar shadesObject={shadesObject} />
-    </div>
+            <Sidebar />
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

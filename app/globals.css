@@ -16,3 +16,18 @@
   }
 }
 
+.shade-control-input {
+  @apply h-10 flex items-center gap-2 px-2 border-2 border-transparent rounded-full;
+  @apply bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700;
+  @apply focus-within:border-primary focus-within:bg-white focus-within:hover:bg-white;
+  @apply focus-within:dark:bg-gray-900 focus-within:dark:hover:bg-gray-900;
+}
+
+.shade-control-input input {
+  @apply flex w-32 items-center bg-transparent appearance-none focus:outline-none;
+}
+
+.shade-control-badge {
+  @apply min-w-10 block shrink-0 text-center;
+  @apply bg-gray-200 rounded-full text-gray-500 px-2 text-xs uppercase dark:bg-gray-700 dark:text-gray-400;
+}

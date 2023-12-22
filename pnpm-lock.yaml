@@ -28,6 +28,9 @@ devDependencies:
   '@choiceform/tailwindcss-svg-icon':
     specifier: ^0.1.2
     version: 0.1.2(tailwindcss@3.4.0)
+  '@faker-js/faker':
+    specifier: ^8.3.1
+    version: 8.3.1
   '@floating-ui/react':
     specifier: ^0.26.4
     version: 0.26.4(react-dom@18.2.0)(react@18.2.0)
@@ -67,9 +70,6 @@ devDependencies:
   eslint-config-next:
     specifier: 14.0.4
     version: 14.0.4(eslint@8.56.0)(typescript@5.3.3)
-  eslint-config-prettier:
-    specifier: 8.8.0
-    version: 8.8.0(eslint@8.56.0)
   eslint-plugin-import:
     specifier: ^2.29.1
     version: 2.29.1(@typescript-eslint/parser@6.15.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
@@ -78,7 +78,7 @@ devDependencies:
     version: 6.8.0(eslint@8.56.0)
   eslint-plugin-prettier:
     specifier: ^5.1.1
-    version: 5.1.1(eslint-config-prettier@8.8.0)(eslint@8.56.0)(prettier@2.8.8)
+    version: 5.1.1(eslint@8.56.0)(prettier@2.8.8)
   eslint-plugin-promise:
     specifier: ^6.1.1
     version: 6.1.1(eslint@8.56.0)
@@ -389,6 +389,11 @@ packages:
   /@eslint/js@8.56.0:
     resolution: {integrity: sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /@faker-js/faker@8.3.1:
+    resolution: {integrity: sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
     dev: true
 
   /@floating-ui/core@1.5.2:
@@ -2005,15 +2010,6 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-config-prettier@8.8.0(eslint@8.56.0):
-    resolution: {integrity: sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==}
-    hasBin: true
-    peerDependencies:
-      eslint: '>=7.0.0'
-    dependencies:
-      eslint: 8.56.0
-    dev: true
-
   /eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
     dependencies:
@@ -2137,7 +2133,7 @@ packages:
       object.fromentries: 2.0.7
     dev: true
 
-  /eslint-plugin-prettier@5.1.1(eslint-config-prettier@8.8.0)(eslint@8.56.0)(prettier@2.8.8):
+  /eslint-plugin-prettier@5.1.1(eslint@8.56.0)(prettier@2.8.8):
     resolution: {integrity: sha512-WQpV3mSmIobb77s4qiCZu3dBrZZ0rj8ckSfBtRrgNK9Wnh2s3eiaxNTWloz1LJ1WtvqZES/PAI7PLvsrGt/CEA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -2152,7 +2148,6 @@ packages:
         optional: true
     dependencies:
       eslint: 8.56.0
-      eslint-config-prettier: 8.8.0(eslint@8.56.0)
       prettier: 2.8.8
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.6

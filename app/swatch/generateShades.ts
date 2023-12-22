@@ -23,6 +23,7 @@ interface SwatchColor {
   900: string;
   950: string;
   DEFAULT: string;
+  [index: string]: string;
 }
 
 export interface SwatchColorMap {
@@ -33,20 +34,38 @@ export const generateShades = ({swatches}: generateShadesProps): SwatchColorMap 
   const shadesObject: SwatchColorMap = {};
   swatches.forEach((swatch) => {
     // 从接口提取颜色和调整参数
-    let {name, value, lightenAmount, darkenAmount, adjustHue} = swatch;
+    let {name, value, lightenAmount = 10, darkenAmount = 10, adjustHue = 0} = swatch;
 
     // 使用chroma.js调整颜色和色调
     let keyColor = chroma(value);
-    let lightenColor = keyColor.brighten(lightenAmount);
-    let darkenColor = keyColor.darken(darkenAmount);
-    let adjustedKeyColor = keyColor.set("hsl.h", adjustHue % 360); // Hue is in range [0°, 360°]
+    let lightenColor = keyColor.brighten(lightenAmount / 10);
+    let darkenColor = keyColor.darken(darkenAmount / 10);
+    // If hue adjustment value "adjustHue" is at ends of hue wheel (0/360), let the color remain the same
+    // Else apply the hue adjustment
+    let adjustedKeyColor = adjustHue % 360 == 0 ? keyColor : keyColor.set("hsl.h", adjustHue % 360);
+
+    // Use adjustedKeyColor to amplify the gradient
+    let delta = chroma.deltaE(keyColor, adjustedKeyColor);
+    lightenColor = lightenColor.set("hsl.h", "+" + delta * 2);
+    darkenColor = darkenColor.set("hsl.h", "-" + delta * 2);
 
     // 根据keyColor生成颜色序列
-    let colors = chroma
-      .scale([lightenColor, value, darkenColor])
-      .classes(12)
-      .mode("hsl")
-      .colors(12);
+    let colors = chroma.scale([lightenColor, keyColor, darkenColor]).colors(12);
+
+    // 找出颜色序列中最接近 keyColor 的颜色并替换为 keyColor
+    let minDeltaE = Infinity;
+    let closestColorIndex: number = 0;
+
+    colors.forEach((color, index) => {
+      let deltaE = chroma.deltaE(keyColor, color);
+      if (deltaE < minDeltaE) {
+        minDeltaE = deltaE;
+        closestColorIndex = index;
+      }
+    });
+
+    // 替换颜色序列中最接近 keyColor 的颜色为 keyColor
+    colors[closestColorIndex] = chroma(keyColor).hex();
 
     // 格式化颜色以去掉'hsl'，'('，')'，并变成百分比格式，并将其添加到输出JSON
     shadesObject[name] = {

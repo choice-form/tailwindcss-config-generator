@@ -1,16 +1,16 @@
-import { SwatchColorMap } from "../../swatch/generateShades";
-import CodeViewer from "./code-viewer";
-import Contrast from "./contrast";
+import {Config, Contrast, CssVar} from ".";
+import {SwatchColorMap} from "../../swatch/generateShades";
 
-interface CodeViewerProps {
-  shadesObject: SwatchColorMap;
-}
+interface SidebarProps {}
 
-const Sidebar = ({ shadesObject }: CodeViewerProps) => {
+const Sidebar = () => {
   return (
-    <div className="flex flex-col gap-4 absolute py-20 right-8 top-0 bottom-0 w-80 pointer-events-none z-50">
-      <Contrast />
-      <CodeViewer shadesObject={shadesObject} />
+    <div className="shrink-0 hidden w-80 md:block">
+      <div className="flex-col flex gap-4">
+        <Contrast />
+        <CssVar />
+        <Config />
+      </div>
     </div>
   );
 };

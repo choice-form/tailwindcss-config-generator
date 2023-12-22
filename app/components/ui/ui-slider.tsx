@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { CSSProperties, createRef, useEffect, useRef, useState } from "react";
+import {CSSProperties, createRef, useEffect, useRef, useState} from "react";
 
 export interface UiSliderProps {
   className?: string;
@@ -48,14 +48,12 @@ const UiSlider = ({
   // 判断 start 是否为数组，从而确定是否为范围选择器
   const isRange = Array.isArray(start);
   // 创建状态来存储滑动条的值
-  const [values, setValues] = useState<number[]>(
-    isRange ? (start as number[]) : [start as number]
-  );
+  const [values, setValues] = useState<number[]>(isRange ? (start as number[]) : [start as number]);
   // 创建一个引用数组来存储滑动条的把手
   const handleRefs = useRef(
     Array(values.length)
       .fill(0)
-      .map(() => createRef<HTMLDivElement>())
+      .map(() => createRef<HTMLDivElement>()),
   );
   // 创建一个引用来存储滑动条的 DOM 元素
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -105,8 +103,7 @@ const UiSlider = ({
   // 根据鼠标的位置计算滑动条的值
   const calculateValue = (newLeft: number, sliderWidth: number) => {
     let newValue = Math.round(
-      (newLeft / sliderWidth) * ((range?.max || max) - (range?.min || min)) +
-        (range?.min || min)
+      (newLeft / sliderWidth) * ((range?.max || max) - (range?.min || min)) + (range?.min || min),
     );
     newValue = Math.round(newValue / step) * step;
     if (newValue < (range?.min || min)) {
@@ -133,8 +130,7 @@ const UiSlider = ({
     handleRefs.current.forEach((handleRef, index) => {
       if (!handleRef.current || !sliderRef.current) return;
       handleRef.current.style.left = `calc(${
-        (values[index] - (range?.min || min)) /
-        ((range?.max || max) - (range?.min || min))
+        (values[index] - (range?.min || min)) / ((range?.max || max) - (range?.min || min))
       } * 100% - var(--slider-thumb) / 2)`;
     });
   }, [values, min, max, range]);
@@ -152,21 +148,14 @@ const UiSlider = ({
 
       if (isRange) {
         const handle1Pos =
-          ((values[0] - (range?.min || min)) /
-            ((range?.max || max) - (range?.min || min))) *
-          100;
+          ((values[0] - (range?.min || min)) / ((range?.max || max) - (range?.min || min))) * 100;
         const handle2Pos =
-          ((values[1] - (range?.min || min)) /
-            ((range?.max || max) - (range?.min || min))) *
-          100;
+          ((values[1] - (range?.min || min)) / ((range?.max || max) - (range?.min || min))) * 100;
         connectRef.current.style.left = Math.min(handle1Pos, handle2Pos) + "%";
-        connectRef.current.style.width =
-          Math.abs(handle1Pos - handle2Pos) + "%";
+        connectRef.current.style.width = Math.abs(handle1Pos - handle2Pos) + "%";
       } else if (handleRefs.current.length === 1) {
         const handlePos =
-          ((values[0] - (range?.min || min)) /
-            ((range?.max || max) - (range?.min || min))) *
-          100;
+          ((values[0] - (range?.min || min)) / ((range?.max || max) - (range?.min || min))) * 100;
         connectRef.current.style.left = "0%";
         connectRef.current.style.width = handlePos + "%";
       }
@@ -186,10 +175,7 @@ const UiSlider = ({
     if (!sliderRef.current) return;
     const sliderStart = sliderRef.current.getBoundingClientRect().left;
     const clickPosition = e.clientX - sliderStart;
-    const clickValue = calculateValue(
-      clickPosition,
-      sliderRef.current.offsetWidth
-    );
+    const clickValue = calculateValue(clickPosition, sliderRef.current.offsetWidth);
     const closestHandleIndex = getClosestHandle(clickValue);
     setValues((prevValues) => {
       const newValues = [...prevValues];
@@ -222,26 +208,23 @@ const UiSlider = ({
       }
       className={classNames(
         "relative w-full pl-[calc(var(--slider-thumb)/2)] pr-[calc(var(--slider-thumb)/2)]",
-        className
+        className,
       )}
     >
       {/* 值超出最大限制时，给一个超出的提示 */}
-      {overflowLabelVisible && (
-        <div className="absolute -top-6.5 right-0">{max}+</div>
-      )}
+      {overflowLabelVisible && <div className="absolute -top-6.5 right-0">{max}+</div>}
       <div
         className={classNames(
           customClassNames?.slider,
-          "relative h-[var(--slider-thumb)] w-full text-blue-500"
+          "relative h-[var(--slider-thumb)] w-full text-primary-500",
         )}
         ref={sliderRef}
         onClick={handleClick}
       >
         <div
           className={classNames(
-            customClassNames?.track ||
-              "overflow-hidden rounded-full bg-light-200",
-            "absolute inset-x-[calc(var(--slider-thumb)/-2)] top-[calc(var(--slider-thumb)/4)] h-[calc(var(--slider-thumb)/2)]"
+            customClassNames?.track || "overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700",
+            "absolute inset-x-[calc(var(--slider-thumb)/-2)] top-[calc(var(--slider-thumb)/4)] h-[calc(var(--slider-thumb)/2)]",
           )}
         >
           {connect && (
@@ -249,7 +232,7 @@ const UiSlider = ({
               className={classNames(
                 customClassNames?.connect || "bg-current",
                 "absolute h-full",
-                isDragging ? "transition-none" : "transition-[left,width]"
+                isDragging ? "transition-none" : "transition-[left,width]",
               )}
               ref={connectRef}
             />
@@ -260,10 +243,10 @@ const UiSlider = ({
             key={index}
             className={classNames(
               customClassNames?.thumb ||
-                "cursor-pointer rounded-full bg-white shadow ring-2",
+                "cursor-pointer rounded-full bg-white shadow ring-2 dark:bg-gray-800",
               "absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
               isDragging ? "transition-none" : "transition-[left]",
-              disabled ? "cursor-not-allowed ring-secondary" : "ring-current"
+              disabled ? "cursor-not-allowed ring-secondary" : "ring-current",
             )}
             ref={handleRef}
             onMouseDown={handleMouseDown(index)}
@@ -272,7 +255,7 @@ const UiSlider = ({
               <div
                 className={classNames(
                   customClassNames?.tooltip ||
-                    "absolute bottom-full mb-2 ml-[50%] flex -translate-x-1/2 rounded-xs bg-current px-2 py-1 leading-4"
+                    "absolute bottom-full mb-2 ml-[50%] flex -translate-x-1/2 rounded-xs bg-current px-2 py-1 leading-4",
                 )}
               >
                 <span className="text-xs text-body">{values[index]}</span>
