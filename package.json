@@ -1,27 +1,70 @@
 {
-  "name": "tailwindcss-config-setup",
+  "name": "@choiceform/tailwindcss-config-generator",
   "version": "0.1.0",
+  "description": "Creation and customization of the Tailwind config file (tailwind.config.js), which allows the fine-tuning of your project's design system including colors, typography, spacing, and more, based on your specific requirements.",
+  "author": {
+    "name": "Choiceform",
+    "email": "developer@choiceform.io",
+    "url": "https://developer.choiceform.com"
+  },
+  "contributors": [
+    "Wester <wester@choiceform.com>"
+  ],
+  "iconSourcePath": "public/icons",
+  "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/choice-form/tailwindcss-config-generator"
+  },
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.0.4"
+    "@headlessui/react": "^1.7.17",
+    "@uiw/react-color": "^2.0.5",
+    "jotai": "^2.6.0",
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.4"
+    "@choiceform/tailwindcss-svg-icon": "^0.1.2",
+    "@floating-ui/react": "^0.26.4",
+    "@types/chroma-js": "^2.4.3",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@types/react-syntax-highlighter": "^15.5.11",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "autoprefixer": "^10.4.16",
+    "chroma-js": "^2.4.2",
+    "classnames": "^2.3.2",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-prettier": "^5.1.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-unused-imports": "2.0.0",
+    "next-themes": "^0.2.1",
+    "postcss": "^8.4.32",
+    "prettier": "2.8.8",
+    "prettier-eslint": "^16.2.0",
+    "prettier-eslint-cli": "^8.0.1",
+    "prettier-plugin-tailwindcss": "0.3.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "tailwind-merge": "^2.2.0",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^3.14.0",
+    "typescript": "^5.3.3"
   }
 }

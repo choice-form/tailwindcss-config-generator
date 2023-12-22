@@ -1,0 +1,35 @@
+import {Switch} from "@headlessui/react";
+import classNames from "classnames";
+
+interface UiSwitchProps {
+  enabled: boolean;
+  setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  label?: string;
+}
+
+const UiSwitch = ({enabled, setEnabled, label}: UiSwitchProps) => {
+  return (
+    <Switch className="flex items-center gap-2 text-xs" checked={enabled} onChange={setEnabled}>
+      <div
+        className={classNames(
+          enabled ? "bg-blue-500" : "bg-black/20 dark:bg-white/30",
+          "relative inline-flex h-4 w-7 shrink-0 cursor-pointer rounded-full border-2 border-transparent",
+          "transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75",
+        )}
+      >
+        <span className="sr-only">Luminance warning</span>
+        <span
+          aria-hidden="true"
+          className={classNames(
+            enabled ? "translate-x-3" : "translate-x-0",
+            "pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg",
+            "ring-0 transition duration-200 ease-in-out",
+          )}
+        />
+      </div>
+      {label && <span>{label}</span>}
+    </Switch>
+  );
+};
+
+export default UiSwitch;
