@@ -1,3 +1,4 @@
+// @ts-nocheck
 import tailwindcssSvgIcon from "@choiceform/tailwindcss-svg-icon";
 import type {Config} from "tailwindcss";
 
