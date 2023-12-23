@@ -1,5 +1,4 @@
 import {Config, Contrast, CssVariables} from ".";
-import {SwatchColorMap} from "../../generate-shades/generate-shades";
 
 interface SidebarProps {}
 
