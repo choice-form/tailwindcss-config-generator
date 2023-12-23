@@ -1,9 +1,10 @@
 import {useAtomValue} from "jotai";
-import {shadesCssVariablesAtom} from "../../atom";
+import {colorSpacesAtom, shadesCssVariablesAtom} from "../../atom";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {oneDark, oneLight} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useTheme} from "next-themes";
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
+import chroma from "chroma-js";
 
 interface CssVariablesProps {}
 
@@ -41,7 +42,19 @@ const CodeHighlighter = ({code, children}: {code: string; children: React.ReactN
 
 const CssVariables = ({}: CssVariablesProps) => {
   const shadesCssVariables = useAtomValue(shadesCssVariablesAtom);
+  const colorSpaces = useAtomValue(colorSpacesAtom);
   const [copied, setCopied] = useState(false);
+
+  const formatColor = (color: string, format: "hex" | "hsl" | "rgb") => {
+    switch (format) {
+      case "hex":
+        return chroma(`hsl(${color})`).hex();
+      case "rgb":
+        return chroma(`hsl(${color})`).rgb();
+      default:
+        return color;
+    }
+  };
 
   useEffect(() => {
     let timerId: NodeJS.Timeout;
@@ -56,7 +69,7 @@ const CssVariables = ({}: CssVariablesProps) => {
   }, [copied]);
 
   let formattedVars = Object.entries(shadesCssVariables)
-    .map(([key, value]) => `    ${key}: ${value.replace(/\s*,\s*\n\s*/g, ", ")};`)
+    .map(([key, value]) => `    ${key}: ${formatColor(value, colorSpaces)};`)
     .join("\n");
 
   let cssString = `@layer base {\n  :root {\n${formattedVars}\n  }\n}`;
@@ -64,6 +77,7 @@ const CssVariables = ({}: CssVariablesProps) => {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(cssString);
+      console.log("🚀 ~ file: css-variables.tsx:67 ~ copyToClipboard ~ cssString:", cssString);
       setCopied(true);
     } catch (err) {
       console.error("Failed to copy text: ", err);

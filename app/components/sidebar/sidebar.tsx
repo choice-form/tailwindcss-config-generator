@@ -1,4 +1,5 @@
 import {Config, Contrast, CssVariables} from ".";
+import {ColorSpaces} from ".";
 
 interface SidebarProps {}
 
@@ -7,6 +8,7 @@ const Sidebar = () => {
     <div className="fixed top-24 inset-x-0 bottom-8 pointer-events-none container mx-auto flex justify-end">
       <div className="shrink-0 hidden w-96 md:block pointer-events-auto">
         <div className="flex-col flex gap-4 min-h-0 h-full">
+          <ColorSpaces />
           <Contrast />
           <CssVariables />
           <Config />

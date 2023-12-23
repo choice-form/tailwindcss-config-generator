@@ -1,8 +1,8 @@
 import classNames from "classnames";
-import {calculateWCAG2, contrastAPCA} from "../../utilities/calculate-contrast";
+import {contrastAPCA} from "../../utilities/calculate-contrast";
 import {wcag2ContrastAtom, apcaContrastAtom, contrastTypeAtom} from "../../atom";
 import {useAtomValue} from "jotai";
-
+import chroma from "chroma-js";
 interface ShadeProps {
   shadeName: string;
   shadeColorReadable: string;
@@ -28,16 +28,25 @@ const Shade = ({
   const apcaContrast = useAtomValue(apcaContrastAtom);
   const contrastType = useAtomValue(contrastTypeAtom);
 
-  const WCAG2 = calculateWCAG2(shadeColorReadable, shadeColorHsl);
+  const WCAG2 = chroma.contrast(shadeColorReadable, shadeColorHsl).toFixed(1);
   const APCA = contrastAPCA(shadeColorReadable, shadeColorHsl);
 
   const isWCAG2 = contrastType === "wcag2" && (wcag2Contrast.aa || wcag2Contrast.aaa);
   const isAPCA = contrastType === "apca" && (apcaContrast.aa || apcaContrast.aaa);
   const isLuminance = contrastType === "luminance" && (luminanceWarning || darkenWarning);
 
+  /** WCAG2 stands for Web Content Accessibility Guidelines 2.
+   * It is a set of guidelines developed by the World Wide Web Consortium (W3C) to ensure that web content is accessible to people with disabilities.
+   * These guidelines provide recommendations for making web content perceivable, operable, understandable, and robust.
+   */
   const WCAGContrast =
     (isWCAG2 && wcag2Contrast.aa && Number(WCAG2) < 4.5) ||
     (wcag2Contrast.aaa && Number(WCAG2) < 7);
+
+  /** APCA stands for Average Picture Complexity Analysis.
+   * It is a method used to measure the visual complexity of an image.
+   * APCA calculates the average complexity of an image by analyzing its pixel values and determining the level of detail and variation present.
+   */
   const APCAContrast =
     (isAPCA && apcaContrast.aa && Math.abs(Number(APCA)) < 60) ||
     (apcaContrast.aaa && Math.abs(Number(APCA)) < 80);

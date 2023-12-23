@@ -55,7 +55,7 @@ const Contrast = ({}: ContrastProps) => {
 
   return (
     <div className="bg-black/5 dark:bg-white/10 p-4 rounded-lg flex flex-col gap-4">
-      <h3 className="text-sm">Contrast checker</h3>
+      <h3 className="text-sm">Contrast Checker</h3>
       <RadioGroup value={typeSelected} onChange={setTypeSelected}>
         <RadioGroup.Label className="sr-only">Type</RadioGroup.Label>
         <div className="grid grid-cols-3 gap-4">

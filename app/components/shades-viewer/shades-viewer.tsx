@@ -3,6 +3,7 @@ import chroma from "chroma-js";
 import {useAtom, useAtomValue, useSetAtom} from "jotai";
 import {useEffect, useRef, useState} from "react";
 import {
+  colorSpacesAtom,
   darkenWarningAtom,
   luminanceWarningAtom,
   shadesAtom,
@@ -22,6 +23,7 @@ interface ShadesViewerProps {
 }
 
 const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
+  const colorSpaces = useAtomValue(colorSpacesAtom);
   const setShadesCssVariables = useSetAtom(shadesCssVariablesAtom);
   const setShadesConfig = useSetAtom(shadesConfigAtom);
   const [name, setName] = useState("primary");
@@ -64,6 +66,17 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
     setName(formattedColorName);
   };
 
+  const shadeSpaces = (color: string, colorSpaces: string) => {
+    switch (colorSpaces) {
+      case "rgb":
+        return `rgba(${color}, <alpha-value>)`;
+      case "hsl":
+        return `hsla(${color}, <alpha-value>)`;
+      default:
+        return color;
+    }
+  };
+
   useEffect(() => {
     let newShadesCssVariables = {};
     let newShadesConfig = {};
@@ -83,8 +96,8 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
           for (let shade in shades) {
             config = {
               ...config,
-              [shade]: `hsla(var(--${colorName}-${shade}), <alpha-value>)`,
-              DEFAULT: `hsla(var(--${colorName}-${correspondingShade}), <alpha-value>)`,
+              [shade]: shadeSpaces(`var(--${colorName}-${shade})`, colorSpaces),
+              DEFAULT: shadeSpaces(`var(--${colorName}-${correspondingShade})`, colorSpaces),
             };
           }
           newShadesConfig = {
@@ -96,7 +109,7 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
       setShadesCssVariables(newShadesCssVariables);
       setShadesConfig(newShadesConfig);
     }
-  }, [shadesState]);
+  }, [shadesState, colorSpaces]);
 
   const isMobile = containerWidth && containerWidth < 641;
 

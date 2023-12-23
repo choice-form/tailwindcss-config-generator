@@ -1,6 +1,8 @@
 import {atom} from "jotai";
 import {generateShadesProps} from "./generate-shades/generate-shades";
 
+export const colorSpacesAtom = atom<"hex" | "hsl" | "rgb">("hsl");
+
 export const luminanceWarningAtom = atom(true);
 export const darkenWarningAtom = atom(true);
 

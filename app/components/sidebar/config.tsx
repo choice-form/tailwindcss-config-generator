@@ -16,7 +16,7 @@ const CodeHighlighter = ({code, children}: {code: string; children: React.ReactN
       <div className="flex items-center gap-4 px-4 pt-4">
         <h3 className="text-sm flex-grow">
           Config
-          <span className="text-xs text-gray-400">(for use in tailwind.config.js) (colors)</span>
+          <span className="text-xs text-gray-400"> (for use in tailwind.config.js) (colors)</span>
         </h3>
         {children}
       </div>
