@@ -1,17 +1,16 @@
 import {useAtomValue} from "jotai";
-import {shadesCssVarsAtom} from "../../atom";
+import {shadesCssVariablesAtom} from "../../atom";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {oneDark, oneLight} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useTheme} from "next-themes";
-import {formatCode} from "../../utilities";
 
-interface CssVarProps {}
+interface CssVariablesProps {}
 
 const CodeHighlighter = ({code}: {code: string}) => {
   const {theme} = useTheme();
 
   return (
-    <div className="bg-black/5 dark:bg-white/10 rounded-lg flex flex-col gap-4">
+    <div className="bg-black/5 dark:bg-white/10 rounded-lg flex flex-col gap-4 min-h-0 overflow-y-auto flex-grow">
       <h3 className="text-sm px-4 pt-4">
         CSS Variables
         <span className="text-xs text-gray-400"> (for use in CSS)</span>
@@ -22,25 +21,29 @@ const CodeHighlighter = ({code}: {code: string}) => {
           padding: "1rem",
           margin: "0px",
           width: "100%",
-          fontSize: "14px",
+          fontSize: "12px",
           fontFamily: "Roboto Mono, monospace",
           lineHeight: 1.5,
         }}
         className="[&>code]:!bg-transparent"
-        language="json"
+        language="scss"
         style={theme === "dark" ? oneDark : oneLight}
       >
-        {formatCode(code)}
+        {code}
       </SyntaxHighlighter>
     </div>
   );
 };
 
-const CssVar = ({}: CssVarProps) => {
-  const shadesCssVars = useAtomValue(shadesCssVarsAtom);
-  let jsonString = JSON.stringify(shadesCssVars).replace(/"(\w+)"\s*:/g, "$1:");
+const CssVariables = ({}: CssVariablesProps) => {
+  const shadesCssVariables = useAtomValue(shadesCssVariablesAtom);
+  let formattedVars = Object.entries(shadesCssVariables)
+    .map(([key, value]) => `    ${key}: ${value.replace(/\s*,\s*\n\s*/g, ", ")};`)
+    .join("\n");
 
-  return <CodeHighlighter code={jsonString} />;
+  let cssString = `@layer base {\n  :root {\n${formattedVars}\n  }\n}`;
+
+  return <CodeHighlighter code={cssString} />;
 };
 
-export default CssVar;
+export default CssVariables;

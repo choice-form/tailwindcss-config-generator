@@ -7,27 +7,28 @@ import {
   luminanceWarningAtom,
   shadesAtom,
   shadesConfigAtom,
-  shadesCssVarsAtom,
+  shadesCssVariablesAtom,
+  sliderIsDraggingAtom,
 } from "../../atom";
-import {SwatchProps} from "../../swatch";
-import {generateShades} from "../../swatch/generateShades";
 import readableColor from "../../utilities/readable-color";
 import {Shade, ShadeControl} from ".";
 import {generateShadeStyle, isValidColor} from "../../utilities";
 import {faker} from "@faker-js/faker";
+import {generateShades, generateShadesProps} from "../../generate-shades";
+import classNames from "classnames";
 
 interface ShadesViewerProps {
   shadesObject: ReturnType<typeof generateShades>;
 }
 
 const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
-  const setShadesCssVars = useSetAtom(shadesCssVarsAtom);
+  const setShadesCssVariables = useSetAtom(shadesCssVariablesAtom);
   const setShadesConfig = useSetAtom(shadesConfigAtom);
   const [name, setName] = useState("primary");
   const [shadesState, setShadesState] = useAtom(shadesAtom);
   const luminanceWarningState = useAtomValue(luminanceWarningAtom);
   const darkenWarningState = useAtomValue(darkenWarningAtom);
-
+  const sliderIsDragging = useAtomValue(sliderIsDraggingAtom);
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -59,60 +60,59 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
       name: formattedColorName,
       value: isValidColor(formattedColorName) ? formattedColorName : chroma.random().hex(),
     };
-    setShadesState((prevState) => [...prevState, newSwatch] as SwatchProps["swatch"]);
+    setShadesState((prevState) => [...prevState, newSwatch] as generateShadesProps["swatches"]);
     setName(formattedColorName);
   };
 
   useEffect(() => {
-    let newShadesCssVars = {};
+    let newShadesCssVariables = {};
     let newShadesConfig = {};
-    Object.entries(shadesObject)
-      .filter(([colorName]) => colorName !== "DEFAULT")
-      .forEach(([colorName, shades]) => {
-        const shadesStyle = generateShadeStyle({swatches: shadesState}, colorName);
-        newShadesCssVars = {
-          ...newShadesCssVars,
-          ...shadesStyle,
-        };
-        let config = {};
-        for (let shade in shades) {
-          config = {
-            ...config,
-            [shade]: `hsla(var(--${colorName}-${shade}), <alpha-value>)`,
+    if (!sliderIsDragging) {
+      Object.entries(shadesObject)
+        .filter(([colorName]) => colorName !== "DEFAULT")
+        .forEach(([colorName, shades], i) => {
+          const shadesStyle = generateShadeStyle({swatches: shadesState}, colorName);
+          newShadesCssVariables = {
+            ...newShadesCssVariables,
+            ...shadesStyle,
           };
-        }
+          let config = {};
+          const correspondingShade = Object.keys(shades).find(
+            (shadeName) => shades[shadeName] === shades.DEFAULT,
+          );
+          for (let shade in shades) {
+            config = {
+              ...config,
+              [shade]: `hsla(var(--${colorName}-${shade}), <alpha-value>)`,
+              DEFAULT: `hsla(var(--${colorName}-${correspondingShade}), <alpha-value>)`,
+            };
+          }
+          newShadesConfig = {
+            ...newShadesConfig,
+            [colorName]: config,
+          };
+        });
 
-        newShadesConfig = {
-          ...newShadesConfig,
-          [colorName]: config,
-        };
-      });
-    setShadesCssVars(newShadesCssVars); // Set new state, replacing the old one.
-    setShadesConfig(newShadesConfig);
+      setShadesCssVariables(newShadesCssVariables);
+      setShadesConfig(newShadesConfig);
+    }
   }, [shadesState]);
+
+  const isMobile = containerWidth && containerWidth < 641;
 
   return (
     <div className="flex flex-grow flex-col gap-4 min-w-0">
-      {/* <header className="col-span-4 flex items-center gap-4 border-b px-4 py-2">
+      <div className="sticky top-16 py-8 z-40">
+        <button
+          className="bg-black text-white hover:bg-light-200 flex items-center gap-1 rounded-lg px-3 py-2 text-sm ring ring-white/50 dark:ring-black/50 dark:bg-white dark:text-black"
+          onClick={handleAddSwatch}
+        >
+          <div className="ic-[e-add]" />
+          Add shade
+        </button>
+      </div>
 
-
-        {Object.entries(shadesObject).map(
-          ([_, shades]) =>
-            shades.DEFAULT === undefined && (
-              <span className="whitespace-nowrap text-xs">The DEFAULT color is out of range</span>
-            ),
-        )}
-      </header> */}
-
-      <button
-        className="bg-light-100 hover:bg-light-200 flex items-center gap-1 rounded px-3 py-2 text-xs"
-        onClick={handleAddSwatch}
-      >
-        <div className="ic-[e-add]" />
-        Add swatch
-      </button>
-
-      <div className="flex flex-col gap-6 flex-1" ref={containerRef}>
+      <div className="flex flex-col gap-8 flex-1" ref={containerRef}>
         {Object.entries(shadesObject).map(([_, shades], i) => {
           const shadesStyle = generateShadeStyle({swatches: shadesState}, "color", i);
 
@@ -128,9 +128,8 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
                 } as React.CSSProperties
               }
             >
-              <ShadeControl index={i} />
-
-              <div className="flex -m-1">
+              <ShadeControl index={i} isMobile={isMobile as boolean} />
+              <div className={classNames("flex -m-1", isMobile && "flex-col")}>
                 {Object.entries(shades)
                   .filter(([shadeName]) => shadeName !== "DEFAULT")
                   .map(([shadeName, shadeValue], j) => {
@@ -150,7 +149,7 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
                         defaultShade={defaultShade}
                         luminanceWarning={luminanceWarning}
                         darkenWarning={darkenWarning}
-                        containerWidth={containerWidth ?? 0}
+                        isMobile={isMobile as boolean}
                       />
                     );
                   })}

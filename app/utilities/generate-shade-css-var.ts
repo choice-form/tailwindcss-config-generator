@@ -1,4 +1,4 @@
-import {generateShades, generateShadesProps} from "../swatch/generateShades";
+import {generateShades, generateShadesProps} from "../generate-shades";
 
 const generateShadeStyle = (
   props: generateShadesProps,
@@ -22,8 +22,8 @@ const generateShadeStyle = (
 
   Object.keys(shade).forEach((key) => {
     if (key !== "DEFAULT") {
-      const cssVarName = `--${colorName}-${key}`;
-      styles[cssVarName] = shade![key];
+      const cssVariablesName = `--${colorName}-${key}`;
+      styles[cssVariablesName] = shade![key];
     }
   });
 

@@ -1,5 +1,7 @@
 import classNames from "classnames";
 import {CSSProperties, createRef, useEffect, useRef, useState} from "react";
+import {useAtom} from "jotai";
+import {sliderIsDraggingAtom} from "../../atom";
 
 export interface UiSliderProps {
   className?: string;
@@ -58,7 +60,7 @@ const UiSlider = ({
   // 创建一个引用来存储滑动条的 DOM 元素
   const sliderRef = useRef<HTMLDivElement>(null);
   // 创建一个状态来存储滑动条是否正在拖动
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useAtom(sliderIsDraggingAtom);
 
   // 处理鼠标按下事件，这将启动滑动条的拖动功能
   const handleMouseDown = (index: number) => (e: React.MouseEvent) => {

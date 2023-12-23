@@ -11,7 +11,7 @@ const CodeHighlighter = ({code}: {code: string}) => {
   const {theme} = useTheme();
 
   return (
-    <div className="bg-black/5 dark:bg-white/10 rounded-lg flex flex-col gap-4">
+    <div className="bg-black/5 dark:bg-white/10 rounded-lg flex flex-col gap-4 min-h-0 flex-grow overflow-y-auto">
       <h3 className="text-sm px-4 pt-4">
         Config
         <span className="text-xs text-gray-400"> (for use in tailwind.config.js)</span>
@@ -22,7 +22,7 @@ const CodeHighlighter = ({code}: {code: string}) => {
           padding: "1rem",
           margin: "0px",
           width: "100%",
-          fontSize: "14px",
+          fontSize: "12px",
           fontFamily: "Roboto Mono, monospace",
           lineHeight: 1.5,
         }}

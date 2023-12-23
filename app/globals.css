@@ -24,7 +24,7 @@
 }
 
 .shade-control-input input {
-  @apply flex w-32 items-center bg-transparent appearance-none focus:outline-none;
+  @apply flex w-32 items-center bg-transparent appearance-none focus:outline-none flex-grow;
 }
 
 .shade-control-badge {

@@ -30,7 +30,7 @@ export interface SwatchColorMap {
   [key: string]: SwatchColor;
 }
 
-export const generateShades = ({swatches}: generateShadesProps): SwatchColorMap => {
+const generateShades = ({swatches}: generateShadesProps): SwatchColorMap => {
   const shadesObject: SwatchColorMap = {};
   swatches.forEach((swatch) => {
     // 从接口提取颜色和调整参数
@@ -97,3 +97,5 @@ const formatHSL = (color: string): string => {
   // 不带hsl前缀和括号
   return `${h},${s}%,${l}%`;
 };
+
+export default generateShades;

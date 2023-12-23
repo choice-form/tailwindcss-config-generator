@@ -7,7 +7,7 @@ const Header = ({}: HeaderProps) => {
   const {theme, setTheme} = useTheme();
 
   return (
-    <header className="px-8 sticky top-0 shrink-0 bg-white/80 dark:bg-gray-900/80 z-40 backdrop-blur border-b">
+    <header className="px-8 sticky top-0 shrink-0 bg-white/80 dark:bg-gray-900/80 z-40 backdrop-blur border-b border-gray-200 dark:border-gray-900">
       <div className="container mx-auto flex items-center gap-4 h-16">
         <div className="flex-1 flex items-center gap-4">
           <h2 className="text-xl font-medium">@Choiceform/tailwindcss-config-generator</h2>
