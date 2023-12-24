@@ -1,4 +1,3 @@
-import {Popover, Transition} from "@headlessui/react";
 import {Colorful} from "@uiw/react-color";
 import chroma from "chroma-js";
 import classNames from "classnames";
