@@ -206,8 +206,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
                           <ColorCodePopover
                             color={shadeColorHex}
                             style={{
-                              background: shadeColorHex,
-                              color: shadeColorReadable,
+                              backgroundColor: shadeColorHex,
                             }}
                           />
                         }

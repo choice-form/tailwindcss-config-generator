@@ -73,9 +73,10 @@ const ColorCodePopover = ({color, style}: ColorCodePopoverProps) => {
 
   return (
     <code
-      className="grid grid-cols-[auto_auto_1fr_auto] gap-2 text-xs p-4 rounded-lg shadow-md"
-      style={style}
+      className="grid grid-cols-[auto_auto_1fr_auto] gap-2 text-xs p-4 rounded-lg shadow-md
+      bg-gray-900/80 text-white dark:bg-white/80 dark:text-gray-900 backdrop-blur"
     >
+      <div className="mb-2 col-span-4 h-1 rounded" style={style} />
       {Object.keys(formatMap).map((type) => (
         <Fragment key={type}>
           <button
