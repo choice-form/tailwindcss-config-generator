@@ -1,19 +1,25 @@
 import {atom} from "jotai";
-import {generateShadesProps} from "./generate-shades/generate-shades";
+import {ContrastTabsType, ProjectProps, WorkspaceProps} from "./type";
 
-export const colorSpacesAtom = atom<"hex" | "hsl" | "rgb">("hsl");
+export const workspaceAtom = atom<WorkspaceProps[]>([]);
 
-export const luminanceWarningAtom = atom(true);
-export const darkenWarningAtom = atom(true);
+export const projectsAtom = atom<ProjectProps>({
+  id: 0,
+  name: "",
+  createdAt: "",
+  updatedAt: "",
+  shades: [],
+  colorSpaces: "hsl",
+  accessibility: {
+    luminanceWarning: {brighten: true, darken: true},
+    wcag2Contrast: "none",
+    apcaContrast: "none",
+  },
+});
 
-export const shadesAtom = atom<generateShadesProps["swatches"]>([]);
+export const contrastTabsAtom = atom<ContrastTabsType>("luminance");
 
 export const shadesCssVariablesAtom = atom<React.CSSProperties>({});
 export const shadesConfigAtom = atom<React.CSSProperties>({});
 
-export const sliderIsDraggingAtom = atom<boolean>(false);
-
-export const contrastTypeAtom = atom<"luminance" | "wcag2" | "apca">("luminance");
-
-export const wcag2ContrastAtom = atom<{aa: boolean; aaa: boolean}>({aa: false, aaa: false});
-export const apcaContrastAtom = atom<{aa: boolean; aaa: boolean}>({aa: false, aaa: false});
+export const uiIsBusyAtom = atom<boolean>(false);

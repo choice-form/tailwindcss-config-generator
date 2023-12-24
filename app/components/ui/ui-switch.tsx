@@ -12,7 +12,7 @@ const UiSwitch = ({enabled, setEnabled, label}: UiSwitchProps) => {
     <Switch className="flex items-center gap-2 text-xs" checked={enabled} onChange={setEnabled}>
       <div
         className={classNames(
-          enabled ? "bg-blue-500" : "bg-black/20 dark:bg-white/30",
+          enabled ? "bg-black dark:bg-white" : "bg-black/20 dark:bg-white/30",
           "relative inline-flex h-4 w-7 shrink-0 cursor-pointer rounded-full border-2 border-transparent",
           "transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75",
         )}
@@ -22,7 +22,7 @@ const UiSwitch = ({enabled, setEnabled, label}: UiSwitchProps) => {
           aria-hidden="true"
           className={classNames(
             enabled ? "translate-x-3" : "translate-x-0",
-            "pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg",
+            "pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg dark:bg-gray-900",
             "ring-0 transition duration-200 ease-in-out",
           )}
         />

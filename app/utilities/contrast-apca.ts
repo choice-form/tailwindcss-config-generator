@@ -1,7 +1,7 @@
 import chroma from "chroma-js";
 import {APCAcontrast} from "apca-w3";
 
-export const contrastAPCA = (foregroundColor: string, backgroundColor: string) => {
+const contrastAPCA = (foregroundColor: string, backgroundColor: string) => {
   // 使用chroma获取颜色的亮度值
   const fgYs = chroma(foregroundColor).luminance();
   const bgYs = chroma(backgroundColor).luminance();
@@ -16,3 +16,5 @@ export const contrastAPCA = (foregroundColor: string, backgroundColor: string) =
 
   return contrast;
 };
+
+export default contrastAPCA;

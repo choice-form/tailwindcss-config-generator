@@ -1,9 +1,9 @@
-import React from "react";
-import {useAtom} from "jotai";
-import {shadesAtom} from "../../atom";
-import {UiSlider} from "..";
-import {ColorInput} from ".";
 import classNames from "classnames";
+import {useAtom} from "jotai";
+import {ColorInput} from ".";
+import {projectsAtom} from "../../atom";
+import {UiSlider} from "../ui";
+import {useState} from "react";
 
 interface ShadeControlProps {
   index: number;
@@ -11,13 +11,22 @@ interface ShadeControlProps {
 }
 
 const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
-  const [shadesState, setShadesState] = useAtom(shadesAtom);
+  const [projects, setProjects] = useAtom(projectsAtom);
+  const [tempName, setTempName] = useState(projects.shades[index].name);
 
   const handleRemoveSwatch = (i: number) => {
-    setShadesState((prevState) => {
-      const newState = [...prevState];
-      newState.splice(i, 1);
-      return newState;
+    setProjects({
+      ...projects,
+      shades: projects.shades.filter((_, index) => index !== i),
+    });
+  };
+
+  const handleBlur = () => {
+    setProjects({
+      ...projects,
+      shades: projects.shades.map((swatch, i) =>
+        index === i ? {...swatch, name: tempName} : swatch,
+      ),
     });
   };
 
@@ -26,7 +35,8 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
       <div className="inline-flex items-center gap-2 self-start flex-wrap">
         <div className="shade-control-input flex-grow">
           <button
-            className="bg-white border dark:bg-gray-600 hover:bg-primary hover:text-primary-readable-color flex h-6 w-6 flex-shrink-0 items-center justify-center place-self-center rounded-full text-xs"
+            className="bg-white border dark:bg-gray-600 hover:bg-primary hover:text-primary-readable-color
+            flex h-6 w-6 flex-shrink-0 items-center justify-center place-self-center rounded-full text-xs"
             onClick={() => handleRemoveSwatch(index)}
           >
             <div className="ic-[e-delete]" />
@@ -34,14 +44,9 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
           <input
             className="flex-grow"
             type="text"
-            value={shadesState[index].name}
-            onChange={(e) =>
-              setShadesState(
-                shadesState.map((swatch, i) =>
-                  index === i ? {...swatch, name: e.target.value} : swatch,
-                ),
-              )
-            }
+            value={tempName}
+            onChange={(e) => setTempName(e.target.value)}
+            onBlur={handleBlur}
             placeholder="Enter name"
           />
         </div>
@@ -63,17 +68,22 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
             step={1}
             start={10}
             connect={true}
-            value={shadesState[index].lightenAmount}
+            value={projects.shades[index].lightenAmount}
             onChange={(value: number | number[]) => {
               const newSwatch = {
                 lightenAmount: typeof value === "number" ? value : 10,
               };
-              setShadesState(
-                shadesState.map((swatch, i) => (index === i ? {...swatch, ...newSwatch} : swatch)),
-              );
+              setProjects({
+                ...projects,
+                shades: projects.shades.map((swatch, i) =>
+                  index === i ? {...swatch, ...newSwatch} : swatch,
+                ),
+              });
             }}
           />
-          <span className="shade-control-badge">{shadesState[index].lightenAmount / 10 || 1}</span>
+          <span className="shade-control-badge">
+            {projects.shades[index].lightenAmount / 10 || 1}
+          </span>
         </div>
 
         <div className="flex items-center gap-2 flex-grow">
@@ -85,17 +95,22 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
             step={1}
             start={10}
             connect={true}
-            value={shadesState[index].darkenAmount}
+            value={projects.shades[index].darkenAmount}
             onChange={(value: number | number[]) => {
               const newSwatch = {
                 darkenAmount: typeof value === "number" ? value : 10,
               };
-              setShadesState(
-                shadesState.map((swatch, i) => (index === i ? {...swatch, ...newSwatch} : swatch)),
-              );
+              setProjects({
+                ...projects,
+                shades: projects.shades.map((swatch, i) =>
+                  index === i ? {...swatch, ...newSwatch} : swatch,
+                ),
+              });
             }}
           />
-          <span className="shade-control-badge">{shadesState[index].darkenAmount / 10 || 1}</span>
+          <span className="shade-control-badge">
+            {projects.shades[index].darkenAmount / 10 || 1}
+          </span>
         </div>
 
         <div className="flex items-center gap-2 flex-grow">
@@ -107,17 +122,20 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
             step={1}
             start={1}
             connect={true}
-            value={shadesState[index].adjustHue}
+            value={projects.shades[index].adjustHue}
             onChange={(value: number | number[]) => {
               const newSwatch = {
                 adjustHue: typeof value === "number" ? value : 10,
               };
-              setShadesState(
-                shadesState.map((swatch, i) => (index === i ? {...swatch, ...newSwatch} : swatch)),
-              );
+              setProjects({
+                ...projects,
+                shades: projects.shades.map((swatch, i) =>
+                  index === i ? {...swatch, ...newSwatch} : swatch,
+                ),
+              });
             }}
           />
-          <span className="shade-control-badge">{shadesState[index].adjustHue ?? 0}</span>
+          <span className="shade-control-badge">{projects.shades[index].adjustHue ?? 0}</span>
         </div>
       </div>
     </div>

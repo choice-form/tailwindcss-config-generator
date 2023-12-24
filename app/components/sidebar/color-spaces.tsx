@@ -1,20 +1,21 @@
 import {RadioGroup} from "@headlessui/react";
-import {useAtom} from "jotai";
-import {colorSpacesAtom} from "../../atom";
 import classNames from "classnames";
+import {useAtom} from "jotai";
+import {projectsAtom} from "../../atom";
+import {ColorSpacesType} from "../../type";
 
 interface ColorSpacesProps {}
 
 const colorSpacesOptions = ["hex", "hsl", "rgb"];
 
 const ColorSpaces = ({}: ColorSpacesProps) => {
-  const [colorSpaces, setColorSpaces] = useAtom(colorSpacesAtom);
+  const [projects, setProjects] = useAtom(projectsAtom);
 
   return (
     <div className="bg-black/5 dark:bg-white/10 p-4 rounded-lg flex flex-col gap-4">
       <h3 className="text-sm">Color Spaces</h3>
-      <RadioGroup value={colorSpaces} onChange={setColorSpaces}>
-        <RadioGroup.Label className="sr-only">WCAG2 Contrast</RadioGroup.Label>
+      <RadioGroup value={projects.colorSpaces}>
+        <RadioGroup.Label className="sr-only">Color Spaces</RadioGroup.Label>
         <div className="grid grid-cols-3 gap-4">
           {colorSpacesOptions.map((plan) => (
             <RadioGroup.Option
@@ -29,18 +30,26 @@ const ColorSpaces = ({}: ColorSpacesProps) => {
                 )
               }
               onClick={() => {
-                setColorSpaces(plan as "hex" | "hsl" | "rgb");
+                setProjects({
+                  ...projects,
+                  colorSpaces: plan as ColorSpacesType,
+                });
               }}
             >
-              {({active, checked}) => (
-                <RadioGroup.Label as="p" className="text-xs uppercase">
-                  {plan}
-                </RadioGroup.Label>
-              )}
+              <RadioGroup.Label as="p" className="text-xs uppercase">
+                {plan}
+              </RadioGroup.Label>
             </RadioGroup.Option>
           ))}
         </div>
       </RadioGroup>
+      {projects.colorSpaces === "hex" && (
+        <span className="text-xs opacity-60">
+          In the HEX color space, due to the lack of alpha channel support, it's not possible to
+          directly represent transparency. For instance, when using HEX codes (like bg-blue-500/50),
+          achieving a 50% transparency effect is unfeasible.
+        </span>
+      )}
     </div>
   );
 };

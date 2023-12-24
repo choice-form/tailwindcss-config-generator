@@ -2,18 +2,19 @@ import {Popover, Transition} from "@headlessui/react";
 import {Colorful} from "@uiw/react-color";
 import chroma from "chroma-js";
 import classNames from "classnames";
-import {ChangeEvent, Fragment, useRef, useState, useEffect, useId} from "react";
 import {useAtom} from "jotai";
-import {shadesAtom} from "../../atom";
-import {isValidColor, determineColorType} from "../../utilities";
+import {ChangeEvent, Fragment, useEffect, useId, useRef, useState} from "react";
+import {projectsAtom} from "../../atom";
+import {determineColorType, isValidColor} from "../../utilities";
+import {UiPopover} from "../ui";
 
 interface ColorInputProps {
   index: number;
 }
 
 const ColorInput = ({index}: ColorInputProps) => {
-  const [shadesState, setShadesState] = useAtom(shadesAtom);
-  const [inputValue, setInputValue] = useState(shadesState[index].value || "");
+  const [projects, setProjects] = useAtom(projectsAtom);
+  const [inputValue, setInputValue] = useState(projects.shades[index].initColor || "");
   const inputRef = useRef<HTMLInputElement>(null);
   const uuid = useId();
 
@@ -22,10 +23,13 @@ const ColorInput = ({index}: ColorInputProps) => {
     setInputValue(newColor);
     if (isValidColor(newColor)) {
       let colorHex = chroma(newColor).hex();
-      const newSwatch = {value: colorHex};
-      setShadesState(
-        shadesState.map((swatch, i) => (index === i ? {...swatch, ...newSwatch} : swatch)),
-      );
+      const newSwatch = {initColor: colorHex};
+      setProjects({
+        ...projects,
+        shades: projects.shades.map((swatch, i) =>
+          index === i ? {...swatch, ...newSwatch} : swatch,
+        ),
+      });
     }
   }
 
@@ -33,47 +37,41 @@ const ColorInput = ({index}: ColorInputProps) => {
 
   useEffect(() => {
     if (isInputFocused) return;
-    setInputValue(shadesState[index].value);
-  }, [shadesState, index]);
+    setInputValue(projects.shades[index].initColor);
+  }, [projects.shades, index]);
+
   return (
     <div className="shade-control-input flex-grow">
-      <Popover className="flex">
-        {({open}) => (
+      <UiPopover
+        placement="bottom-start"
+        triggerClassName="flex items-center gap-1 justify-center"
+        trigger={(isOpen) => (
           <>
-            <Popover.Button
+            <button
               className="relative h-6 w-6 flex-shrink-0 place-self-center rounded-full hover:ring ring-primary-500/30"
               style={{
-                backgroundColor: shadesState[index].value,
+                backgroundColor: projects.shades[index].initColor,
               }}
             />
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Popover.Panel className="absolute mt-8 z-50">
-                <Colorful
-                  disableAlpha={true}
-                  color={chroma(shadesState[index].value).hex()}
-                  onChange={(e) => {
-                    const newSwatch = {
-                      value: e.hex,
-                    };
-                    setShadesState(
-                      shadesState.map((swatch, i) =>
-                        index === i ? {...swatch, ...newSwatch} : swatch,
-                      ),
-                    );
-                  }}
-                />
-              </Popover.Panel>
-            </Transition>
           </>
         )}
-      </Popover>
+      >
+        <Colorful
+          disableAlpha={true}
+          color={chroma(projects.shades[index].initColor).hex()}
+          onChange={(e) => {
+            const newSwatch = {
+              initColor: e.hex,
+            };
+            setProjects({
+              ...projects,
+              shades: projects.shades.map((swatch, i) =>
+                index === i ? {...swatch, ...newSwatch} : swatch,
+              ),
+            });
+          }}
+        />
+      </UiPopover>
       <input
         id={uuid}
         ref={inputRef}

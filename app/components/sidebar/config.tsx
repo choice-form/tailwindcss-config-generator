@@ -1,10 +1,10 @@
+import {useAtomValue} from "jotai";
 import {useTheme} from "next-themes";
+import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {oneDark, oneLight} from "react-syntax-highlighter/dist/esm/styles/prism";
-import {formatCode} from "../../utilities";
-import {useAtomValue} from "jotai";
 import {shadesConfigAtom} from "../../atom";
-import {useEffect, useState} from "react";
+import {formatCode} from "../../utilities";
 
 interface ConfigProps {}
 

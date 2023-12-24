@@ -1,67 +1,29 @@
-import {useAtom, useSetAtom} from "jotai";
+import {useAtom} from "jotai";
 import {UiSwitch} from "../ui";
-import {
-  apcaContrastAtom,
-  darkenWarningAtom,
-  luminanceWarningAtom,
-  wcag2ContrastAtom,
-  contrastTypeAtom,
-} from "../../atom";
+import {contrastTabsAtom, projectsAtom} from "../../atom";
 import {RadioGroup} from "@headlessui/react";
-import {useState} from "react";
 import classNames from "classnames";
+import {ContrastTabsType, W3cContrastType} from "../../type";
 
 interface ContrastProps {}
 
-const typeOptions = [
-  {
-    name: "Luminance",
-    value: "luminance",
-  },
-  {
-    name: "WCAG2",
-    value: "wcag2",
-  },
-  {
-    name: "APCA",
-    value: "apca",
-  },
-];
+const typeOptions = ["luminance", "wcag2", "apca"];
 
-const W3COptions = [
-  {
-    name: "None",
-    value: true,
-  },
-  {
-    name: "AA",
-    value: false,
-  },
-  {
-    name: "AAA",
-    value: false,
-  },
-];
+const W3COptions = ["none", "aa", "aaa"];
 
 const Contrast = ({}: ContrastProps) => {
-  const [luminanceWarning, setLuminanceWarning] = useAtom(luminanceWarningAtom);
-  const [darkenWarning, setDarkenWarning] = useAtom(darkenWarningAtom);
-  const setWcag2Contrast = useSetAtom(wcag2ContrastAtom);
-  const setApcaContrast = useSetAtom(apcaContrastAtom);
-  const [wcag2Selected, setWcag2Selected] = useState(W3COptions[0]);
-  const [apcaSelected, setApcaSelected] = useState(W3COptions[0]);
-  const [typeSelected, setTypeSelected] = useState(typeOptions[0]);
-  const [typeState, setTypeState] = useAtom(contrastTypeAtom);
+  const [projects, setProjects] = useAtom(projectsAtom);
+  const [contrastTabs, setContrastTabs] = useAtom(contrastTabsAtom);
 
   return (
     <div className="bg-black/5 dark:bg-white/10 p-4 rounded-lg flex flex-col gap-4">
       <h3 className="text-sm">Contrast Checker</h3>
-      <RadioGroup value={typeSelected} onChange={setTypeSelected}>
-        <RadioGroup.Label className="sr-only">Type</RadioGroup.Label>
+      <RadioGroup value={contrastTabs}>
+        <RadioGroup.Label className="sr-only">Contrast Tabs</RadioGroup.Label>
         <div className="grid grid-cols-3 gap-4">
           {typeOptions.map((plan) => (
             <RadioGroup.Option
-              key={plan.name}
+              key={plan}
               value={plan}
               className={({active, checked}) =>
                 classNames(
@@ -72,36 +34,61 @@ const Contrast = ({}: ContrastProps) => {
                 )
               }
               onClick={() => {
-                setTypeState(plan.value as "luminance" | "wcag2" | "apca");
+                setContrastTabs(plan as ContrastTabsType);
               }}
             >
-              {({active, checked}) => (
-                <RadioGroup.Label as="p" className="text-xs">
-                  {plan.name}
-                </RadioGroup.Label>
-              )}
+              <RadioGroup.Label as="p" className="text-xs uppercase">
+                {plan}
+              </RadioGroup.Label>
             </RadioGroup.Option>
           ))}
         </div>
       </RadioGroup>
-      {typeState === "luminance" && (
+
+      {contrastTabs === "luminance" && (
         <>
           <UiSwitch
-            enabled={luminanceWarning}
-            setEnabled={setLuminanceWarning}
+            enabled={projects.accessibility.luminanceWarning.brighten}
+            setEnabled={() =>
+              setProjects({
+                ...projects,
+                accessibility: {
+                  ...projects.accessibility,
+                  luminanceWarning: {
+                    ...projects.accessibility.luminanceWarning,
+                    brighten: !projects.accessibility.luminanceWarning.brighten,
+                  },
+                },
+              })
+            }
             label="Luminance warning"
           />
-          <UiSwitch enabled={darkenWarning} setEnabled={setDarkenWarning} label="Darken warning" />
+          <UiSwitch
+            enabled={projects.accessibility.luminanceWarning.darken}
+            setEnabled={() =>
+              setProjects({
+                ...projects,
+                accessibility: {
+                  ...projects.accessibility,
+                  luminanceWarning: {
+                    ...projects.accessibility.luminanceWarning,
+                    darken: !projects.accessibility.luminanceWarning.darken,
+                  },
+                },
+              })
+            }
+            label="Darken warning"
+          />
         </>
       )}
 
-      {typeState === "wcag2" && (
-        <RadioGroup value={wcag2Selected} onChange={setWcag2Selected}>
+      {contrastTabs === "wcag2" && (
+        <RadioGroup value={projects.accessibility.wcag2Contrast}>
           <RadioGroup.Label className="sr-only">WCAG2 Contrast</RadioGroup.Label>
           <div className="grid grid-cols-3 gap-4">
             {W3COptions.map((plan) => (
               <RadioGroup.Option
-                key={plan.name}
+                key={plan}
                 value={plan}
                 className={({active, checked}) =>
                   classNames(
@@ -112,32 +99,33 @@ const Contrast = ({}: ContrastProps) => {
                   )
                 }
                 onClick={() => {
-                  setWcag2Contrast({
-                    aa: plan.name === "AA" ? true : false,
-                    aaa: plan.name === "AAA" ? true : false,
+                  setProjects({
+                    ...projects,
+                    accessibility: {
+                      ...projects.accessibility,
+                      wcag2Contrast: plan as W3cContrastType,
+                    },
                   });
                 }}
               >
-                {({active, checked}) => (
-                  <RadioGroup.Label as="p" className="text-xs">
-                    {plan.name === "None" && "None"}
-                    {plan.name === "AA" && "4.5+ (AA)"}
-                    {plan.name === "AAA" && "7+ (AAA)"}
-                  </RadioGroup.Label>
-                )}
+                <RadioGroup.Label as="p" className="text-xs">
+                  {plan === "none" && "None"}
+                  {plan === "aa" && "4.5+ (AA)"}
+                  {plan === "aaa" && "7+ (AAA)"}
+                </RadioGroup.Label>
               </RadioGroup.Option>
             ))}
           </div>
         </RadioGroup>
       )}
 
-      {typeState === "apca" && (
-        <RadioGroup value={apcaSelected} onChange={setApcaSelected}>
+      {contrastTabs === "apca" && (
+        <RadioGroup value={projects.accessibility.apcaContrast}>
           <RadioGroup.Label className="sr-only">APCA Contrast</RadioGroup.Label>
           <div className="grid grid-cols-3 gap-4">
             {W3COptions.map((plan) => (
               <RadioGroup.Option
-                key={plan.name}
+                key={plan}
                 value={plan}
                 className={({active, checked}) =>
                   classNames(
@@ -148,19 +136,20 @@ const Contrast = ({}: ContrastProps) => {
                   )
                 }
                 onClick={() => {
-                  setApcaContrast({
-                    aa: plan.name === "AA" ? true : false,
-                    aaa: plan.name === "AAA" ? true : false,
+                  setProjects({
+                    ...projects,
+                    accessibility: {
+                      ...projects.accessibility,
+                      apcaContrast: plan as W3cContrastType,
+                    },
                   });
                 }}
               >
-                {({active, checked}) => (
-                  <RadioGroup.Label as="p" className="text-xs">
-                    {plan.name === "None" && "None"}
-                    {plan.name === "AA" && " 60%+ (AA)"}
-                    {plan.name === "AAA" && "80%+ (AAA)"}
-                  </RadioGroup.Label>
-                )}
+                <RadioGroup.Label as="p" className="text-xs">
+                  {plan === "none" && "None"}
+                  {plan === "aa" && " 60%+ (AA)"}
+                  {plan === "aaa" && "80%+ (AAA)"}
+                </RadioGroup.Label>
               </RadioGroup.Option>
             ))}
           </div>

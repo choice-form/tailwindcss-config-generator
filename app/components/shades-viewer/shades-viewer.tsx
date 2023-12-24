@@ -1,39 +1,53 @@
 "use client";
+import {faker} from "@faker-js/faker";
 import chroma from "chroma-js";
+import classNames from "classnames";
 import {useAtom, useAtomValue, useSetAtom} from "jotai";
 import {useEffect, useRef, useState} from "react";
-import {
-  colorSpacesAtom,
-  darkenWarningAtom,
-  luminanceWarningAtom,
-  shadesAtom,
-  shadesConfigAtom,
-  shadesCssVariablesAtom,
-  sliderIsDraggingAtom,
-} from "../../atom";
-import readableColor from "../../utilities/readable-color";
-import {Shade, ShadeControl} from ".";
+import {Shade, ShadeControl, ColorCodePopover} from ".";
+import {projectsAtom, shadesConfigAtom, shadesCssVariablesAtom, uiIsBusyAtom} from "../../atom";
+import {generateShades} from "../../generate-shades";
 import {generateShadeStyle, isValidColor} from "../../utilities";
-import {faker} from "@faker-js/faker";
-import {generateShades, generateShadesProps} from "../../generate-shades";
-import classNames from "classnames";
+import readableColor from "../../utilities/readable-color";
+import {ShadesProps} from "../../type";
 
-interface ShadesViewerProps {
-  shadesObject: ReturnType<typeof generateShades>;
-}
+interface ShadesViewerProps {}
 
-const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
-  const colorSpaces = useAtomValue(colorSpacesAtom);
+const ShadesViewer = ({}: ShadesViewerProps) => {
+  const [projects, setProjects] = useAtom(projectsAtom);
   const setShadesCssVariables = useSetAtom(shadesCssVariablesAtom);
   const setShadesConfig = useSetAtom(shadesConfigAtom);
-  const [name, setName] = useState("primary");
-  const [shadesState, setShadesState] = useAtom(shadesAtom);
-  const luminanceWarningState = useAtomValue(luminanceWarningAtom);
-  const darkenWarningState = useAtomValue(darkenWarningAtom);
-  const sliderIsDragging = useAtomValue(sliderIsDraggingAtom);
+  const uiIsBusy = useAtomValue(uiIsBusyAtom);
+
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  /** Example of shadesObject:
+    {
+      blue: {
+        50: '255,100%,63%',
+        100: '251,100%,61%',
+        200: '248,100%,58%',
+        300: '246,100%,56%',
+        400: '243,100%,54%',
+        500: '240,100%,50%',
+        600: '240,100%,49%',
+        700: '240,100%,47%',
+        800: '240,100%,45%',
+        900: '240,100%,43%',
+        950: '240,100%,42%',
+        DEFAULT: '240,100%,50%'
+      }
+    }
+  */
+  const shadesObject = generateShades({
+    shades: projects?.shades.map((swatch) => swatch),
+  });
+
+  const shadesMap = new Map(Object.entries(shadesObject));
+  const shadesArray = Array.from(shadesMap);
+
+  // Container width observer
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       setContainerWidth(entries[0].contentRect.width);
@@ -48,24 +62,34 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
     };
   }, [containerRef.current]);
 
-  const handleAddSwatch = () => {
+  // Create a new shade
+  const handleAddShade = () => {
     let formattedColorName;
     do {
+      // Generate a random color name
       let colorName = faker.color.human();
+      // Remove spaces and make it lowercase
       formattedColorName = colorName.toLowerCase().replace(/ /g, "-");
     } while (
+      // Check if the color name already exists
       Object.keys(shadesObject).includes(formattedColorName) ||
+      // Filter out the following names
       formattedColorName === "white" ||
       formattedColorName === "black"
     );
-    const newSwatch = {
+    const newShade = {
       name: formattedColorName,
-      value: isValidColor(formattedColorName) ? formattedColorName : chroma.random().hex(),
+      // If the name is a legal color name, the color name is used to generate the color.
+      // If it is not legal, the color is randomly generated.
+      initColor: isValidColor(formattedColorName) ? formattedColorName : chroma.random().hex(),
     };
-    setShadesState((prevState) => [...prevState, newSwatch] as generateShadesProps["swatches"]);
-    setName(formattedColorName);
+    setProjects((prevState) => ({
+      ...prevState,
+      shades: [...prevState.shades, newShade] as ShadesProps[],
+    }));
   };
 
+  // Convert the color to the corresponding color space
   const shadeSpaces = (color: string, colorSpaces: string) => {
     switch (colorSpaces) {
       case "rgb":
@@ -73,18 +97,24 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
       case "hsl":
         return `hsla(${color}, <alpha-value>)`;
       default:
-        return color;
+        return color; // hex
     }
   };
 
+  const isMobile = containerWidth && containerWidth < 641;
+
+  // Generate shades css variables and shades config
   useEffect(() => {
     let newShadesCssVariables = {};
     let newShadesConfig = {};
-    if (!sliderIsDragging) {
-      Object.entries(shadesObject)
+    if (!uiIsBusy) {
+      shadesArray
         .filter(([colorName]) => colorName !== "DEFAULT")
-        .forEach(([colorName, shades], i) => {
-          const shadesStyle = generateShadeStyle({swatches: shadesState}, colorName);
+        .forEach(([colorName, shades]) => {
+          const shadesStyle = generateShadeStyle(
+            {shades: projects.shades, initial: false},
+            colorName,
+          );
           newShadesCssVariables = {
             ...newShadesCssVariables,
             ...shadesStyle,
@@ -96,8 +126,11 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
           for (let shade in shades) {
             config = {
               ...config,
-              [shade]: shadeSpaces(`var(--${colorName}-${shade})`, colorSpaces),
-              DEFAULT: shadeSpaces(`var(--${colorName}-${correspondingShade})`, colorSpaces),
+              [shade]: shadeSpaces(`var(--${colorName}-${shade})`, projects.colorSpaces),
+              DEFAULT: shadeSpaces(
+                `var(--${colorName}-${correspondingShade})`,
+                projects.colorSpaces,
+              ),
             };
           }
           newShadesConfig = {
@@ -109,16 +142,15 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
       setShadesCssVariables(newShadesCssVariables);
       setShadesConfig(newShadesConfig);
     }
-  }, [shadesState, colorSpaces]);
-
-  const isMobile = containerWidth && containerWidth < 641;
+  }, [projects.shades, projects.colorSpaces]);
 
   return (
     <div className="flex flex-grow flex-col gap-4 min-w-0">
       <div className="sticky top-16 py-8 z-40">
         <button
-          className="bg-black text-white hover:bg-light-200 flex items-center gap-1 rounded-lg px-3 py-2 text-sm ring ring-white/50 dark:ring-black/50 dark:bg-white dark:text-black"
-          onClick={handleAddSwatch}
+          className="bg-black text-white hover:bg-light-200 flex items-center gap-1 rounded-lg px-3 py-2
+          text-sm ring ring-white/50 dark:ring-black/50 dark:bg-white dark:text-black"
+          onClick={handleAddShade}
         >
           <div className="ic-[e-add]" />
           Add shade
@@ -126,8 +158,8 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
       </div>
 
       <div className="flex flex-col gap-8 flex-1" ref={containerRef}>
-        {Object.entries(shadesObject).map(([_, shades], i) => {
-          const shadesStyle = generateShadeStyle({swatches: shadesState}, "color", i);
+        {shadesArray.map(([_, shades], i) => {
+          const shadesStyle = generateShadeStyle({shades: projects.shades}, "color", i);
 
           return (
             <div
@@ -142,6 +174,7 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
               }
             >
               <ShadeControl index={i} isMobile={isMobile as boolean} />
+
               <div className={classNames("flex -m-1", isMobile && "flex-col")}>
                 {Object.entries(shades)
                   .filter(([shadeName]) => shadeName !== "DEFAULT")
@@ -150,11 +183,25 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
                     const shadeColorHex = shadeColor.hex();
                     const shadeColorReadable = readableColor(shadeColor).hex();
                     const defaultShade = shadeValue === shades.DEFAULT;
-                    const luminanceWarning = luminanceWarningState && shadeColor.luminance() > 0.9;
-                    const darkenWarning = darkenWarningState && shadeColor.luminance() < 0.01;
+
+                    const luminanceWarning =
+                      projects.accessibility.luminanceWarning.brighten &&
+                      shadeColor.luminance() > 0.9;
+                    const darkenWarning =
+                      projects.accessibility.luminanceWarning.darken &&
+                      shadeColor.luminance() < 0.01;
                     return (
                       <Shade
                         key={j}
+                        colorCodePopover={
+                          <ColorCodePopover
+                            color={shadeColorHex}
+                            style={{
+                              background: shadeColorHex,
+                              color: shadeColorReadable,
+                            }}
+                          />
+                        }
                         shadeName={shadeName}
                         shadeColorReadable={shadeColorReadable}
                         shadeColorHsl={`hsl(${shadeValue})`}
@@ -163,6 +210,28 @@ const ShadesViewer = ({shadesObject}: ShadesViewerProps) => {
                         luminanceWarning={luminanceWarning}
                         darkenWarning={darkenWarning}
                         isMobile={isMobile as boolean}
+                        handleClick={() =>
+                          setProjects((prevState) => {
+                            const newShades = [...prevState.shades];
+                            if (newShades[i].defaultIndex === j) {
+                              newShades[i] = {
+                                ...newShades[i],
+                                initColor: shadeColorHex,
+                                defaultIndex: undefined,
+                              };
+                            } else {
+                              newShades[i] = {
+                                ...newShades[i],
+                                initColor: shadeColorHex,
+                                defaultIndex: j,
+                              };
+                            }
+                            return {
+                              ...prevState,
+                              shades: newShades,
+                            };
+                          })
+                        }
                       />
                     );
                   })}

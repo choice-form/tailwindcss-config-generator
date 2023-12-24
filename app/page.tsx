@@ -1,20 +1,10 @@
 "use client";
 
 import Header from "./components/header";
-import ShadesViewer from "./components/shades-viewer/shades-viewer";
+import {ShadesViewer} from "./components/shades-viewer";
 import Sidebar from "./components/sidebar/sidebar";
-import {useAtomValue} from "jotai";
-import {shadesAtom} from "./atom";
-import {generateShades} from "./generate-shades";
-import {generateShadesProps} from "./generate-shades/generate-shades";
 
 export default function Home() {
-  const shadesState = useAtomValue(shadesAtom);
-
-  const shadesObject = generateShades({
-    swatches: shadesState.map((swatch) => swatch),
-  } as generateShadesProps);
-
   return (
     <main className="w-screen min-h-screen flex flex-col">
       <Header />
@@ -28,7 +18,7 @@ export default function Home() {
                 allows the fine-tuning of your project's design system including colors, typography,
                 spacing, and more, based on your specific requirements.
               </p>
-              <ShadesViewer shadesObject={shadesObject} />
+              <ShadesViewer />
             </div>
 
             <Sidebar />

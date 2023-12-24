@@ -1,5 +1,4 @@
-import {Config, Contrast, CssVariables} from ".";
-import {ColorSpaces} from ".";
+import {Config, Contrast, CssVariables, ColorSpaces} from ".";
 
 interface SidebarProps {}
 
