@@ -8,34 +8,44 @@ import {projectsAtom, shadesCssVariablesAtom} from "../../atom";
 
 interface CssVariablesProps {}
 
-const CodeHighlighter = ({code, children}: {code: string; children: React.ReactNode}) => {
+const CodeHighlighter = ({
+  code,
+  children,
+  showCodes,
+}: {
+  code: string;
+  children: React.ReactNode;
+  showCodes?: boolean;
+}) => {
   const {theme} = useTheme();
 
   return (
-    <div className="bg-black/5 dark:bg-white/10 rounded-lg flex flex-col gap-4 min-h-0 overflow-y-auto">
-      <div className="flex items-center gap-4 px-4 pt-4">
+    <div className="bg-black/5 dark:bg-white/10 rounded-lg flex flex-col min-h-0 overflow-y-auto">
+      <div className="flex items-center gap-4 p-4">
         <h3 className="text-sm flex-grow">
           CSS Variables
           <span className="text-xs text-gray-400"> (for use in CSS)</span>
         </h3>
         {children}
-      </div>
-      <SyntaxHighlighter
-        customStyle={{
-          background: "transparent",
-          padding: "1rem",
-          margin: "0px",
-          width: "100%",
-          fontSize: "12px",
-          fontFamily: "Roboto Mono, monospace",
-          lineHeight: 1.5,
-        }}
-        className="[&>code]:!bg-transparent"
-        language="scss"
-        style={theme === "dark" ? oneDark : oneLight}
-      >
-        {code}
-      </SyntaxHighlighter>
+      </div>{" "}
+      {showCodes && (
+        <SyntaxHighlighter
+          customStyle={{
+            background: "transparent",
+            padding: "1rem",
+            margin: "0px",
+            width: "100%",
+            fontSize: "12px",
+            fontFamily: "Roboto Mono, monospace",
+            lineHeight: 1.5,
+          }}
+          className="[&>code]:!bg-transparent"
+          language="scss"
+          style={theme === "dark" ? oneDark : oneLight}
+        >
+          {code}
+        </SyntaxHighlighter>
+      )}
     </div>
   );
 };
@@ -83,19 +93,20 @@ const CssVariables = ({}: CssVariablesProps) => {
     }
   };
 
-  return (
-    <>
-      <CodeHighlighter code={cssString}>
-        {copied && <span className="text-xs text-green-500 font-medium">Copied!</span>}
+  const showCodes = projects.shades.length > 0;
 
+  return (
+    <CodeHighlighter code={cssString} showCodes={showCodes}>
+      {copied && <span className="text-xs text-green-500 font-medium">Copied!</span>}
+      {showCodes && (
         <button
           className="flex items-center gap-2 opacity-30 hover:opacity-100"
           onClick={copyToClipboard}
         >
           <div className="ic-[document-copy]" />
         </button>
-      </CodeHighlighter>
-    </>
+      )}
+    </CodeHighlighter>
   );
 };
 

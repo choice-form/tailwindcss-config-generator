@@ -60,7 +60,7 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
         )}
       >
         <div className="flex items-center gap-2 flex-grow">
-          <span>Lighten amount</span>
+          <span className={classNames(isMobile && "w-24 shrink-0")}>Lighten amount</span>
           <UiSlider
             className="min-w-10"
             min={10}
@@ -87,7 +87,7 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
         </div>
 
         <div className="flex items-center gap-2 flex-grow">
-          <span>Darken amount</span>
+          <span className={classNames(isMobile && "w-24 shrink-0")}>Darken amount</span>
           <UiSlider
             className="min-w-10"
             min={10}
@@ -114,7 +114,7 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
         </div>
 
         <div className="flex items-center gap-2 flex-grow">
-          <span>Adjust hue</span>
+          <span className={classNames(isMobile && "w-24 shrink-0")}>Adjust hue</span>
           <UiSlider
             className="min-w-10"
             min={0}
