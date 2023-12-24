@@ -1,7 +1,7 @@
 "use client";
 
 import Header from "./components/header";
-import {ShadesViewer} from "./components/shades-viewer";
+import {ShadesViewer} from "./components/viewer";
 import Sidebar from "./components/sidebar/sidebar";
 
 export default function Home() {

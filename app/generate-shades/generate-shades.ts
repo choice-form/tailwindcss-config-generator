@@ -17,30 +17,39 @@ const generateShades = ({shades = [], initial = true}: generateShadesProps): Swa
       initColor,
       lightenAmount = 10,
       darkenAmount = 10,
-      adjustHue = 0,
+      hueAmount = 0,
+      saturationUpAmount = 0,
+      saturationDownAmount = 0,
+      desaturateUpAmount = 0,
+      desaturateDownAmount = 0,
       defaultIndex,
     } = swatch;
 
     // Adjust colors and tints using chroma.js
     let keyColor = chroma(initColor);
-    let lightenColor = keyColor.brighten(lightenAmount / 10);
-    let darkenColor = keyColor.darken(darkenAmount / 10);
-    // If hue adjustment value "adjustHue" is at ends of hue wheel (0/360), let the color remain the same
-    // Else apply the hue adjustment
-    let adjustedKeyColor = adjustHue % 360 == 0 ? keyColor : keyColor.set("hsl.h", adjustHue % 360);
-
-    // Use adjustedKeyColor to amplify the gradient
-    let delta = chroma.deltaE(keyColor, adjustedKeyColor);
-    lightenColor = lightenColor.set("hsl.h", "+" + delta * 2);
-    darkenColor = darkenColor.set("hsl.h", "-" + delta * 2);
+    const degreesPerUnit = 4;
+    let lightenColor = keyColor
+      .brighten(lightenAmount / 10)
+      .saturate(saturationUpAmount / 10)
+      .desaturate(desaturateUpAmount / 10)
+      .set("hsl.h", keyColor.get("hsl.h") - hueAmount * degreesPerUnit);
+    let darkenColor = keyColor
+      .darken(darkenAmount / 10)
+      .saturate(saturationDownAmount / 10)
+      .desaturate(desaturateDownAmount / 10)
+      .set("hsl.h", keyColor.get("hsl.h") + hueAmount * degreesPerUnit);
 
     // Calculate the ratio for color scale domain only when "defaultIndex" is defined
     let colors: string[];
     if (defaultIndex !== undefined) {
       let ratio = defaultIndex / 11; // len is the length of your color array
-      colors = chroma.scale([lightenColor, keyColor, darkenColor]).domain([0, ratio, 1]).colors(12);
+      colors = chroma
+        .scale([lightenColor, keyColor, darkenColor])
+        .mode("lab")
+        .domain([0, ratio, 1])
+        .colors(12);
     } else {
-      colors = chroma.scale([lightenColor, keyColor, darkenColor]).colors(12);
+      colors = chroma.scale([lightenColor, keyColor, darkenColor]).mode("lab").colors(12);
     }
 
     // Find the color closest to keyColor in the color sequence and replace it with keyColor

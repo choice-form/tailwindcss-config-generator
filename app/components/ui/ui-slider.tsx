@@ -218,7 +218,7 @@ const UiSlider = ({
       <div
         className={classNames(
           customClassNames?.slider,
-          "relative h-[var(--slider-thumb)] w-full text-primary-500",
+          "relative h-[var(--slider-thumb)] w-full text-primary",
         )}
         ref={sliderRef}
         onClick={handleClick}

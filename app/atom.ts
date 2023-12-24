@@ -23,3 +23,5 @@ export const shadesCssVariablesAtom = atom<React.CSSProperties>({});
 export const shadesConfigAtom = atom<React.CSSProperties>({});
 
 export const uiIsBusyAtom = atom<boolean>(false);
+
+export const containerWidthAtom = atom<"sm" | "md" | "lg" | null>(null);

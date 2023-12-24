@@ -21,6 +21,9 @@ interface UiPopoverProps {
   triggerClassName?: string;
   className?: string;
   placement?: Placement;
+  placeOffset?: number;
+  portalId?: string;
+  style?: React.CSSProperties;
 }
 
 const UiPopover = ({
@@ -29,6 +32,9 @@ const UiPopover = ({
   triggerClassName,
   className,
   placement = "bottom",
+  placeOffset = 8,
+  portalId,
+  style,
 }: UiPopoverProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -36,7 +42,7 @@ const UiPopover = ({
     open: isOpen,
     placement: placement,
     onOpenChange: setIsOpen,
-    middleware: [offset(10), flip({fallbackAxisSideDirection: "end"}), shift()],
+    middleware: [offset(placeOffset), flip({fallbackAxisSideDirection: "end"}), shift()],
     whileElementsMounted: autoUpdate,
   });
 
@@ -55,12 +61,12 @@ const UiPopover = ({
       </div>
 
       {isOpen && (
-        <FloatingPortal>
+        <FloatingPortal id={portalId}>
           <FloatingFocusManager context={context} modal={false}>
             <div
               className={className}
               ref={refs.setFloating}
-              style={floatingStyles}
+              style={{...floatingStyles, ...style}}
               aria-labelledby={headingId}
               {...getFloatingProps()}
             >

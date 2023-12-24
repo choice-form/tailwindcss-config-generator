@@ -24,7 +24,11 @@ export interface ShadesProps {
   initColor: string;
   lightenAmount: number;
   darkenAmount: number;
-  adjustHue: number;
+  hueAmount: number;
+  desaturateUpAmount: number;
+  desaturateDownAmount: number;
+  saturationUpAmount: number;
+  saturationDownAmount: number;
   defaultIndex: number | undefined;
 }
 

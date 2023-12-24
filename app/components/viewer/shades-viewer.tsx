@@ -4,8 +4,14 @@ import chroma from "chroma-js";
 import classNames from "classnames";
 import {useAtom, useAtomValue, useSetAtom} from "jotai";
 import {useEffect, useRef, useState} from "react";
-import {Shade, ShadeControl, ColorCodePopover} from ".";
-import {projectsAtom, shadesConfigAtom, shadesCssVariablesAtom, uiIsBusyAtom} from "../../atom";
+import {ShadeBlock, ShadeControl, ColorCodePopover} from ".";
+import {
+  containerWidthAtom,
+  projectsAtom,
+  shadesConfigAtom,
+  shadesCssVariablesAtom,
+  uiIsBusyAtom,
+} from "../../atom";
 import {generateShades} from "../../generate-shades";
 import {generateShadeStyle, isValidColor} from "../../utilities";
 import readableColor from "../../utilities/readable-color";
@@ -18,8 +24,9 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   const setShadesCssVariables = useSetAtom(shadesCssVariablesAtom);
   const setShadesConfig = useSetAtom(shadesConfigAtom);
   const uiIsBusy = useAtomValue(uiIsBusyAtom);
+  const [containerWidth, setContainerWidth] = useAtom(containerWidthAtom);
+  console.log("🚀 ~ file: shades-viewer.tsx:28 ~ ShadesViewer ~ containerWidth:", containerWidth);
 
-  const [containerWidth, setContainerWidth] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   /** Example of shadesObject:
@@ -50,7 +57,11 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   // Container width observer
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      setContainerWidth(entries[0].contentRect.width);
+      if (!containerRef.current) return;
+      let sm = entries[0].contentRect.width < 361;
+      let md = entries[0].contentRect.width < 641;
+      let lg = entries[0].contentRect.width < 1025;
+      setContainerWidth(sm ? "sm" : md ? "md" : lg ? "lg" : null);
     });
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
@@ -101,8 +112,6 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
     }
   };
 
-  const isMobile = containerWidth && containerWidth < 641;
-
   // Generate shades css variables and shades config
   useEffect(() => {
     let newShadesCssVariables = {};
@@ -144,6 +153,8 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
     }
   }, [projects.shades, projects.colorSpaces]);
 
+  const containerWidthState = containerWidth === "md" || containerWidth === "sm";
+
   return (
     <div className="flex flex-grow flex-col gap-4 min-w-0">
       <div className="sticky top-16 py-8 z-40">
@@ -173,9 +184,9 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
                 } as React.CSSProperties
               }
             >
-              <ShadeControl index={i} isMobile={isMobile as boolean} />
+              <ShadeControl index={i} />
 
-              <div className={classNames("flex -m-1", isMobile && "flex-col")}>
+              <div className={classNames("flex -m-1", containerWidthState && "flex-col")}>
                 {Object.entries(shades)
                   .filter(([shadeName]) => shadeName !== "DEFAULT")
                   .map(([shadeName, shadeValue], j) => {
@@ -191,7 +202,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
                       projects.accessibility.luminanceWarning.darken &&
                       shadeColor.luminance() < 0.01;
                     return (
-                      <Shade
+                      <ShadeBlock
                         key={j}
                         colorCodePopover={
                           <ColorCodePopover
@@ -209,7 +220,6 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
                         defaultShade={defaultShade}
                         luminanceWarning={luminanceWarning}
                         darkenWarning={darkenWarning}
-                        isMobile={isMobile as boolean}
                         handleClick={() =>
                           setProjects((prevState) => {
                             const newShades = [...prevState.shades];

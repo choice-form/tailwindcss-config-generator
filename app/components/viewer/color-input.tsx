@@ -43,6 +43,7 @@ const ColorInput = ({index}: ColorInputProps) => {
   return (
     <div className="shade-control-input flex-grow">
       <UiPopover
+        placeOffset={16}
         placement="bottom-start"
         triggerClassName="flex items-center gap-1 justify-center"
         trigger={(isOpen) => (

@@ -1,11 +1,11 @@
 import classNames from "classnames";
-import {projectsAtom, contrastTabsAtom} from "../../atom";
+import {projectsAtom, contrastTabsAtom, containerWidthAtom} from "../../atom";
 import {useAtomValue} from "jotai";
 import chroma from "chroma-js";
 import {contrastAPCA} from "../../utilities";
 import {UiPopover} from "../ui";
 
-interface ShadeProps {
+interface ShadeBlockProps {
   shadeName: string;
   shadeColorReadable: string;
   shadeColorHsl: string;
@@ -13,12 +13,11 @@ interface ShadeProps {
   defaultShade: boolean;
   luminanceWarning: boolean;
   darkenWarning: boolean;
-  isMobile: boolean;
   handleClick: () => void;
   colorCodePopover?: React.ReactNode;
 }
 
-const Shade = ({
+const ShadeBlock = ({
   shadeName,
   shadeColorReadable,
   shadeColorHsl,
@@ -26,12 +25,12 @@ const Shade = ({
   defaultShade,
   luminanceWarning,
   darkenWarning,
-  isMobile,
   handleClick,
   colorCodePopover,
-}: ShadeProps) => {
+}: ShadeBlockProps) => {
   const projects = useAtomValue(projectsAtom);
   const contrastTabs = useAtomValue(contrastTabsAtom);
+  const containerWidth = useAtomValue(containerWidthAtom);
 
   const WCAG2 = chroma.contrast(shadeColorReadable, shadeColorHsl).toFixed(1);
   const APCA = contrastAPCA(shadeColorReadable, shadeColorHsl);
@@ -59,12 +58,19 @@ const Shade = ({
   const warningClass = (color: string) =>
     `linear-gradient(135deg,${color} 10%,#0000 0,#0000 50%,${color} 0,${color} 60%,#0000 0,#0000)`;
 
+  const containerWidthState = containerWidth === "md" || containerWidth === "sm";
+
   return (
-    <div className={classNames("min-w-0 flex-0 p-1", isMobile ? "w-full" : "w-[calc(100%/11)]")}>
+    <div
+      className={classNames(
+        "min-w-0 flex-0 p-1",
+        containerWidthState ? "w-full" : "w-[calc(100%/11)]",
+      )}
+    >
       <div
         className={classNames(
           "items-center w-full relative whitespace-nowrap rounded-lg grid min-w-0 select-none",
-          isMobile
+          containerWidthState
             ? "flex-row gap-4 py-2 pr-4 pl-2 grid-cols-4"
             : "aspect-[9/18] p-2 grid-rows-3 place-content-center",
         )}
@@ -85,7 +91,7 @@ const Shade = ({
         <div
           className={classNames(
             "flex items-center",
-            isMobile ? "order-5 gap-4 flex-row-reverse" : "gap-2 flex-col",
+            containerWidthState ? "order-5 gap-4 flex-row-reverse" : "gap-2 flex-col",
           )}
         >
           {isWCAG2 && <span className="text-xs px-1 rounded">{WCAG2}</span>}
@@ -103,7 +109,7 @@ const Shade = ({
           onClick={handleClick}
           className={classNames(
             "group/default w-full flex items-center justify-center relative",
-            isMobile ? "order-4 flex-1" : "h-12",
+            containerWidthState ? "order-4 flex-1" : "h-12",
           )}
         >
           {defaultShade && (
@@ -117,7 +123,7 @@ const Shade = ({
         <div
           className={classNames(
             "flex min-w-0 items-center relative group/info",
-            isMobile ? "col-span-2 gap-2" : "flex-col gap-1",
+            containerWidthState ? "col-span-2 gap-2" : "flex-col gap-1",
           )}
         >
           <strong>{shadeName}</strong>
@@ -129,7 +135,7 @@ const Shade = ({
                 <span
                   className={classNames(
                     "text-xs truncate min-w-0 pointer-events-none",
-                    isMobile
+                    containerWidthState
                       ? "visible"
                       : classNames(
                           "absolute bottom-0 leading-4",
@@ -155,4 +161,4 @@ const Shade = ({
   );
 };
 
-export default Shade;
+export default ShadeBlock;
