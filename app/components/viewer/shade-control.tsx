@@ -4,7 +4,6 @@ import {ColorInput} from ".";
 import {containerWidthAtom, projectsAtom} from "../../atom";
 import {UiPopover, UiSlider} from "../ui";
 import {useState, useEffect, Fragment} from "react";
-import chroma from "chroma-js";
 import {formatHSL} from "../../utilities";
 
 interface ShadeControlProps {

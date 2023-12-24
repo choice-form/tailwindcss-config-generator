@@ -3,7 +3,7 @@ import {faker} from "@faker-js/faker";
 import chroma from "chroma-js";
 import classNames from "classnames";
 import {useAtom, useAtomValue, useSetAtom} from "jotai";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef} from "react";
 import {ShadeBlock, ShadeControl, ColorCodePopover} from ".";
 import {
   containerWidthAtom,
@@ -25,8 +25,6 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   const setShadesConfig = useSetAtom(shadesConfigAtom);
   const uiIsBusy = useAtomValue(uiIsBusyAtom);
   const [containerWidth, setContainerWidth] = useAtom(containerWidthAtom);
-  console.log("🚀 ~ file: shades-viewer.tsx:28 ~ ShadesViewer ~ containerWidth:", containerWidth);
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   /** Example of shadesObject:
