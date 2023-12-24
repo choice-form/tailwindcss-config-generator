@@ -3,7 +3,7 @@ import {useAtom} from "jotai";
 import {ColorInput} from ".";
 import {projectsAtom} from "../../atom";
 import {UiSlider} from "../ui";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 interface ShadeControlProps {
   index: number;
@@ -13,6 +13,7 @@ interface ShadeControlProps {
 const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
   const [projects, setProjects] = useAtom(projectsAtom);
   const [tempName, setTempName] = useState(projects.shades[index].name);
+  const [nameCheck, setNameCheck] = useState<string>("");
 
   const handleRemoveSwatch = (i: number) => {
     setProjects({
@@ -21,11 +22,45 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
     });
   };
 
+  useEffect(() => {
+    let timerId: NodeJS.Timeout;
+    if (nameCheck) {
+      timerId = setTimeout(() => {
+        setNameCheck("");
+      }, 3000);
+    }
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [nameCheck]);
+
   const handleBlur = () => {
+    let newName = tempName;
+
+    // Check if the name is a number
+    if (/^\d+$/.test(newName)) {
+      newName = `color-${newName}`;
+      setNameCheck(
+        "Name cannot be a number. We have added a prefix 'color-' to your name automatically.",
+      );
+    }
+
+    let duplicate = projects.shades.find((s, j) => s.name === newName && j !== index);
+
+    // Check if the name already exists
+    if (duplicate) {
+      newName = `${newName}${index}`;
+      setNameCheck(
+        'Name already exists. We have added a suffix "-${index}" to your name automatically.',
+      );
+    }
+
+    setTempName(newName);
+
     setProjects({
       ...projects,
       shades: projects.shades.map((swatch, i) =>
-        index === i ? {...swatch, name: tempName} : swatch,
+        index === i ? {...swatch, name: newName} : swatch,
       ),
     });
   };
@@ -41,14 +76,21 @@ const ShadeControl = ({index, isMobile}: ShadeControlProps) => {
           >
             <div className="ic-[e-delete]" />
           </button>
-          <input
-            className="flex-grow"
-            type="text"
-            value={tempName}
-            onChange={(e) => setTempName(e.target.value)}
-            onBlur={handleBlur}
-            placeholder="Enter name"
-          />
+          <div className="flex-grow relative">
+            {nameCheck && (
+              <span className="text-xs absolute -top-8 -left-8 opacity-50 whitespace-nowrap">
+                {nameCheck}
+              </span>
+            )}
+            <input
+              className="flex-grow"
+              type="text"
+              value={tempName}
+              onChange={(e) => setTempName(e.target.value)}
+              onBlur={handleBlur}
+              placeholder="Enter name"
+            />
+          </div>
         </div>
         <ColorInput index={index} />
       </div>
