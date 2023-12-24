@@ -16,6 +16,7 @@ const ColorInput = ({index}: ColorInputProps) => {
   const [projects, setProjects] = useAtom(projectsAtom);
   const [inputValue, setInputValue] = useState(projects.shades[index].initColor || "");
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const uuid = useId();
 
   function handleColorChange(event: ChangeEvent<HTMLInputElement>) {
@@ -43,19 +44,19 @@ const ColorInput = ({index}: ColorInputProps) => {
   return (
     <div className="shade-control-input flex-grow">
       <UiPopover
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         placeOffset={16}
         placement="bottom-start"
         triggerClassName="flex items-center gap-1 justify-center"
-        trigger={(isOpen) => (
-          <>
-            <button
-              className="relative h-6 w-6 flex-shrink-0 place-self-center rounded-full hover:ring ring-primary-500/30"
-              style={{
-                backgroundColor: projects.shades[index].initColor,
-              }}
-            />
-          </>
-        )}
+        trigger={
+          <button
+            className="relative h-6 w-6 flex-shrink-0 place-self-center rounded-full hover:ring ring-primary-500/30"
+            style={{
+              backgroundColor: projects.shades[index].initColor,
+            }}
+          />
+        }
       >
         <Colorful
           disableAlpha={true}

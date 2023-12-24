@@ -1,6 +1,7 @@
 import {UiPopover, UiSlider} from "../ui";
 import classNames from "classnames";
 import {Fragment} from "react";
+import {useState} from "react";
 
 interface ColorSliderProps {
   label?: string;
@@ -22,38 +23,40 @@ interface ColorSliderProps {
 }
 
 const ColorSlider = ({label, slider, count, color, centerMark}: ColorSliderProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const colorStyle = {
     "--color-default": color?.default,
   } as React.CSSProperties;
 
   return (
     <UiPopover
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       triggerClassName="flex-1 flex"
       className="w-64 bg-gray-900/80 text-white dark:bg-white/80 dark:text-gray-900 backdrop-blur
       p-4 rounded-lg grid grid-cols-[auto_1fr] text-xs gap-2 items-center"
       style={colorStyle}
-      trigger={(isOpen) => (
-        <>
-          <button
-            className={classNames(
-              "shade-control-input flex-1 text-sm",
-              isOpen && "!border-primary !bg-white dark:!bg-gray-900",
-            )}
+      trigger={
+        <button
+          className={classNames(
+            "shade-control-input flex-1 text-sm",
+            isOpen && "!border-primary !bg-white dark:!bg-gray-900",
+          )}
+        >
+          <span className="opacity-60 flex-1 text-left">{label}:</span>
+          <span
+            className="whitespace-nowrap"
+            style={{
+              width: `calc(2rem * ${slider.length})`,
+            }}
           >
-            <span className="opacity-60 flex-1 text-left">{label}:</span>
-            <span
-              className="whitespace-nowrap"
-              style={{
-                width: `calc(2rem * ${slider.length})`,
-              }}
-            >
-              {slider.length > 1
-                ? `[${slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}]`
-                : slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}
-            </span>
-          </button>
-        </>
-      )}
+            {slider.length > 1
+              ? `[${slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}]`
+              : slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}
+          </span>
+        </button>
+      }
     >
       <>
         {slider.map((s, i) => (

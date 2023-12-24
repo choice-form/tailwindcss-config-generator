@@ -6,7 +6,7 @@ export interface WorkspaceProps {
 }
 
 export interface ProjectProps {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -29,7 +29,7 @@ export interface ShadesProps {
   desaturateDownAmount: number;
   saturationUpAmount: number;
   saturationDownAmount: number;
-  defaultIndex: number | undefined;
+  defaultIndex?: number | undefined;
 }
 
 export interface SwatchColorProps {

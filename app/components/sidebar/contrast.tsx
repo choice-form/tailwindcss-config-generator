@@ -28,15 +28,15 @@ const Contrast = ({}: ContrastProps) => {
       {contrastTabs === "luminance" && (
         <>
           <UiSwitch
-            enabled={projects.accessibility.luminanceWarning.brighten}
+            enabled={projects.accessibility?.luminanceWarning?.brighten}
             setEnabled={() =>
               setProjects({
                 ...projects,
                 accessibility: {
                   ...projects.accessibility,
                   luminanceWarning: {
-                    ...projects.accessibility.luminanceWarning,
-                    brighten: !projects.accessibility.luminanceWarning.brighten,
+                    ...projects.accessibility?.luminanceWarning,
+                    brighten: !projects.accessibility?.luminanceWarning?.brighten,
                   },
                 },
               })
@@ -44,15 +44,15 @@ const Contrast = ({}: ContrastProps) => {
             label="Luminance warning"
           />
           <UiSwitch
-            enabled={projects.accessibility.luminanceWarning.darken}
+            enabled={projects.accessibility?.luminanceWarning?.darken}
             setEnabled={() =>
               setProjects({
                 ...projects,
                 accessibility: {
                   ...projects.accessibility,
                   luminanceWarning: {
-                    ...projects.accessibility.luminanceWarning,
-                    darken: !projects.accessibility.luminanceWarning.darken,
+                    ...projects.accessibility?.luminanceWarning,
+                    darken: !projects.accessibility?.luminanceWarning?.darken,
                   },
                 },
               })

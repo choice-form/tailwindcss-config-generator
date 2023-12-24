@@ -4,6 +4,7 @@ import {useAtomValue} from "jotai";
 import chroma from "chroma-js";
 import {contrastAPCA} from "../../utilities";
 import {UiPopover} from "../ui";
+import {useState} from "react";
 
 interface ShadeBlockProps {
   shadeName: string;
@@ -31,6 +32,7 @@ const ShadeBlock = ({
   const projects = useAtomValue(projectsAtom);
   const contrastTabs = useAtomValue(contrastTabsAtom);
   const containerWidth = useAtomValue(containerWidthAtom);
+  const [isOpen, setIsOpen] = useState(false);
 
   const WCAG2 = chroma.contrast(shadeColorReadable, shadeColorHsl).toFixed(1);
   const APCA = contrastAPCA(shadeColorReadable, shadeColorHsl);
@@ -129,8 +131,10 @@ const ShadeBlock = ({
           <strong>{shadeName}</strong>
 
           <UiPopover
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
             triggerClassName="flex items-center gap-1 justify-center"
-            trigger={(isOpen) => (
+            trigger={
               <>
                 <span
                   className={classNames(
@@ -151,7 +155,7 @@ const ShadeBlock = ({
                   <div className="ic-[c-info-e]" />
                 </button>
               </>
-            )}
+            }
           >
             {colorCodePopover}
           </UiPopover>

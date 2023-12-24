@@ -15,7 +15,9 @@ import {
 import {generateShades} from "../../generate-shades";
 import {generateShadeStyle, isValidColor} from "../../utilities";
 import readableColor from "../../utilities/readable-color";
-import {ShadesProps} from "../../type";
+import {ProjectProps, ShadesProps} from "../../type";
+import preset from "../../../public/preset.json";
+import {PresetPopover} from "../preset";
 
 interface ShadesViewerProps {}
 
@@ -155,7 +157,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
 
   return (
     <div className="flex flex-grow flex-col gap-4 min-w-0">
-      <div className="sticky top-16 py-8 z-40">
+      <div className="sticky top-16 py-8 z-40 flex gap-4">
         <button
           className="bg-black text-white hover:bg-light-200 flex items-center gap-1 rounded-lg px-3 py-2
           text-sm ring ring-white/50 dark:ring-black/50 dark:bg-white dark:text-black"
@@ -164,6 +166,8 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
           <div className="ic-[e-add]" />
           Add shade
         </button>
+
+        <PresetPopover />
       </div>
 
       <div className="flex flex-col gap-8 flex-1" ref={containerRef}>
@@ -194,10 +198,10 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
                     const defaultShade = shadeValue === shades.DEFAULT;
 
                     const luminanceWarning =
-                      projects.accessibility.luminanceWarning.brighten &&
+                      projects?.accessibility?.luminanceWarning?.brighten &&
                       shadeColor.luminance() > 0.9;
                     const darkenWarning =
-                      projects.accessibility.luminanceWarning.darken &&
+                      projects?.accessibility?.luminanceWarning?.darken &&
                       shadeColor.luminance() < 0.01;
                     return (
                       <ShadeBlock

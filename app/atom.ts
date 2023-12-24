@@ -4,7 +4,7 @@ import {ContrastTabsType, ProjectProps, WorkspaceProps} from "./type";
 export const workspaceAtom = atom<WorkspaceProps[]>([]);
 
 export const projectsAtom = atom<ProjectProps>({
-  id: 0,
+  id: "",
   name: "",
   createdAt: "",
   updatedAt: "",

@@ -1,0 +1,262 @@
+[
+  {
+    "id": "preset_1",
+    "name": "preset name 1",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "midnight-blue", "initColor": "#0a3284"},
+      {"name": "sunflower-yellow", "initColor": "#e2d336"},
+      {"name": "peach-cream", "initColor": "#f5c87d"},
+      {"name": "seafoam-green", "initColor": "#679d8d"},
+      {"name": "moss-green", "initColor": "#6fa65d"}
+    ]
+  },
+  {
+    "id": "preset_2",
+    "name": "preset name 2",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "lavender-mist", "initColor": "#efaef4"},
+      {"name": "fresh-mint", "initColor": "#61c566"},
+      {"name": "amethyst-purple", "initColor": "#a174b6"},
+      {"name": "royal-blue", "initColor": "#0c11d3"},
+      {"name": "deep-violet", "initColor": "#672baa"}
+    ]
+  },
+  {
+    "id": "preset_3",
+    "name": "preset name 3",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "sky-blue", "initColor": "#25b2e5"},
+      {"name": "tangerine-orange", "initColor": "#e26a2c"},
+      {"name": "watermelon-pink", "initColor": "#ef3765"},
+      {"name": "burnt-orange", "initColor": "#da4f16"},
+      {"name": "fuchsia-pink", "initColor": "#da0fbf"}
+    ]
+  },
+  {
+    "id": "preset_4",
+    "name": "preset name 4",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "crimson-red", "initColor": "#e43833"},
+      {"name": "lime-green", "initColor": "#35f946"},
+      {"name": "sunrise-yellow", "initColor": "#f9bb00"},
+      {"name": "lavender", "initColor": "#7454a7"},
+      {"name": "spring-green", "initColor": "#2bf169"}
+    ]
+  },
+  {
+    "id": "preset_5",
+    "name": "preset name 5",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "plum-purple", "initColor": "#710974"},
+      {"name": "pumpkin-orange", "initColor": "#c75f07"},
+      {"name": "sage-green", "initColor": "#a2bf53"},
+      {"name": "blush-pink", "initColor": "#e9ccc3"},
+      {"name": "magenta", "initColor": "#7a0f99"}
+    ]
+  },
+  {
+    "id": "preset_6",
+    "name": "preset name 6",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "cerulean-blue", "initColor": "#2daad6"},
+      {"name": "forest-green", "initColor": "#38af65"},
+      {"name": "neon-green", "initColor": "#2de885"},
+      {"name": "deep-purple", "initColor": "#811f98"},
+      {"name": "storm-grey", "initColor": "#90a7a9"}
+    ]
+  },
+  {
+    "id": "preset_7",
+    "name": "preset name 7",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "rose-pink", "initColor": "#f7bbee"},
+      {"name": "vivid-violet", "initColor": "#d24ada"},
+      {"name": "olive-green", "initColor": "#659048"},
+      {"name": "grape-purple", "initColor": "#844482"},
+      {"name": "navy-blue", "initColor": "#2c4a74"}
+    ]
+  },
+  {
+    "id": "preset_8",
+    "name": "preset name 8",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "dusty-rose", "initColor": "#dbc5bb"},
+      {"name": "meadow-green", "initColor": "#567f08"},
+      {"name": "hot-pink", "initColor": "#d219cf"},
+      {"name": "indigo", "initColor": "#1d0a95"},
+      {"name": "mossy-green", "initColor": "#406d32"}
+    ]
+  },
+  {
+    "id": "preset_9",
+    "name": "preset name 9",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "forest-pine", "initColor": "#056b0a"},
+      {"name": "coral-pink", "initColor": "#de76a5"},
+      {"name": "chestnut-brown", "initColor": "#8c381e"},
+      {"name": "tomato-red", "initColor": "#de3a13"},
+      {"name": "burnt-sienna", "initColor": "#b85021"}
+    ]
+  },
+  {
+    "id": "preset_10",
+    "name": "preset name 10",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "berry-purple", "initColor": "#81297a"},
+      {"name": "mustard-yellow", "initColor": "#806f11"},
+      {"name": "electric-blue", "initColor": "#4a09d6"},
+      {"name": "cinnamon-brown", "initColor": "#923c0e"},
+      {"name": "sandy-beige", "initColor": "#d2c07a"}
+    ]
+  },
+  {
+    "id": "preset_11",
+    "name": "preset name 11",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "muted-purple", "initColor": "#defe51"},
+      {"name": "rich-red", "initColor": "#162d1e"},
+      {"name": "neon-black", "initColor": "#7a9667"},
+      {"name": "dark-brown", "initColor": "#d67da1"},
+      {"name": "soft-black", "initColor": "#f46724"}
+    ]
+  },
+  {
+    "id": "preset_12",
+    "name": "preset name 12",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "muted-purple", "initColor": "#feff85"},
+      {"name": "bright-red", "initColor": "#417ffa"},
+      {"name": "dark-grey", "initColor": "#d6f076"},
+      {"name": "dark-orange", "initColor": "#1f94b5"},
+      {"name": "muted-orange", "initColor": "#e8555d"}
+    ]
+  },
+  {
+    "id": "preset_13",
+    "name": "preset name 13",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "bright-yellow", "initColor": "#37b696"},
+      {"name": "vivid-orange", "initColor": "#b8fd73"},
+      {"name": "light-blue", "initColor": "#274505"},
+      {"name": "vivid-yellow", "initColor": "#d287e9"},
+      {"name": "light-grey", "initColor": "#194068"}
+    ]
+  },
+  {
+    "id": "preset_14",
+    "name": "preset name 14",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "bright-brown", "initColor": "#d01a38"},
+      {"name": "pastel-brown", "initColor": "#fd8d16"},
+      {"name": "soft-black", "initColor": "#4d42a6"},
+      {"name": "deep-brown", "initColor": "#77a74b"},
+      {"name": "muted-yellow", "initColor": "#0752a9"}
+    ]
+  },
+  {
+    "id": "preset_15",
+    "name": "preset name 15",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "deep-red", "initColor": "#58e91f"},
+      {"name": "deep-purple", "initColor": "#7d09a0"},
+      {"name": "pastel-blue", "initColor": "#7de7f4"},
+      {"name": "vivid-green", "initColor": "#80ee90"},
+      {"name": "rich-orange", "initColor": "#7cddb2"}
+    ]
+  },
+  {
+    "id": "preset_16",
+    "name": "preset name 16",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "bright-purple", "initColor": "#6e0fd0"},
+      {"name": "light-green", "initColor": "#bcc954"},
+      {"name": "soft-black", "initColor": "#b4eeb4"},
+      {"name": "dark-blue", "initColor": "#60288e"},
+      {"name": "deep-grey", "initColor": "#8dac03"}
+    ]
+  },
+  {
+    "id": "preset_17",
+    "name": "preset name 17",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "soft-pink", "initColor": "#b162b5"},
+      {"name": "muted-brown", "initColor": "#3f9ef0"},
+      {"name": "dark-orange", "initColor": "#13fdf9"},
+      {"name": "light-pink", "initColor": "#1ba015"},
+      {"name": "soft-grey", "initColor": "#6cdfac"}
+    ]
+  },
+  {
+    "id": "preset_18",
+    "name": "preset name 18",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "deep-yellow", "initColor": "#725ef1"},
+      {"name": "bright-purple", "initColor": "#85d473"},
+      {"name": "soft-blue", "initColor": "#56ecd4"},
+      {"name": "dark-pink", "initColor": "#8e4052"},
+      {"name": "pastel-blue", "initColor": "#b2f5a4"}
+    ]
+  },
+  {
+    "id": "preset_19",
+    "name": "preset name 19",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "deep-green", "initColor": "#a14b7f"},
+      {"name": "muted-grey", "initColor": "#d79628"},
+      {"name": "vivid-purple", "initColor": "#fdbf62"},
+      {"name": "vivid-red", "initColor": "#0e9c5d"},
+      {"name": "vivid-red", "initColor": "#fc96ad"}
+    ]
+  },
+  {
+    "id": "preset_20",
+    "name": "preset name 20",
+    "createdAt": "9/4/2103",
+    "updatedAt": "9/4/2103",
+    "shades": [
+      {"name": "pastel-yellow", "initColor": "#041195"},
+      {"name": "pastel-blue", "initColor": "#7c59a2"},
+      {"name": "vivid-brown", "initColor": "#add934"},
+      {"name": "vivid-orange", "initColor": "#86b636"},
+      {"name": "rich-yellow", "initColor": "#e05f44"}
+    ]
+  }
+]

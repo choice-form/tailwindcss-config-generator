@@ -16,7 +16,9 @@ import {
 } from "@floating-ui/react";
 
 interface UiPopoverProps {
-  trigger: (open: boolean) => React.ReactNode;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  trigger: React.ReactNode;
   children?: React.ReactNode;
   triggerClassName?: string;
   className?: string;
@@ -27,6 +29,8 @@ interface UiPopoverProps {
 }
 
 const UiPopover = ({
+  isOpen,
+  setIsOpen,
   trigger,
   children,
   triggerClassName,
@@ -36,8 +40,6 @@ const UiPopover = ({
   portalId,
   style,
 }: UiPopoverProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const {refs, floatingStyles, context} = useFloating({
     open: isOpen,
     placement: placement,
@@ -57,7 +59,7 @@ const UiPopover = ({
   return (
     <>
       <div className={triggerClassName} ref={refs.setReference} {...getReferenceProps()}>
-        {trigger(isOpen)}
+        {trigger}
       </div>
 
       {isOpen && (
