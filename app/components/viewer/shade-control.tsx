@@ -80,7 +80,7 @@ const Slider = ({
               customClassNames={{
                 track: "bg-white/20 dark:bg-black/20 overflow-hidden rounded-full",
                 thumb:
-                  "cursor-pointer rounded-full bg-white shadow ring-2 absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
+                  "cursor-pointer rounded-full bg-gray-800 dark:bg-white shadow ring-2 absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
               }}
               min={s.min}
               max={s.max}
@@ -352,6 +352,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         />
 
         <Slider
+          centerMark={true}
           label="Hue"
           color={{
             default: formatHSL(projects.shades[index].initColor),

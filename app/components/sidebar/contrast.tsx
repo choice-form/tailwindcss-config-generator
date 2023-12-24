@@ -1,9 +1,8 @@
 import {useAtom} from "jotai";
 import {UiSwitch} from "../ui";
 import {contrastTabsAtom, projectsAtom} from "../../atom";
-import {RadioGroup} from "@headlessui/react";
-import classNames from "classnames";
 import {ContrastTabsType, W3cContrastType} from "../../type";
+import {UiTabs} from "../ui";
 
 interface ContrastProps {}
 
@@ -18,32 +17,13 @@ const Contrast = ({}: ContrastProps) => {
   return (
     <div className="bg-black/5 dark:bg-white/10 p-4 rounded-lg flex flex-col gap-4">
       <h3 className="text-sm">Contrast Checker</h3>
-      <RadioGroup value={contrastTabs}>
-        <RadioGroup.Label className="sr-only">Contrast Tabs</RadioGroup.Label>
-        <div className="grid grid-cols-3 gap-4">
-          {typeOptions.map((plan) => (
-            <RadioGroup.Option
-              key={plan}
-              value={plan}
-              className={({active, checked}) =>
-                classNames(
-                  "border p-2 rounded-lg text-center flex justify-center items-center cursor-pointer",
-                  checked
-                    ? "text-current border-gray-500 dark:border-gray-300"
-                    : "text-gray-500 border-gray-200 dark:border-gray-700",
-                )
-              }
-              onClick={() => {
-                setContrastTabs(plan as ContrastTabsType);
-              }}
-            >
-              <RadioGroup.Label as="p" className="text-xs uppercase">
-                {plan}
-              </RadioGroup.Label>
-            </RadioGroup.Option>
-          ))}
-        </div>
-      </RadioGroup>
+      <UiTabs
+        tabs={typeOptions.map((type) => ({
+          label: type,
+          checked: type === contrastTabs,
+          onClick: () => setContrastTabs(type as ContrastTabsType),
+        }))}
+      />
 
       {contrastTabs === "luminance" && (
         <>
@@ -83,77 +63,47 @@ const Contrast = ({}: ContrastProps) => {
       )}
 
       {contrastTabs === "wcag2" && (
-        <RadioGroup value={projects.accessibility.wcag2Contrast}>
-          <RadioGroup.Label className="sr-only">WCAG2 Contrast</RadioGroup.Label>
-          <div className="grid grid-cols-3 gap-4">
-            {W3COptions.map((plan) => (
-              <RadioGroup.Option
-                key={plan}
-                value={plan}
-                className={({active, checked}) =>
-                  classNames(
-                    "border p-2 rounded-lg text-center flex justify-center items-center cursor-pointer",
-                    checked
-                      ? "text-current border-gray-500 dark:border-gray-300"
-                      : "text-gray-500 border-gray-200 dark:border-gray-700",
-                  )
-                }
-                onClick={() => {
-                  setProjects({
-                    ...projects,
-                    accessibility: {
-                      ...projects.accessibility,
-                      wcag2Contrast: plan as W3cContrastType,
-                    },
-                  });
-                }}
-              >
-                <RadioGroup.Label as="p" className="text-xs">
-                  {plan === "none" && "None"}
-                  {plan === "aa" && "4.5+ (AA)"}
-                  {plan === "aaa" && "7+ (AAA)"}
-                </RadioGroup.Label>
-              </RadioGroup.Option>
-            ))}
-          </div>
-        </RadioGroup>
+        <UiTabs
+          tabs={W3COptions.map((type) => ({
+            label: {
+              none: "None",
+              aa: "4.5+ (AA)",
+              aaa: "7+ (AAA)",
+            }[type as W3cContrastType],
+            checked: type === projects.accessibility.wcag2Contrast,
+            onClick: () => {
+              setProjects({
+                ...projects,
+                accessibility: {
+                  ...projects.accessibility,
+                  wcag2Contrast: type as W3cContrastType,
+                },
+              });
+            },
+          }))}
+        />
       )}
 
       {contrastTabs === "apca" && (
-        <RadioGroup value={projects.accessibility.apcaContrast}>
-          <RadioGroup.Label className="sr-only">APCA Contrast</RadioGroup.Label>
-          <div className="grid grid-cols-3 gap-4">
-            {W3COptions.map((plan) => (
-              <RadioGroup.Option
-                key={plan}
-                value={plan}
-                className={({active, checked}) =>
-                  classNames(
-                    "border p-2 rounded-lg text-center flex justify-center items-center cursor-pointer",
-                    checked
-                      ? "text-current border-gray-500 dark:border-gray-300"
-                      : "text-gray-500 border-gray-200 dark:border-gray-700",
-                  )
-                }
-                onClick={() => {
-                  setProjects({
-                    ...projects,
-                    accessibility: {
-                      ...projects.accessibility,
-                      apcaContrast: plan as W3cContrastType,
-                    },
-                  });
-                }}
-              >
-                <RadioGroup.Label as="p" className="text-xs">
-                  {plan === "none" && "None"}
-                  {plan === "aa" && " 60%+ (AA)"}
-                  {plan === "aaa" && "80%+ (AAA)"}
-                </RadioGroup.Label>
-              </RadioGroup.Option>
-            ))}
-          </div>
-        </RadioGroup>
+        <UiTabs
+          tabs={W3COptions.map((type) => ({
+            label: {
+              none: "None",
+              aa: "60%+ (AA)",
+              aaa: "80%+ (AAA)",
+            }[type as W3cContrastType],
+            checked: type === projects.accessibility.apcaContrast,
+            onClick: () => {
+              setProjects({
+                ...projects,
+                accessibility: {
+                  ...projects.accessibility,
+                  apcaContrast: type as W3cContrastType,
+                },
+              });
+            },
+          }))}
+        />
       )}
     </div>
   );

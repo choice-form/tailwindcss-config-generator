@@ -1,4 +1,3 @@
-import {Switch} from "@headlessui/react";
 import classNames from "classnames";
 
 interface UiSwitchProps {
@@ -9,7 +8,10 @@ interface UiSwitchProps {
 
 const UiSwitch = ({enabled, setEnabled, label}: UiSwitchProps) => {
   return (
-    <Switch className="flex items-center gap-2 text-xs" checked={enabled} onChange={setEnabled}>
+    <div
+      className="flex items-center gap-2 text-xs select-none cursor-pointer"
+      onClick={() => setEnabled(!enabled)}
+    >
       <div
         className={classNames(
           enabled ? "bg-black dark:bg-white" : "bg-black/20 dark:bg-white/30",
@@ -28,7 +30,7 @@ const UiSwitch = ({enabled, setEnabled, label}: UiSwitchProps) => {
         />
       </div>
       {label && <span>{label}</span>}
-    </Switch>
+    </div>
   );
 };
 

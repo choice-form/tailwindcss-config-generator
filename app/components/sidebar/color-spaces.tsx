@@ -1,8 +1,7 @@
-import {RadioGroup} from "@headlessui/react";
-import classNames from "classnames";
 import {useAtom} from "jotai";
 import {projectsAtom} from "../../atom";
 import {ColorSpacesType} from "../../type";
+import {UiTabs} from "../ui";
 
 interface ColorSpacesProps {}
 
@@ -14,35 +13,14 @@ const ColorSpaces = ({}: ColorSpacesProps) => {
   return (
     <div className="bg-black/5 dark:bg-white/10 p-4 rounded-lg flex flex-col gap-4">
       <h3 className="text-sm">Color Spaces</h3>
-      <RadioGroup value={projects.colorSpaces}>
-        <RadioGroup.Label className="sr-only">Color Spaces</RadioGroup.Label>
-        <div className="grid grid-cols-3 gap-4">
-          {colorSpacesOptions.map((plan) => (
-            <RadioGroup.Option
-              key={plan}
-              value={plan}
-              className={({active, checked}) =>
-                classNames(
-                  "border p-2 rounded-lg text-center flex justify-center items-center cursor-pointer",
-                  checked
-                    ? "text-current border-gray-500 dark:border-gray-300"
-                    : "text-gray-500 border-gray-200 dark:border-gray-700",
-                )
-              }
-              onClick={() => {
-                setProjects({
-                  ...projects,
-                  colorSpaces: plan as ColorSpacesType,
-                });
-              }}
-            >
-              <RadioGroup.Label as="p" className="text-xs uppercase">
-                {plan}
-              </RadioGroup.Label>
-            </RadioGroup.Option>
-          ))}
-        </div>
-      </RadioGroup>
+      <UiTabs
+        tabs={colorSpacesOptions.map((type) => ({
+          label: type,
+          checked: type === projects.colorSpaces,
+          onClick: () => setProjects({...projects, colorSpaces: type as ColorSpacesType}),
+        }))}
+      />
+
       {projects.colorSpaces === "hex" && (
         <span className="text-xs opacity-60">
           In the HEX color space, due to the lack of alpha channel support, it's not possible to
