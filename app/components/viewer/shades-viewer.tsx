@@ -172,7 +172,11 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
 
       <div className="flex flex-col gap-8 flex-1" ref={containerRef}>
         {shadesArray.map(([_, shades], i) => {
-          const shadesStyle = generateShadeStyle({shades: projects.shades}, "color", i);
+          const shadesStyle = generateShadeStyle(
+            {shades: projects.shades, initial: false},
+            "color",
+            i,
+          );
 
           return (
             <div
