@@ -5,11 +5,18 @@ import {useAtom} from "jotai";
 import {ProjectProps} from "../../type";
 import {useState} from "react";
 import classNames from "classnames";
+import {useService, useStore} from "../../store/provider";
+import {
+  updateProjectCommand,
+  updateProjectShadesCommand,
+} from "../../store/commands/update-project";
 
 interface PresetPopoverProps {}
 
 const PresetPopover = ({}: PresetPopoverProps) => {
-  const [projects, setProjects] = useAtom(projectsAtom);
+  // const [project, setProjects] = useAtom(projectsAtom);
+  const service = useService();
+  const project = useStore((state) => state.project);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -36,10 +43,9 @@ const PresetPopover = ({}: PresetPopoverProps) => {
             key={i}
             className="rounded p-2 hover:bg-black/5 dark:hover:bg-white/5"
             onClick={() => {
-              setProjects({
-                ...projects,
-                shades: preset.shades,
-              } as ProjectProps);
+              service.execute(
+                updateProjectCommand(project, {shades: preset.shades as ProjectProps["shades"]}),
+              );
 
               setIsOpen(false);
             }}

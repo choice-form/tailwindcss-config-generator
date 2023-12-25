@@ -5,22 +5,33 @@ import {containerWidthAtom, projectsAtom} from "../../atom";
 
 import {useState, useEffect, Fragment} from "react";
 import {formatHSL} from "../../utilities";
+import {useService, useStore} from "../../store/provider";
+import {
+  updateProjectCommand,
+  updateProjectShadesCommand,
+} from "../../store/commands/update-project";
+import {set} from "lodash";
 
 interface ShadeControlProps {
   index: number;
 }
 
 const ShadeControl = ({index}: ShadeControlProps) => {
-  const [projects, setProjects] = useAtom(projectsAtom);
-  const [tempName, setTempName] = useState(projects.shades[index].name);
+  // const [projects, setProjects] = useAtom(projectsAtom);
+
+  const service = useService();
+  const project = useStore((state) => state.project);
+
+  const [tempName, setTempName] = useState(project.shades[index].name);
   const [nameCheck, setNameCheck] = useState<string>("");
   const containerWidth = useAtomValue(containerWidthAtom);
 
   const handleRemoveSwatch = (i: number) => {
-    setProjects({
-      ...projects,
-      shades: projects.shades.filter((_, index) => index !== i),
-    });
+    service.execute(
+      updateProjectShadesCommand(project, ({shades}) => {
+        return shades.filter((_, index) => index !== i);
+      }),
+    );
   };
 
   useEffect(() => {
@@ -46,7 +57,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
       );
     }
 
-    let duplicate = projects.shades.find((s, j) => s.name === newName && j !== index);
+    let duplicate = project.shades.find((s, j) => s.name === newName && j !== index);
 
     // Check if the name already exists
     if (duplicate) {
@@ -58,12 +69,11 @@ const ShadeControl = ({index}: ShadeControlProps) => {
 
     setTempName(newName);
 
-    setProjects({
-      ...projects,
-      shades: projects.shades.map((swatch, i) =>
-        index === i ? {...swatch, name: newName} : swatch,
-      ),
-    });
+    service.execute(
+      updateProjectShadesCommand(project, ({shades}) => {
+        return shades.map((swatch, i) => (index === i ? {...swatch, name: newName} : swatch));
+      }),
+    );
   };
 
   return (
@@ -118,7 +128,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           label="lightness"
           count={10}
           color={{
-            default: formatHSL(projects.shades[index].initColor),
+            default: formatHSL(project.shades[index].initColor),
           }}
           slider={[
             {
@@ -128,17 +138,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               step: 1,
               start: 10,
               connect: true,
-              value: projects.shades[index].lightenAmount,
+              value: project.shades[index].lightenAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
                   lightenAmount: typeof value === "number" ? value : 10,
                 };
-                setProjects({
-                  ...projects,
-                  shades: projects.shades.map((swatch, i) =>
-                    index === i ? {...swatch, ...newSwatch} : swatch,
-                  ),
-                });
+                service.execute(
+                  updateProjectShadesCommand(project, ({shades}) => {
+                    return shades.map((swatch, i) =>
+                      index === i ? {...swatch, ...newSwatch} : swatch,
+                    );
+                  }),
+                );
               },
             },
             {
@@ -148,17 +159,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               step: 1,
               start: 10,
               connect: true,
-              value: projects.shades[index].darkenAmount,
+              value: project.shades[index].darkenAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
                   darkenAmount: typeof value === "number" ? value : 10,
                 };
-                setProjects({
-                  ...projects,
-                  shades: projects.shades.map((swatch, i) =>
-                    index === i ? {...swatch, ...newSwatch} : swatch,
-                  ),
-                });
+                service.execute(
+                  updateProjectShadesCommand(project, ({shades}) => {
+                    return shades.map((swatch, i) =>
+                      index === i ? {...swatch, ...newSwatch} : swatch,
+                    );
+                  }),
+                );
               },
             },
           ]}
@@ -168,7 +180,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           label="Saturation"
           count={10}
           color={{
-            default: formatHSL(projects.shades[index].initColor),
+            default: formatHSL(project.shades[index].initColor),
           }}
           slider={[
             {
@@ -178,17 +190,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               step: 1,
               start: 0,
               connect: true,
-              value: projects.shades[index].saturationUpAmount,
+              value: project.shades[index].saturationUpAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
                   saturationUpAmount: typeof value === "number" ? value : 0,
                 };
-                setProjects({
-                  ...projects,
-                  shades: projects.shades.map((swatch, i) =>
-                    index === i ? {...swatch, ...newSwatch} : swatch,
-                  ),
-                });
+                service.execute(
+                  updateProjectShadesCommand(project, ({shades}) => {
+                    return shades.map((swatch, i) =>
+                      index === i ? {...swatch, ...newSwatch} : swatch,
+                    );
+                  }),
+                );
               },
             },
             {
@@ -198,17 +211,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               step: 1,
               start: 0,
               connect: true,
-              value: projects.shades[index].saturationDownAmount,
+              value: project.shades[index].saturationDownAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
                   saturationDownAmount: typeof value === "number" ? value : 0,
                 };
-                setProjects({
-                  ...projects,
-                  shades: projects.shades.map((swatch, i) =>
-                    index === i ? {...swatch, ...newSwatch} : swatch,
-                  ),
-                });
+                service.execute(
+                  updateProjectShadesCommand(project, ({shades}) => {
+                    return shades.map((swatch, i) =>
+                      index === i ? {...swatch, ...newSwatch} : swatch,
+                    );
+                  }),
+                );
               },
             },
           ]}
@@ -218,7 +232,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           label="Desaturate"
           count={10}
           color={{
-            default: formatHSL(projects.shades[index].initColor),
+            default: formatHSL(project.shades[index].initColor),
           }}
           slider={[
             {
@@ -228,17 +242,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               step: 1,
               start: 0,
               connect: true,
-              value: projects.shades[index].desaturateUpAmount,
+              value: project.shades[index].desaturateUpAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
                   desaturateUpAmount: typeof value === "number" ? value : 0,
                 };
-                setProjects({
-                  ...projects,
-                  shades: projects.shades.map((swatch, i) =>
-                    index === i ? {...swatch, ...newSwatch} : swatch,
-                  ),
-                });
+                service.execute(
+                  updateProjectShadesCommand(project, ({shades}) => {
+                    return shades.map((swatch, i) =>
+                      index === i ? {...swatch, ...newSwatch} : swatch,
+                    );
+                  }),
+                );
               },
             },
             {
@@ -248,17 +263,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               step: 1,
               start: 0,
               connect: true,
-              value: projects.shades[index].desaturateDownAmount,
+              value: project.shades[index].desaturateDownAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
                   desaturateDownAmount: typeof value === "number" ? value : 0,
                 };
-                setProjects({
-                  ...projects,
-                  shades: projects.shades.map((swatch, i) =>
-                    index === i ? {...swatch, ...newSwatch} : swatch,
-                  ),
-                });
+                service.execute(
+                  updateProjectShadesCommand(project, ({shades}) => {
+                    return shades.map((swatch, i) =>
+                      index === i ? {...swatch, ...newSwatch} : swatch,
+                    );
+                  }),
+                );
               },
             },
           ]}
@@ -268,7 +284,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           centerMark={true}
           label="Hue"
           color={{
-            default: formatHSL(projects.shades[index].initColor),
+            default: formatHSL(project.shades[index].initColor),
           }}
           slider={[
             {
@@ -278,17 +294,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               step: 1,
               start: 0,
               connect: true,
-              value: projects.shades[index].hueAmount,
+              value: project.shades[index].hueAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
                   hueAmount: typeof value === "number" ? value : 0,
                 };
-                setProjects({
-                  ...projects,
-                  shades: projects.shades.map((swatch, i) =>
-                    index === i ? {...swatch, ...newSwatch} : swatch,
-                  ),
-                });
+                service.execute(
+                  updateProjectShadesCommand(project, ({shades}) => {
+                    return shades.map((swatch, i) =>
+                      index === i ? {...swatch, ...newSwatch} : swatch,
+                    );
+                  }),
+                );
               },
             },
           ]}

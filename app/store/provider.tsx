@@ -32,7 +32,7 @@ export function StoreProvider({children, state}: PropsWithChildren<{state: AppSt
 
   useEffect(() => {
     return service.store.subscribe((state) => {
-      console.info("state", state);
+      console.info("state", state.project.shades);
     });
   }, [state]);
 

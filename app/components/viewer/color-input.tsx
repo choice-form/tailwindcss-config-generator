@@ -6,14 +6,19 @@ import {ChangeEvent, Fragment, useEffect, useId, useRef, useState} from "react";
 import {projectsAtom} from "../../atom";
 import {determineColorType, isValidColor} from "../../utilities";
 import {UiPopover} from "../ui";
+import {useService, useStore} from "../../store/provider";
+import {updateProjectShadesCommand} from "../../store/commands/update-project";
 
 interface ColorInputProps {
   index: number;
 }
 
 const ColorInput = ({index}: ColorInputProps) => {
-  const [projects, setProjects] = useAtom(projectsAtom);
-  const [inputValue, setInputValue] = useState(projects.shades[index].initColor || "");
+  // const [project, setProjects] = useAtom(projectsAtom);
+
+  const service = useService();
+  const project = useStore((state) => state.project);
+  const [inputValue, setInputValue] = useState(project.shades[index].initColor || "");
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const uuid = useId();
@@ -24,12 +29,12 @@ const ColorInput = ({index}: ColorInputProps) => {
     if (isValidColor(newColor)) {
       let colorHex = chroma(newColor).hex();
       const newSwatch = {initColor: colorHex};
-      setProjects({
-        ...projects,
-        shades: projects.shades.map((swatch, i) =>
-          index === i ? {...swatch, ...newSwatch} : swatch,
-        ),
-      });
+
+      service.execute(
+        updateProjectShadesCommand(project, ({shades}) => {
+          return shades.map((swatch, i) => (index === i ? {...swatch, ...newSwatch} : swatch));
+        }),
+      );
     }
   }
 
@@ -37,8 +42,8 @@ const ColorInput = ({index}: ColorInputProps) => {
 
   useEffect(() => {
     if (isInputFocused) return;
-    setInputValue(projects.shades[index].initColor);
-  }, [projects.shades, index]);
+    setInputValue(project.shades[index].initColor);
+  }, [project.shades, index]);
 
   return (
     <div className="shade-control-input flex-grow">
@@ -52,24 +57,25 @@ const ColorInput = ({index}: ColorInputProps) => {
           <button
             className="relative h-6 w-6 flex-shrink-0 place-self-center rounded-full ring-primary-500/30 hover:ring"
             style={{
-              backgroundColor: projects.shades[index].initColor,
+              backgroundColor: project.shades[index].initColor,
             }}
           />
         }
       >
         <Colorful
           disableAlpha={true}
-          color={chroma(projects.shades[index].initColor).hex()}
+          color={chroma(project.shades[index].initColor).hex()}
           onChange={(e) => {
             const newSwatch = {
               initColor: e.hex,
             };
-            setProjects({
-              ...projects,
-              shades: projects.shades.map((swatch, i) =>
-                index === i ? {...swatch, ...newSwatch} : swatch,
-              ),
-            });
+            service.execute(
+              updateProjectShadesCommand(project, ({shades}) => {
+                return shades.map((swatch, i) =>
+                  index === i ? {...swatch, ...newSwatch} : swatch,
+                );
+              }),
+            );
           }}
         />
       </UiPopover>
