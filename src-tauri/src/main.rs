@@ -1,8 +1,38 @@
-// Prevents additional console window on Windows in release, DO NOT REMOVE!!
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![cfg_attr(
+  all(not(debug_assertions), target_os = "windows"),
+  windows_subsystem = "windows"
+)]
+
+#[cfg(target_os = "macos")]
+#[macro_use]
+extern crate objc;
+
+use tauri::{Manager, WindowEvent};
+use window_ext::WindowExt;
+
+mod window_ext;
 
 fn main() {
   tauri::Builder::default()
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+      .setup(|app| {
+          let win = app.get_window("main").unwrap();
+          win.set_transparent_titlebar(true);
+          win.position_traffic_lights(30.0, 30.0);
+          Ok(())
+      })
+      .on_window_event(|e| {
+          let apply_offset = || {
+            let win = e.window();
+            win.position_traffic_lights(30., 30.);
+          };
+
+        match e.event() {
+            WindowEvent::Resized(..) => apply_offset(),
+            WindowEvent::ThemeChanged(..) => apply_offset(),
+            _ => {}
+        }
+      })
+      .run(tauri::generate_context!())
+      .expect("error while running tauri application");
+
 }
