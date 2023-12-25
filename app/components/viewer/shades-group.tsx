@@ -8,6 +8,7 @@ import {generateShadeStyle, readableColor} from "../../utilities";
 import ColorCodePopover from "./color-code-popover";
 import ShadeBlock from "./shade-block";
 import ShadeControl from "./shade-control";
+import {create, original} from "mutative";
 
 type Props = {i: number; _color: string; shades: SwatchColorProps};
 
@@ -22,10 +23,10 @@ export function ShadesGroup({i, shades}: Props) {
   const handleShadeChange = useCallback((j: number, color: string) => {
     service.execute(
       updateProjectShadesCommand(project, ({shades}) => {
-        const shadesCopy = [...shades];
-        shadesCopy[i].initColor = color;
-        shadesCopy[i].defaultIndex = shadesCopy[i].defaultIndex === j ? undefined : j;
-        return shadesCopy;
+        const [draft, finalize] = create(shades);
+        draft[i].initColor = color;
+        draft[i].defaultIndex = draft[i].defaultIndex === j ? undefined : j;
+        return finalize();
       }),
     );
   }, []);
