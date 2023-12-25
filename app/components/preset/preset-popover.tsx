@@ -21,7 +21,7 @@ const PresetPopover = ({}: PresetPopoverProps) => {
       trigger={
         <button
           className={classNames(
-            "bg-black text-white hover:bg-light-200 flex items-center gap-2 rounded-lg px-3 py-2 text-sm ring ring-white/50 dark:ring-black/50 dark:bg-white dark:text-black",
+            "hover:bg-light-200 flex items-center gap-2 rounded-lg bg-black px-3 py-2 text-sm text-white ring ring-white/50 dark:bg-white dark:text-black dark:ring-black/50",
             isOpen && "ring ring-black/30 dark:ring-white/30",
           )}
         >
@@ -30,11 +30,11 @@ const PresetPopover = ({}: PresetPopoverProps) => {
         </button>
       }
     >
-      <ul className="bg-white dark:bg-gray-800 shadow-lg rounded-lg max-h-screen border p-2 dark:border-gray-700 overflow-y-auto">
+      <ul className="max-h-screen overflow-y-auto rounded-lg border bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-gray-800">
         {preset.map((preset, i) => (
           <li
             key={i}
-            className="p-2 rounded hover:bg-black/5 dark:hover:bg-white/5"
+            className="rounded p-2 hover:bg-black/5 dark:hover:bg-white/5"
             onClick={() => {
               setProjects({
                 ...projects,
@@ -44,11 +44,11 @@ const PresetPopover = ({}: PresetPopoverProps) => {
               setIsOpen(false);
             }}
           >
-            <div className="flex items-center rounded overflow-hidden cursor-pointer">
+            <div className="flex cursor-pointer items-center overflow-hidden rounded">
               {preset.shades.map((shade, j) => (
                 <div
                   key={j}
-                  className="flex items-center gap-2 w-8 h-8"
+                  className="flex h-8 w-8 items-center gap-2"
                   style={{
                     backgroundColor: shade.initColor,
                   }}

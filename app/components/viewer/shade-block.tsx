@@ -65,16 +65,16 @@ const ShadeBlock = ({
   return (
     <div
       className={classNames(
-        "min-w-0 flex-0 p-1",
+        "flex-0 min-w-0 p-1",
         containerWidthState ? "w-full" : "w-[calc(100%/11)]",
       )}
     >
       <div
         className={classNames(
-          "items-center w-full relative whitespace-nowrap rounded-lg grid min-w-0 select-none",
+          "relative grid w-full min-w-0 select-none items-center whitespace-nowrap rounded-lg",
           containerWidthState
-            ? "flex-row gap-4 py-2 pr-4 pl-2 grid-cols-4"
-            : "aspect-[9/18] p-2 grid-rows-3 place-content-center",
+            ? "grid-cols-4 flex-row gap-4 py-2 pl-2 pr-4"
+            : "aspect-[9/18] grid-rows-3 place-content-center p-2",
         )}
         style={{
           color: shadeColorReadable,
@@ -93,11 +93,11 @@ const ShadeBlock = ({
         <div
           className={classNames(
             "flex items-center",
-            containerWidthState ? "order-5 gap-4 flex-row-reverse" : "gap-2 flex-col",
+            containerWidthState ? "order-5 flex-row-reverse gap-4" : "flex-col gap-2",
           )}
         >
-          {isWCAG2 && <span className="text-xs px-1 rounded">{WCAG2}</span>}
-          {isAPCA && <span className="text-xs px-1 rounded">{APCA}%</span>}
+          {isWCAG2 && <span className="rounded px-1 text-xs">{WCAG2}</span>}
+          {isAPCA && <span className="rounded px-1 text-xs">{APCA}%</span>}
 
           <div
             className={classNames(
@@ -110,21 +110,21 @@ const ShadeBlock = ({
         <button
           onClick={handleClick}
           className={classNames(
-            "group/default w-full flex items-center justify-center relative",
+            "group/default relative flex w-full items-center justify-center",
             containerWidthState ? "order-4 flex-1" : "h-12",
           )}
         >
           {defaultShade && (
-            <div className="ic-[lock] group-hover/default:invisible absolute inset-0 m-auto" />
+            <div className="ic-[lock] absolute inset-0 m-auto group-hover/default:invisible" />
           )}
-          <span className="text-xs invisible group-hover/default:visible">
+          <span className="invisible text-xs group-hover/default:visible">
             {defaultShade ? "Unlock" : "Lock"}
           </span>
         </button>
 
         <div
           className={classNames(
-            "flex min-w-0 items-center relative group/info",
+            "group/info relative flex min-w-0 items-center",
             containerWidthState ? "col-span-2 gap-2" : "flex-col gap-1",
           )}
         >
@@ -138,7 +138,7 @@ const ShadeBlock = ({
               <>
                 <span
                   className={classNames(
-                    "text-xs truncate min-w-0 pointer-events-none",
+                    "pointer-events-none min-w-0 truncate text-xs",
                     containerWidthState
                       ? "visible"
                       : classNames(

@@ -51,7 +51,7 @@ const UiDialog = ({
       <FloatingPortal>
         {isOpen && (
           <FloatingOverlay
-            className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur z-50"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur"
             lockScroll
           >
             <FloatingFocusManager context={context}>

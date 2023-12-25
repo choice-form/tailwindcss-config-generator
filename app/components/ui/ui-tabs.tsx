@@ -22,10 +22,10 @@ const UiTabs = ({tabs}: UiTabsProps) => {
           role="tab"
           key={tab.label}
           className={classNames(
-            "border p-2 rounded-lg text-center flex justify-center items-center cursor-pointer text-xs uppercase",
+            "flex cursor-pointer items-center justify-center rounded-lg border p-2 text-center text-xs uppercase",
             tab.checked
-              ? "text-current border-gray-500 dark:border-gray-300"
-              : "border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-800",
+              ? "border-gray-500 text-current dark:border-gray-300"
+              : "border-gray-300 hover:bg-gray-200 dark:border-gray-600 dark:hover:bg-gray-800",
           )}
           onClick={tab.onClick}
         >

@@ -14,7 +14,7 @@ const ColorSpaces = ({}: ColorSpacesProps) => {
   const project = useStore((state) => state.project);
 
   return (
-    <div className="bg-black/5 dark:bg-white/10 p-4 rounded-lg flex flex-col gap-4">
+    <div className="flex flex-col gap-4 rounded-lg bg-black/5 p-4 dark:bg-white/10">
       <h3 className="text-sm">Color Spaces</h3>
       <UiTabs
         tabs={colorSpacesOptions.map((type) => ({

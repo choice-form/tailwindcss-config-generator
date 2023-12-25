@@ -156,11 +156,11 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   const containerWidthState = containerWidth === "md" || containerWidth === "sm";
 
   return (
-    <div className="flex flex-grow flex-col gap-4 min-w-0">
-      <div className="sticky top-16 py-8 z-40 flex gap-4">
+    <div className="flex min-w-0 flex-grow flex-col gap-4">
+      <div className="sticky top-16 z-40 flex gap-4 py-8">
         <button
-          className="bg-black text-white hover:bg-light-200 flex items-center gap-1 rounded-lg px-3 py-2
-          text-sm ring ring-white/50 dark:ring-black/50 dark:bg-white dark:text-black"
+          className="hover:bg-light-200 flex items-center gap-1 rounded-lg bg-black px-3 py-2 text-sm
+          text-white ring ring-white/50 dark:bg-white dark:text-black dark:ring-black/50"
           onClick={handleAddShade}
         >
           <div className="ic-[e-add]" />
@@ -170,7 +170,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
         <PresetPopover />
       </div>
 
-      <div className="flex flex-col gap-8 flex-1" ref={containerRef}>
+      <div className="flex flex-1 flex-col gap-8" ref={containerRef}>
         {shadesArray.map(([_, shades], i) => {
           const shadesStyle = generateShadeStyle(
             {shades: projects.shades, initial: false},
@@ -192,7 +192,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
             >
               <ShadeControl index={i} />
 
-              <div className={classNames("flex -m-1", containerWidthState && "flex-col")}>
+              <div className={classNames("-m-1 flex", containerWidthState && "flex-col")}>
                 {Object.entries(shades)
                   .filter(([shadeName]) => shadeName !== "DEFAULT")
                   .map(([shadeName, shadeValue], j) => {

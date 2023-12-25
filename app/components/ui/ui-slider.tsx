@@ -214,7 +214,7 @@ const UiSlider = ({
       )}
     >
       {/* 值超出最大限制时，给一个超出的提示 */}
-      {overflowLabelVisible && <div className="absolute -top-6.5 right-0">{max}+</div>}
+      {overflowLabelVisible && <div className="-top-6.5 absolute right-0">{max}+</div>}
       <div
         className={classNames(
           customClassNames?.slider,
@@ -248,7 +248,7 @@ const UiSlider = ({
                 "cursor-pointer rounded-full bg-white shadow ring-2 dark:bg-gray-800",
               "absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
               isDragging ? "transition-none" : "transition-[left]",
-              disabled ? "cursor-not-allowed ring-secondary" : "ring-current",
+              disabled ? "ring-secondary cursor-not-allowed" : "ring-current",
             )}
             ref={handleRef}
             onMouseDown={handleMouseDown(index)}
@@ -257,10 +257,10 @@ const UiSlider = ({
               <div
                 className={classNames(
                   customClassNames?.tooltip ||
-                    "absolute bottom-full mb-2 ml-[50%] flex -translate-x-1/2 rounded-xs bg-current px-2 py-1 leading-4",
+                    "rounded-xs absolute bottom-full mb-2 ml-[50%] flex -translate-x-1/2 bg-current px-2 py-1 leading-4",
                 )}
               >
-                <span className="text-xs text-body">{values[index]}</span>
+                <span className="text-body text-xs">{values[index]}</span>
               </div>
             )}
           </div>

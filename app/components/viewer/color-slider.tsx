@@ -34,8 +34,8 @@ const ColorSlider = ({label, slider, count, color, centerMark}: ColorSliderProps
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       triggerClassName="flex-1 flex"
-      className="w-64 bg-gray-900/80 text-white dark:bg-white/80 dark:text-gray-900 backdrop-blur
-      p-4 rounded-lg grid grid-cols-[auto_1fr] text-xs gap-2 items-center"
+      className="grid w-64 grid-cols-[auto_1fr] items-center gap-2 rounded-lg
+      bg-gray-900/80 p-4 text-xs text-white backdrop-blur dark:bg-white/80 dark:text-gray-900"
       style={colorStyle}
       trigger={
         <button
@@ -44,7 +44,7 @@ const ColorSlider = ({label, slider, count, color, centerMark}: ColorSliderProps
             isOpen && "!border-primary !bg-white dark:!bg-gray-900",
           )}
         >
-          <span className="opacity-60 flex-1 text-left">{label}:</span>
+          <span className="flex-1 text-left opacity-60">{label}:</span>
           <span
             className="whitespace-nowrap"
             style={{
@@ -66,7 +66,7 @@ const ColorSlider = ({label, slider, count, color, centerMark}: ColorSliderProps
               className={classNames(
                 "min-w-10",
                 centerMark &&
-                  "before:w-px before:h-full before:bg-white before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2",
+                  "before:absolute before:left-1/2 before:top-1/2 before:h-full before:w-px before:-translate-x-1/2 before:-translate-y-1/2 before:transform before:bg-white",
               )}
               customClassNames={{
                 track: "bg-white/20 dark:bg-black/20 overflow-hidden rounded-full",

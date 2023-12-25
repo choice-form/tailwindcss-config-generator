@@ -20,9 +20,9 @@ const CodeHighlighter = ({
   const {theme} = useTheme();
 
   return (
-    <div className="bg-black/5 dark:bg-white/10 rounded-lg flex flex-col min-h-0 overflow-y-auto">
+    <div className="flex min-h-0 flex-col overflow-y-auto rounded-lg bg-black/5 dark:bg-white/10">
       <div className="flex items-center gap-4 p-4">
-        <h3 className="text-sm flex-grow">
+        <h3 className="flex-grow text-sm">
           Config
           <span className="text-xs text-gray-400"> (for use in tailwind.config.js) (colors)</span>
         </h3>
@@ -82,7 +82,7 @@ const Config = ({}: ConfigProps) => {
 
   return (
     <CodeHighlighter code={jsonString} showCodes={showCodes}>
-      {copied && <span className="text-xs text-green-500 font-medium">Copied!</span>}
+      {copied && <span className="text-xs font-medium text-green-500">Copied!</span>}
       {showCodes && (
         <button
           className="flex items-center gap-2 opacity-30 hover:opacity-100"

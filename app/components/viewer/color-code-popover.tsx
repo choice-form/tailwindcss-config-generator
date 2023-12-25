@@ -73,17 +73,17 @@ const ColorCodePopover = ({color, style}: ColorCodePopoverProps) => {
 
   return (
     <code
-      className="grid grid-cols-[auto_auto_1fr_auto] gap-2 text-xs p-4 rounded-lg shadow-md
-      bg-gray-900/80 text-white dark:bg-white/80 dark:text-gray-900 backdrop-blur"
+      className="grid grid-cols-[auto_auto_1fr_auto] gap-2 rounded-lg bg-gray-900/80
+      p-4 text-xs text-white shadow-md backdrop-blur dark:bg-white/80 dark:text-gray-900"
     >
-      <div className="mb-2 col-span-4 h-1 rounded" style={style} />
+      <div className="col-span-4 mb-2 h-1 rounded" style={style} />
       {Object.keys(formatMap).map((type) => (
         <Fragment key={type}>
           <button
             className="flex items-center gap-2 opacity-30 hover:opacity-100"
             onClick={() => copyToClipboard(type as keyof CopiedState)}
           >
-            <div className="ic-[document-copy] w-3 h-3" />
+            <div className="ic-[document-copy] h-3 w-3" />
           </button>
           <span>{type.toUpperCase()}</span>
           <pre ref={refMap[type]}>{formatMap[type]}</pre>

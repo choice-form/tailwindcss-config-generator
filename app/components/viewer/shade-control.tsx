@@ -69,28 +69,28 @@ const ShadeControl = ({index}: ShadeControlProps) => {
   return (
     <div
       className={classNames(
-        "flex items-center flex-wrap",
-        containerWidth === "md" ? "gap-2 flex-col" : "gap-4",
+        "flex flex-wrap items-center",
+        containerWidth === "md" ? "flex-col gap-2" : "gap-4",
       )}
     >
       <div
         className={classNames(
-          "items-center gap-2 self-start flex-wrap",
-          containerWidth === "md" ? "grid grid-cols-2 w-full" : "inline-flex",
+          "flex-wrap items-center gap-2 self-start",
+          containerWidth === "md" ? "grid w-full grid-cols-2" : "inline-flex",
           containerWidth === "sm" ? "grid w-full" : "inline-flex",
         )}
       >
         <div className="shade-control-input flex-grow">
           <button
-            className="bg-white border dark:bg-gray-600 hover:bg-primary hover:text-primary-readable-color
-            flex h-6 w-6 flex-shrink-0 items-center justify-center place-self-center rounded-full text-xs"
+            className="flex h-6 w-6 flex-shrink-0 items-center
+            justify-center place-self-center rounded-full border bg-white text-xs hover:bg-primary hover:text-primary-readable-color dark:bg-gray-600"
             onClick={() => handleRemoveSwatch(index)}
           >
             <div className="ic-[e-delete]" />
           </button>
-          <div className="flex-grow relative">
+          <div className="relative flex-grow">
             {nameCheck && (
-              <span className="text-xs absolute -top-8 -left-8 opacity-50 whitespace-nowrap">
+              <span className="absolute -left-8 -top-8 whitespace-nowrap text-xs opacity-50">
                 {nameCheck}
               </span>
             )}
@@ -110,7 +110,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
       <div
         className={classNames(
           "flex-1 gap-2",
-          containerWidth === "md" ? "grid grid-cols-2 w-full" : "flex",
+          containerWidth === "md" ? "grid w-full grid-cols-2" : "flex",
           containerWidth === "sm" ? "grid w-full" : "flex",
         )}
       >

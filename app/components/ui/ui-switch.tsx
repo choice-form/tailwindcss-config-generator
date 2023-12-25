@@ -9,7 +9,7 @@ interface UiSwitchProps {
 const UiSwitch = ({enabled, setEnabled, label}: UiSwitchProps) => {
   return (
     <div
-      className="flex items-center gap-2 text-xs select-none cursor-pointer"
+      className="flex cursor-pointer select-none items-center gap-2 text-xs"
       onClick={() => setEnabled(!enabled)}
     >
       <div
