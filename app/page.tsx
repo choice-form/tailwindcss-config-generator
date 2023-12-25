@@ -1,10 +1,30 @@
 "use client";
 
+import {useCallback, useLayoutEffect} from "react";
 import Header from "./components/header";
-import {ShadesViewer} from "./components/viewer";
 import Sidebar from "./components/sidebar/sidebar";
+import {ShadesViewer} from "./components/viewer";
+import {useService} from "./store/provider";
 
 export default function Home() {
+  const service = useService();
+  const handleKeydown = useCallback((event: KeyboardEvent) => {
+    if (event.key === "z" && event.metaKey) {
+      if (event.shiftKey) {
+        service.redo();
+      } else {
+        service.undo();
+      }
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    window.addEventListener("keydown", handleKeydown, false);
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+    };
+  }, []);
+
   return (
     <main className="w-screen min-h-screen flex flex-col">
       <Header />

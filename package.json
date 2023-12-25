@@ -24,10 +24,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@choiceform/zeit": "^0.1.2",
     "jotai": "^2.6.0",
     "next": "14.0.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@choiceform/tailwindcss-svg-icon": "^0.1.2",

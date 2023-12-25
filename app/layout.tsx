@@ -1,6 +1,9 @@
-import type {Metadata} from "next";
 import "./globals.css";
-import Providers from "./theme/providers";
+
+import type {Metadata} from "next";
+import {initialState} from "./store/initial-state";
+import {StoreProvider} from "./store/provider";
+import ThemeProvider from "./theme/providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,7 +14,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="dark:bg-gray-900 dark:text-white">
-        <Providers>{children}</Providers>
+        <StoreProvider state={initialState}>
+          <ThemeProvider>{children}</ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );
