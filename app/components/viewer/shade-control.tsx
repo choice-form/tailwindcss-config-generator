@@ -1,30 +1,19 @@
-import classNames from "classnames";
-import {useAtom, useAtomValue} from "jotai";
+import {useEffect, useState} from "react";
 import {ColorInput, ColorSlider} from ".";
-import {containerWidthAtom, projectsAtom} from "../../atom";
-
-import {useState, useEffect, Fragment} from "react";
-import {formatHSL} from "../../utilities";
+import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
-import {
-  updateProjectCommand,
-  updateProjectShadesCommand,
-} from "../../store/commands/update-project";
-import {set} from "lodash";
+import {formatHSL} from "../../utilities";
 
 interface ShadeControlProps {
   index: number;
 }
 
 const ShadeControl = ({index}: ShadeControlProps) => {
-  // const [projects, setProjects] = useAtom(projectsAtom);
-
   const service = useService();
   const project = useStore((state) => state.project);
 
   const [tempName, setTempName] = useState(project.shades[index].name);
   const [nameCheck, setNameCheck] = useState<string>("");
-  const containerWidth = useAtomValue(containerWidthAtom);
 
   const handleRemoveSwatch = (i: number) => {
     service.execute(
@@ -77,28 +66,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
   };
 
   return (
-    <div
-      className={classNames(
-        "flex flex-wrap items-center",
-        containerWidth === "md" ? "flex-col gap-2" : "gap-4",
-      )}
-    >
-      <div
-        className={classNames(
-          "flex-wrap items-center gap-2 self-start",
-          containerWidth === "md" ? "grid w-full grid-cols-2" : "inline-flex",
-          containerWidth === "sm" ? "grid w-full" : "inline-flex",
-        )}
-      >
+    <div className="mb-1 grid grid-cols-1 items-center gap-2 @5xl:grid-cols-[auto_1fr]">
+      <div className="grid flex-wrap items-center gap-2 self-start @2xl:grid-cols-2">
         <div className="shade-control-input flex-grow">
           <button
             className="flex h-6 w-6 flex-shrink-0 items-center
-            justify-center place-self-center rounded-full border bg-white text-xs hover:bg-primary hover:text-primary-readable-color dark:bg-gray-600"
+            justify-center place-self-center rounded-full border border-gray-200 bg-white text-xs hover:bg-primary
+            hover:text-primary-readable-color dark:border-gray-600 dark:bg-gray-600"
             onClick={() => handleRemoveSwatch(index)}
           >
             <div className="ic-[e-delete]" />
           </button>
-          <div className="relative flex-grow">
+          <div className="relative flex flex-grow">
             {nameCheck && (
               <span className="absolute -left-8 -top-8 whitespace-nowrap text-xs opacity-50">
                 {nameCheck}
@@ -117,15 +96,9 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         <ColorInput index={index} />
       </div>
 
-      <div
-        className={classNames(
-          "flex-1 gap-2",
-          containerWidth === "md" ? "grid w-full grid-cols-2" : "flex",
-          containerWidth === "sm" ? "grid w-full" : "flex",
-        )}
-      >
+      <div className="grid flex-1 gap-2 @lg:grid-cols-1 @xl:w-full @xl:grid-cols-2 @2xl:grid-cols-4">
         <ColorSlider
-          label="lightness"
+          label="Lightness"
           count={10}
           color={{
             default: formatHSL(project.shades[index].initColor),

@@ -1,8 +1,7 @@
 import classNames from "classnames";
 import {CSSProperties, createRef, useEffect, useRef, useState} from "react";
-import {useAtom} from "jotai";
-import {uiIsBusyAtom} from "../../atom";
 
+import {useService, useStore} from "../../store/provider";
 export interface UiSliderProps {
   className?: string;
   min: number;
@@ -60,13 +59,15 @@ const UiSlider = ({
   // 创建一个引用来存储滑动条的 DOM 元素
   const sliderRef = useRef<HTMLDivElement>(null);
   // 创建一个状态来存储滑动条是否正在拖动
-  const [isDragging, setIsDragging] = useAtom(uiIsBusyAtom);
+
+  const service = useService();
+  const uiIsBusy = useStore((state) => state.uiIsBusy);
 
   // 处理鼠标按下事件，这将启动滑动条的拖动功能
   const handleMouseDown = (index: number) => (e: React.MouseEvent) => {
     if (disabled) return;
     e.preventDefault();
-    setIsDragging(true);
+    service.patch({uiIsBusy: true});
     const handleMouseMove = (e: MouseEvent) => {
       if (!sliderRef.current) return;
       const sliderStart = sliderRef.current.getBoundingClientRect().left;
@@ -96,7 +97,7 @@ const UiSlider = ({
       if (disabled) return;
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
-      setIsDragging(false);
+      service.patch({uiIsBusy: false});
     };
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
@@ -234,7 +235,7 @@ const UiSlider = ({
               className={classNames(
                 customClassNames?.connect || "bg-current",
                 "absolute h-full",
-                isDragging ? "transition-none" : "transition-[left,width]",
+                uiIsBusy ? "transition-none" : "transition-[left,width]",
               )}
               ref={connectRef}
             />
@@ -247,13 +248,13 @@ const UiSlider = ({
               customClassNames?.thumb ||
                 "cursor-pointer rounded-full bg-white shadow ring-2 dark:bg-gray-800",
               "absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
-              isDragging ? "transition-none" : "transition-[left]",
+              uiIsBusy ? "transition-none" : "transition-[left]",
               disabled ? "ring-secondary cursor-not-allowed" : "ring-current",
             )}
             ref={handleRef}
             onMouseDown={handleMouseDown(index)}
           >
-            {(tooltip === "always" || (tooltip === "drag" && isDragging)) && (
+            {(tooltip === "always" || (tooltip === "drag" && uiIsBusy)) && (
               <div
                 className={classNames(
                   customClassNames?.tooltip ||

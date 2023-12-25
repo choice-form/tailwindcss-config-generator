@@ -1,21 +1,17 @@
 import {Colorful} from "@uiw/react-color";
 import chroma from "chroma-js";
 import classNames from "classnames";
-import {useAtom} from "jotai";
-import {ChangeEvent, Fragment, useEffect, useId, useRef, useState} from "react";
-import {projectsAtom} from "../../atom";
+import {ChangeEvent, useEffect, useId, useRef, useState} from "react";
+import {updateProjectShadesCommand} from "../../store/commands/update-project";
+import {useService, useStore} from "../../store/provider";
 import {determineColorType, isValidColor} from "../../utilities";
 import {UiPopover} from "../ui";
-import {useService, useStore} from "../../store/provider";
-import {updateProjectShadesCommand} from "../../store/commands/update-project";
 
 interface ColorInputProps {
   index: number;
 }
 
 const ColorInput = ({index}: ColorInputProps) => {
-  // const [project, setProjects] = useAtom(projectsAtom);
-
   const service = useService();
   const project = useStore((state) => state.project);
   const [inputValue, setInputValue] = useState(project.shades[index].initColor || "");

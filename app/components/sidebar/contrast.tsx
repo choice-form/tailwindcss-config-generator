@@ -1,18 +1,17 @@
-import {useAtom} from "jotai";
-import {UiSwitch} from "../ui";
-import {contrastTabsAtom, projectsAtom} from "../../atom";
-import {ContrastTabsType, W3cContrastType} from "../../type";
-import {UiTabs} from "../ui";
+import {updateProjectCommand} from "../../store/commands/update-project";
+import {useService, useStore} from "../../store/provider";
+import {W3cContrastType} from "../../type";
+import {UiSwitch, UiTabs} from "../ui";
 
 interface ContrastProps {}
 
-const typeOptions = ["luminance", "wcag2", "apca"];
-
-const W3COptions = ["none", "aa", "aaa"];
+const typeOptions = ["luminance", "wcag2", "apca"] as const;
+const W3COptions = ["none", "aa", "aaa"] as const;
 
 const Contrast = ({}: ContrastProps) => {
-  const [projects, setProjects] = useAtom(projectsAtom);
-  const [contrastTabs, setContrastTabs] = useAtom(contrastTabsAtom);
+  const service = useService();
+  const project = useStore((state) => state.project);
+  const contrastTabs = useStore((state) => state.contrastTabs);
 
   return (
     <div className="flex flex-col gap-4 rounded-lg bg-black/5 p-4 dark:bg-white/10">
@@ -21,43 +20,47 @@ const Contrast = ({}: ContrastProps) => {
         tabs={typeOptions.map((type) => ({
           label: type,
           checked: type === contrastTabs,
-          onClick: () => setContrastTabs(type as ContrastTabsType),
+          onClick: () => {
+            service.patch({contrastTabs: type});
+          },
         }))}
       />
 
       {contrastTabs === "luminance" && (
         <>
           <UiSwitch
-            enabled={projects.accessibility?.luminanceWarning?.brighten}
-            setEnabled={() =>
-              setProjects({
-                ...projects,
-                accessibility: {
-                  ...projects.accessibility,
-                  luminanceWarning: {
-                    ...projects.accessibility?.luminanceWarning,
-                    brighten: !projects.accessibility?.luminanceWarning?.brighten,
-                  },
-                },
-              })
-            }
             label="Luminance warning"
+            enabled={project.accessibility?.luminanceWarning?.brighten}
+            setEnabled={() => {
+              service.execute(
+                updateProjectCommand(project, {
+                  accessibility: {
+                    ...project.accessibility,
+                    luminanceWarning: {
+                      ...project.accessibility?.luminanceWarning,
+                      brighten: !project.accessibility?.luminanceWarning?.brighten,
+                    },
+                  },
+                }),
+              );
+            }}
           />
           <UiSwitch
-            enabled={projects.accessibility?.luminanceWarning?.darken}
-            setEnabled={() =>
-              setProjects({
-                ...projects,
-                accessibility: {
-                  ...projects.accessibility,
-                  luminanceWarning: {
-                    ...projects.accessibility?.luminanceWarning,
-                    darken: !projects.accessibility?.luminanceWarning?.darken,
-                  },
-                },
-              })
-            }
             label="Darken warning"
+            enabled={project.accessibility?.luminanceWarning?.darken}
+            setEnabled={() => {
+              service.execute(
+                updateProjectCommand(project, {
+                  accessibility: {
+                    ...project.accessibility,
+                    luminanceWarning: {
+                      ...project.accessibility?.luminanceWarning,
+                      darken: !project.accessibility?.luminanceWarning?.darken,
+                    },
+                  },
+                }),
+              );
+            }}
           />
         </>
       )}
@@ -70,15 +73,16 @@ const Contrast = ({}: ContrastProps) => {
               aa: "4.5+ (AA)",
               aaa: "7+ (AAA)",
             }[type as W3cContrastType],
-            checked: type === projects.accessibility.wcag2Contrast,
+            checked: type === project.accessibility.wcag2Contrast,
             onClick: () => {
-              setProjects({
-                ...projects,
-                accessibility: {
-                  ...projects.accessibility,
-                  wcag2Contrast: type as W3cContrastType,
-                },
-              });
+              service.execute(
+                updateProjectCommand(project, {
+                  accessibility: {
+                    ...project.accessibility,
+                    wcag2Contrast: type,
+                  },
+                }),
+              );
             },
           }))}
         />
@@ -92,15 +96,16 @@ const Contrast = ({}: ContrastProps) => {
               aa: "60%+ (AA)",
               aaa: "80%+ (AAA)",
             }[type as W3cContrastType],
-            checked: type === projects.accessibility.apcaContrast,
+            checked: type === project.accessibility.apcaContrast,
             onClick: () => {
-              setProjects({
-                ...projects,
-                accessibility: {
-                  ...projects.accessibility,
-                  apcaContrast: type as W3cContrastType,
-                },
-              });
+              service.execute(
+                updateProjectCommand(project, {
+                  accessibility: {
+                    ...project.accessibility,
+                    apcaContrast: type,
+                  },
+                }),
+              );
             },
           }))}
         />

@@ -1,9 +1,6 @@
-import {useAtom} from "jotai";
-import {projectsAtom} from "../../atom";
-import {ColorSpacesType} from "../../type";
-import {UiTabs} from "../ui";
-import {useService, useStore} from "../../store/provider";
 import {updateProjectCommand} from "../../store/commands/update-project";
+import {useService, useStore} from "../../store/provider";
+import {UiTabs} from "../ui";
 
 interface ColorSpacesProps {}
 
@@ -21,7 +18,6 @@ const ColorSpaces = ({}: ColorSpacesProps) => {
           label: type,
           checked: type === project.colorSpaces,
           onClick: () => {
-            // service.patch({ ...project, colorSpaces: type });
             service.execute(updateProjectCommand(project, {colorSpaces: type}));
           },
         }))}

@@ -1,20 +1,14 @@
-import {UiPopover} from "../ui";
-import preset from "../../../public/preset.json";
-import {projectsAtom} from "../../atom";
-import {useAtom} from "jotai";
-import {ProjectProps} from "../../type";
-import {useState} from "react";
 import classNames from "classnames";
+import {useState} from "react";
+import preset from "../../../public/preset.json";
+import {updateProjectCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
-import {
-  updateProjectCommand,
-  updateProjectShadesCommand,
-} from "../../store/commands/update-project";
+import {ProjectProps} from "../../type";
+import {UiPopover} from "../ui";
 
 interface PresetPopoverProps {}
 
 const PresetPopover = ({}: PresetPopoverProps) => {
-  // const [project, setProjects] = useAtom(projectsAtom);
   const service = useService();
   const project = useStore((state) => state.project);
   const [isOpen, setIsOpen] = useState(false);

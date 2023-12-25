@@ -1,10 +1,9 @@
 import chroma from "chroma-js";
-import {useAtomValue} from "jotai";
 import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {oneDark, oneLight} from "react-syntax-highlighter/dist/esm/styles/prism";
-import {projectsAtom, shadesCssVariablesAtom} from "../../atom";
+import {useStore} from "../../store/provider";
 
 interface CssVariablesProps {}
 
@@ -27,7 +26,8 @@ const CodeHighlighter = ({
           <span className="text-xs text-gray-400"> (for use in CSS)</span>
         </h3>
         {children}
-      </div>{" "}
+      </div>
+
       {showCodes && (
         <SyntaxHighlighter
           customStyle={{
@@ -51,8 +51,8 @@ const CodeHighlighter = ({
 };
 
 const CssVariables = ({}: CssVariablesProps) => {
-  const shadesCssVariables = useAtomValue(shadesCssVariablesAtom);
-  const projects = useAtomValue(projectsAtom);
+  const project = useStore((state) => state.project);
+  const shadesCssVariables = useStore((state) => state.shadesCssVariables);
   const [copied, setCopied] = useState(false);
 
   const formatColor = (color: string, format: "hex" | "hsl" | "rgb") => {
@@ -79,7 +79,7 @@ const CssVariables = ({}: CssVariablesProps) => {
   }, [copied]);
 
   let formattedVars = Object.entries(shadesCssVariables)
-    .map(([key, value]) => `    ${key}: ${formatColor(value, projects.colorSpaces)};`)
+    .map(([key, value]) => `    ${key}: ${formatColor(value, project.colorSpaces)};`)
     .join("\n");
 
   let cssString = `@layer base {\n  :root {\n${formattedVars}\n  }\n}`;
@@ -93,7 +93,7 @@ const CssVariables = ({}: CssVariablesProps) => {
     }
   };
 
-  const showCodes = projects.shades.length > 0;
+  const showCodes = project.shades.length > 0;
 
   return (
     <CodeHighlighter code={cssString} showCodes={showCodes}>

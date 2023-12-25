@@ -1,5 +1,5 @@
-// @ts-nocheck
 import tailwindcssSvgIcon from "@choiceform/tailwindcss-svg-icon";
+import containerQueries from "@tailwindcss/container-queries";
 import type {Config} from "tailwindcss";
 
 const config: Config = {
@@ -31,6 +31,7 @@ const config: Config = {
     },
   },
   plugins: [
+    containerQueries,
     tailwindcssSvgIcon({
       classPrefix: "ic",
       defaultSize: 1,

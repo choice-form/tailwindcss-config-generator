@@ -1,11 +1,9 @@
-import classNames from "classnames";
-import {projectsAtom, contrastTabsAtom, containerWidthAtom} from "../../atom";
-import {useAtomValue} from "jotai";
 import chroma from "chroma-js";
+import classNames from "classnames";
+import {useState} from "react";
+import {useStore} from "../../store/provider";
 import {contrastAPCA} from "../../utilities";
 import {UiPopover} from "../ui";
-import {useState} from "react";
-
 interface ShadeBlockProps {
   shadeName: string;
   shadeColorReadable: string;
@@ -29,16 +27,15 @@ const ShadeBlock = ({
   handleClick,
   colorCodePopover,
 }: ShadeBlockProps) => {
-  const projects = useAtomValue(projectsAtom);
-  const contrastTabs = useAtomValue(contrastTabsAtom);
-  const containerWidth = useAtomValue(containerWidthAtom);
+  const project = useStore((state) => state.project);
+  const contrastTabs = useStore((state) => state.contrastTabs);
   const [isOpen, setIsOpen] = useState(false);
 
   const WCAG2 = chroma.contrast(shadeColorReadable, shadeColorHsl).toFixed(1);
   const APCA = contrastAPCA(shadeColorReadable, shadeColorHsl);
 
-  const isWCAG2 = contrastTabs === "wcag2" && projects.accessibility.wcag2Contrast !== "none";
-  const isAPCA = contrastTabs === "apca" && projects.accessibility.apcaContrast !== "none";
+  const isWCAG2 = contrastTabs === "wcag2" && project.accessibility.wcag2Contrast !== "none";
+  const isAPCA = contrastTabs === "apca" && project.accessibility.apcaContrast !== "none";
   const isLuminance = contrastTabs === "luminance" && (luminanceWarning || darkenWarning);
 
   /** WCAG2 stands for Web Content Accessibility Guidelines 2.
@@ -46,36 +43,25 @@ const ShadeBlock = ({
    * These guidelines provide recommendations for making web content perceivable, operable, understandable, and robust.
    */
   const WCAGContrast =
-    (isWCAG2 && projects.accessibility.wcag2Contrast === "aa" && Number(WCAG2) < 4.5) ||
-    (isWCAG2 && projects.accessibility.wcag2Contrast === "aaa" && Number(WCAG2) < 7);
+    (isWCAG2 && project.accessibility.wcag2Contrast === "aa" && Number(WCAG2) < 4.5) ||
+    (isWCAG2 && project.accessibility.wcag2Contrast === "aaa" && Number(WCAG2) < 7);
 
   /** APCA stands for Average Picture Complexity Analysis.
    * It is a method used to measure the visual complexity of an image.
    * APCA calculates the average complexity of an image by analyzing its pixel values and determining the level of detail and variation present.
    */
   const APCAContrast =
-    (isAPCA && projects.accessibility.apcaContrast === "aa" && Math.abs(Number(APCA)) < 60) ||
-    (isAPCA && projects.accessibility.apcaContrast === "aaa" && Math.abs(Number(APCA)) < 80);
+    (isAPCA && project.accessibility.apcaContrast === "aa" && Math.abs(Number(APCA)) < 60) ||
+    (isAPCA && project.accessibility.apcaContrast === "aaa" && Math.abs(Number(APCA)) < 80);
 
   const warningClass = (color: string) =>
     `linear-gradient(135deg,${color} 10%,#0000 0,#0000 50%,${color} 0,${color} 60%,#0000 0,#0000)`;
 
-  const containerWidthState = containerWidth === "md" || containerWidth === "sm";
-
   return (
-    <div
-      className={classNames(
-        "flex-0 min-w-0 p-1",
-        containerWidthState ? "w-full" : "w-[calc(100%/11)]",
-      )}
-    >
+    <div className="flex-0 w-full min-w-0 p-1 @2xl:w-[calc(100%/11)]">
       <div
-        className={classNames(
-          "relative grid w-full min-w-0 select-none items-center whitespace-nowrap rounded-lg",
-          containerWidthState
-            ? "grid-cols-4 flex-row gap-4 py-2 pl-2 pr-4"
-            : "aspect-[9/18] grid-rows-3 place-content-center p-2",
-        )}
+        className="relative grid w-full min-w-0 select-none grid-cols-4 items-center gap-4 whitespace-nowrap rounded-lg px-4 py-2
+        @2xl:aspect-[9/18] @2xl:grid-cols-1 @2xl:grid-rows-3 @2xl:place-content-center @2xl:gap-0 @2xl:p-2"
         style={{
           color: shadeColorReadable,
           backgroundColor: shadeColorHsl,
@@ -91,10 +77,8 @@ const ShadeBlock = ({
         }}
       >
         <div
-          className={classNames(
-            "flex items-center",
-            containerWidthState ? "order-5 flex-row-reverse gap-4" : "flex-col gap-2",
-          )}
+          className="order-3 flex flex-row-reverse items-center gap-2
+          @2xl:order-1 @2xl:flex-col"
         >
           {isWCAG2 && <span className="rounded px-1 text-xs">{WCAG2}</span>}
           {isAPCA && <span className="rounded px-1 text-xs">{APCA}%</span>}
@@ -109,10 +93,7 @@ const ShadeBlock = ({
 
         <button
           onClick={handleClick}
-          className={classNames(
-            "group/default relative flex w-full items-center justify-center",
-            containerWidthState ? "order-4 flex-1" : "h-12",
-          )}
+          className="group/default relative order-2 flex w-full flex-1 items-center justify-center @2xl:h-12"
         >
           {defaultShade && (
             <div className="ic-[lock] absolute inset-0 m-auto group-hover/default:invisible" />
@@ -123,28 +104,21 @@ const ShadeBlock = ({
         </button>
 
         <div
-          className={classNames(
-            "group/info relative flex min-w-0 items-center",
-            containerWidthState ? "col-span-2 gap-2" : "flex-col gap-1",
-          )}
+          className="group/info relative order-1 col-span-2 flex min-w-0 items-center gap-4
+          @2xl:order-3 @2xl:col-span-1 @2xl:flex-col @2xl:gap-1"
         >
-          <strong>{shadeName}</strong>
+          <strong className="@2xl:text-xl">{shadeName}</strong>
 
           <UiPopover
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            triggerClassName="flex items-center gap-1 justify-center"
+            triggerClassName="flex items-center gap-4 justify-center @2xl:gap-1"
             trigger={
               <>
                 <span
                   className={classNames(
-                    "pointer-events-none min-w-0 truncate text-xs",
-                    containerWidthState
-                      ? "visible"
-                      : classNames(
-                          "absolute bottom-0 leading-4",
-                          isOpen ? "invisible" : "group-hover/info:invisible",
-                        ),
+                    "pointer-events-none visible min-w-0 truncate text-xs @2xl:absolute @2xl:bottom-0 @2xl:leading-4",
+                    isOpen ? "invisible" : "@2xl:group-hover/info:invisible",
                   )}
                 >
                   {shadeColorHex}

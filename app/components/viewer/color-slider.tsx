@@ -4,6 +4,7 @@ import {Fragment} from "react";
 import {useState} from "react";
 
 interface ColorSliderProps {
+  className?: string;
   label?: string;
   count?: number;
   color?: {
@@ -22,7 +23,7 @@ interface ColorSliderProps {
   }[];
 }
 
-const ColorSlider = ({label, slider, count, color, centerMark}: ColorSliderProps) => {
+const ColorSlider = ({className, label, slider, count, color, centerMark}: ColorSliderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const colorStyle = {
@@ -40,20 +41,14 @@ const ColorSlider = ({label, slider, count, color, centerMark}: ColorSliderProps
       trigger={
         <button
           className={classNames(
+            className,
             "shade-control-input flex-1 text-sm",
             isOpen && "!border-primary !bg-white dark:!bg-gray-900",
           )}
         >
           <span className="flex-1 text-left opacity-60">{label}:</span>
-          <span
-            className="whitespace-nowrap"
-            style={{
-              width: `calc(2rem * ${slider.length})`,
-            }}
-          >
-            {slider.length > 1
-              ? `[${slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}]`
-              : slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}
+          <span className="shade-control-badge">
+            {slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}
           </span>
         </button>
       }

@@ -1,14 +1,7 @@
 "use client";
 import {faker} from "@faker-js/faker";
 import chroma from "chroma-js";
-import {useAtom, useAtomValue, useSetAtom} from "jotai";
-import {memo, useEffect, useRef} from "react";
-import {
-  containerWidthAtom,
-  shadesConfigAtom,
-  shadesCssVariablesAtom,
-  uiIsBusyAtom,
-} from "../../atom";
+import {memo, useEffect} from "react";
 import {generateShades} from "../../generate-shades";
 import {updateProjectCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
@@ -18,20 +11,24 @@ import {PresetPopover} from "../preset";
 import {ShadesGroup} from "./shades-group";
 
 const MemoedShadesGroup = memo(ShadesGroup, (prevProps, nextProps) => {
-  return prevProps._color === nextProps._color;
+  return (
+    prevProps._initColor === nextProps._initColor &&
+    prevProps._lightenAmount === nextProps._lightenAmount &&
+    prevProps._darkenAmount === nextProps._darkenAmount &&
+    prevProps._hueAmount === nextProps._hueAmount &&
+    prevProps._desaturateUpAmount === nextProps._desaturateUpAmount &&
+    prevProps._desaturateDownAmount === nextProps._desaturateDownAmount &&
+    prevProps._saturationUpAmount === nextProps._saturationUpAmount &&
+    prevProps._saturationDownAmount === nextProps._saturationDownAmount
+  );
 });
 
 interface ShadesViewerProps {}
 
 const ShadesViewer = ({}: ShadesViewerProps) => {
-  // const [projects, setProjects] = useAtom(projectsAtom);
   const service = useService();
   const project = useStore((state) => state.project);
-  const setShadesCssVariables = useSetAtom(shadesCssVariablesAtom);
-  const setShadesConfig = useSetAtom(shadesConfigAtom);
-  const uiIsBusy = useAtomValue(uiIsBusyAtom);
-  const [containerWidth, setContainerWidth] = useAtom(containerWidthAtom);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const uiIsBusy = useStore((state) => state.uiIsBusy);
 
   /** Example of shadesObject:
     {
@@ -58,25 +55,6 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   const shadesMap = new Map(Object.entries(shadesObject));
   const shadesArray = Array.from(shadesMap);
 
-  // Container width observer
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      if (!containerRef.current) return;
-      let sm = entries[0].contentRect.width < 361;
-      let md = entries[0].contentRect.width < 641;
-      let lg = entries[0].contentRect.width < 1025;
-      setContainerWidth(sm ? "sm" : md ? "md" : lg ? "lg" : null);
-    });
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-    return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
-      }
-    };
-  }, [containerRef.current]);
-
   // Create a new shade
   const handleAddShade = () => {
     let formattedColorName;
@@ -101,10 +79,6 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
     service.execute(
       updateProjectCommand(project, {shades: [...project.shades, newShade] as ShadesProps[]}),
     );
-    // setProjects((prevState) => ({
-    //   ...prevState,
-    //   shades: [...prevState.shades, newShade] as ShadesProps[],
-    // }));
   };
 
   // Convert the color to the corresponding color space
@@ -155,13 +129,15 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
           };
         });
 
-      setShadesCssVariables(newShadesCssVariables);
-      setShadesConfig(newShadesConfig);
+      service.patch({
+        shadesCssVariables: newShadesCssVariables,
+        shadesConfig: newShadesConfig,
+      });
     }
   }, [project.shades, project.colorSpaces]);
 
   return (
-    <div className="flex min-w-0 flex-grow flex-col gap-4">
+    <div className="flex min-w-0 flex-grow flex-col gap-4 @container">
       <div className="sticky top-16 z-40 flex gap-4 py-8">
         <button
           className="hover:bg-light-200 flex items-center gap-1 rounded-lg bg-black px-3 py-2 text-sm
@@ -175,10 +151,25 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
         <PresetPopover />
       </div>
 
-      <div className="flex flex-1 flex-col gap-8" ref={containerRef}>
+      <div className="flex flex-1 flex-col gap-8">
         {shadesArray.map(([_, shades], i) => {
           const shade = project.shades[i];
-          return <MemoedShadesGroup key={i} i={i} _color={shade.initColor} shades={shades} />;
+          return (
+            <MemoedShadesGroup
+              key={i}
+              index={i}
+              _initColor={shade.initColor}
+              _lightenAmount={shade.lightenAmount}
+              _darkenAmount={shade.darkenAmount}
+              _hueAmount={shade.hueAmount}
+              _desaturateUpAmount={shade.desaturateUpAmount}
+              _desaturateDownAmount={shade.desaturateDownAmount}
+              _saturationUpAmount={shade.saturationUpAmount}
+              _saturationDownAmount={shade.saturationDownAmount}
+              shades={shades}
+              project={project}
+            />
+          );
         })}
       </div>
     </div>

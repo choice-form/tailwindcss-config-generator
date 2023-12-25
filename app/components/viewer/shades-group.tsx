@@ -1,31 +1,38 @@
 import chroma from "chroma-js";
-import classNames from "classnames";
+import {create} from "mutative";
 import {useCallback} from "react";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
-import {useService, useStore} from "../../store/provider";
-import type {SwatchColorProps} from "../../type";
+import {useService} from "../../store/provider";
+import type {ProjectProps, SwatchColorProps} from "../../type";
 import {generateShadeStyle, readableColor} from "../../utilities";
 import ColorCodePopover from "./color-code-popover";
 import ShadeBlock from "./shade-block";
 import ShadeControl from "./shade-control";
-import {create, original} from "mutative";
 
-type Props = {i: number; _color: string; shades: SwatchColorProps};
+type Props = {
+  index: number;
+  _initColor: string;
+  _lightenAmount: number;
+  _darkenAmount: number;
+  _hueAmount: number;
+  _desaturateUpAmount: number;
+  _desaturateDownAmount: number;
+  _saturationUpAmount: number;
+  _saturationDownAmount: number;
+  shades: SwatchColorProps;
+  project: ProjectProps;
+};
 
-export function ShadesGroup({i, shades}: Props) {
+export function ShadesGroup({index, shades, project}: Props) {
   const service = useService();
-  const project = useStore((state) => state.project);
-  const containerWidth = useStore((state) => state.containerWidth);
-  const containerWidthState = containerWidth === "md" || containerWidth === "sm";
-
-  const shadesStyle = generateShadeStyle({shades: project.shades, initial: false}, "color", i);
+  const shadesStyle = generateShadeStyle({shades: project.shades, initial: false}, "color", index);
 
   const handleShadeChange = useCallback((j: number, color: string) => {
     service.execute(
       updateProjectShadesCommand(project, ({shades}) => {
         const [draft, finalize] = create(shades);
-        draft[i].initColor = color;
-        draft[i].defaultIndex = draft[i].defaultIndex === j ? undefined : j;
+        draft[index].initColor = color;
+        draft[index].defaultIndex = draft[index].defaultIndex === j ? undefined : j;
         return finalize();
       }),
     );
@@ -42,9 +49,9 @@ export function ShadesGroup({i, shades}: Props) {
         } as React.CSSProperties
       }
     >
-      <ShadeControl index={i} />
+      <ShadeControl index={index} />
 
-      <div className={classNames("-m-1 flex", containerWidthState && "flex-col")}>
+      <div className="-m-1 flex flex-col @2xl:flex-row">
         {Object.entries(shades)
           .filter(([shadeName]) => shadeName !== "DEFAULT")
           .map(([shadeName, shadeValue], j) => {

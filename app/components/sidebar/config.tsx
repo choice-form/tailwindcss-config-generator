@@ -1,9 +1,8 @@
-import {useAtomValue} from "jotai";
 import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {oneDark, oneLight} from "react-syntax-highlighter/dist/esm/styles/prism";
-import {projectsAtom, shadesConfigAtom} from "../../atom";
+import {useStore} from "../../store/provider";
 import {formatCode} from "../../utilities";
 
 interface ConfigProps {}
@@ -51,9 +50,9 @@ const CodeHighlighter = ({
 };
 
 const Config = ({}: ConfigProps) => {
-  const shadesConfig = useAtomValue(shadesConfigAtom);
+  const project = useStore((state) => state.project);
+  const shadesConfig = useStore((state) => state.shadesConfig);
   const [copied, setCopied] = useState(false);
-  const projects = useAtomValue(projectsAtom);
 
   useEffect(() => {
     let timerId: NodeJS.Timeout;
@@ -78,7 +77,7 @@ const Config = ({}: ConfigProps) => {
     }
   };
 
-  const showCodes = projects.shades.length > 0;
+  const showCodes = project.shades.length > 0;
 
   return (
     <CodeHighlighter code={jsonString} showCodes={showCodes}>
