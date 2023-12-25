@@ -32,7 +32,7 @@ export function StoreProvider({children, state}: PropsWithChildren<{state: AppSt
 
   useEffect(() => {
     return service.store.subscribe((state) => {
-      console.info("state", state.project.shades);
+      // process.env.NODE_ENV === "development" && console.log(state);
     });
   }, [state]);
 

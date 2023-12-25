@@ -1,32 +1,24 @@
 "use client";
 import {faker} from "@faker-js/faker";
 import chroma from "chroma-js";
-import classNames from "classnames";
 import {useAtom, useAtomValue, useSetAtom} from "jotai";
 import {memo, useEffect, useRef} from "react";
-import {ShadeBlock, ShadeControl, ColorCodePopover} from ".";
 import {
   containerWidthAtom,
-  projectsAtom,
   shadesConfigAtom,
   shadesCssVariablesAtom,
   uiIsBusyAtom,
 } from "../../atom";
 import {generateShades} from "../../generate-shades";
-import {generateShadeStyle, isValidColor} from "../../utilities";
-import readableColor from "../../utilities/readable-color";
-import {ProjectProps, ShadesProps} from "../../type";
-import preset from "../../../public/preset.json";
-import {PresetPopover} from "../preset";
-import {useService, useStore} from "../../store/provider";
 import {updateProjectCommand} from "../../store/commands/update-project";
+import {useService, useStore} from "../../store/provider";
+import {ShadesProps} from "../../type";
+import {generateShadeStyle, isValidColor} from "../../utilities";
+import {PresetPopover} from "../preset";
 import {ShadesGroup} from "./shades-group";
 
 const MemoedShadesGroup = memo(ShadesGroup, (prevProps, nextProps) => {
-  return (
-    prevProps.project.shades[prevProps.i].initColor ===
-    nextProps.project.shades[nextProps.i].initColor
-  );
+  return prevProps._color === nextProps._color;
 });
 
 interface ShadesViewerProps {}
@@ -60,7 +52,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
     }
   */
   const shadesObject = generateShades({
-    shades: project?.shades.map((swatch) => swatch),
+    shades: project.shades.map((swatch) => swatch),
   });
 
   const shadesMap = new Map(Object.entries(shadesObject));
@@ -185,7 +177,8 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
 
       <div className="flex flex-1 flex-col gap-8" ref={containerRef}>
         {shadesArray.map(([_, shades], i) => {
-          return <MemoedShadesGroup key={i} i={i} project={project} shades={shades} />;
+          const shade = project.shades[i];
+          return <MemoedShadesGroup key={i} i={i} _color={shade.initColor} shades={shades} />;
         })}
       </div>
     </div>

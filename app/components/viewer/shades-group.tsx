@@ -1,21 +1,34 @@
 import chroma from "chroma-js";
 import classNames from "classnames";
+import {useCallback} from "react";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
+import {useService, useStore} from "../../store/provider";
+import type {SwatchColorProps} from "../../type";
 import {generateShadeStyle, readableColor} from "../../utilities";
 import ColorCodePopover from "./color-code-popover";
 import ShadeBlock from "./shade-block";
 import ShadeControl from "./shade-control";
-import {useService, useStore} from "../../store/provider";
-import type {ProjectProps, SwatchColorProps} from "../../type";
 
-type Props = {i: number; project: ProjectProps; shades: SwatchColorProps};
+type Props = {i: number; _color: string; shades: SwatchColorProps};
 
-export function ShadesGroup({i, project, shades}: Props) {
+export function ShadesGroup({i, shades}: Props) {
   const service = useService();
+  const project = useStore((state) => state.project);
   const containerWidth = useStore((state) => state.containerWidth);
   const containerWidthState = containerWidth === "md" || containerWidth === "sm";
 
   const shadesStyle = generateShadeStyle({shades: project.shades, initial: false}, "color", i);
+
+  const handleShadeChange = useCallback((j: number, color: string) => {
+    service.execute(
+      updateProjectShadesCommand(project, ({shades}) => {
+        const shadesCopy = [...shades];
+        shadesCopy[i].initColor = color;
+        shadesCopy[i].defaultIndex = shadesCopy[i].defaultIndex === j ? undefined : j;
+        return shadesCopy;
+      }),
+    );
+  }, []);
 
   return (
     <div
@@ -43,6 +56,7 @@ export function ShadesGroup({i, project, shades}: Props) {
               project?.accessibility?.luminanceWarning?.brighten && shadeColor.luminance() > 0.9;
             const darkenWarning =
               project?.accessibility?.luminanceWarning?.darken && shadeColor.luminance() < 0.01;
+
             return (
               <ShadeBlock
                 key={j}
@@ -61,18 +75,9 @@ export function ShadesGroup({i, project, shades}: Props) {
                 defaultShade={defaultShade}
                 luminanceWarning={luminanceWarning}
                 darkenWarning={darkenWarning}
-                handleClick={() =>
-                  service.execute(
-                    updateProjectShadesCommand(project, ({shades}) => {
-                      shades[i] = {
-                        ...shades[i],
-                        initColor: shadeColorHex,
-                        defaultIndex: shades[i].defaultIndex === j ? undefined : j,
-                      };
-                      return [...shades];
-                    }),
-                  )
-                }
+                handleClick={() => {
+                  handleShadeChange(j, shadeColorHex);
+                }}
               />
             );
           })}
