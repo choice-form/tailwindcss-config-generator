@@ -24,6 +24,8 @@ const Toolbar = ({}: ToolbarProps) => {
       // Remove spaces and make it lowercase
       formattedColorName = colorName.toLowerCase().replace(/ /g, "-");
     } while (
+      // Check if the color name already exists
+      Object.keys(project.shades.map((shade) => shade.name)).includes(formattedColorName) ||
       // Filter out the following names
       formattedColorName === "white" ||
       formattedColorName === "black"
