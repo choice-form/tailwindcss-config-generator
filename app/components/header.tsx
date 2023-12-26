@@ -3,10 +3,15 @@ import {useTheme} from "next-themes";
 import {UiDialog} from "./ui";
 import {useState} from "react";
 import Link from "next/link";
+import Image from "next/image";
 
-interface HeaderProps {}
+interface HeaderProps {
+  onSignIn?: () => void;
+  onSignOut?: () => void;
+  user?: any;
+}
 
-const Header = ({}: HeaderProps) => {
+const Header = ({onSignIn, onSignOut, user}: HeaderProps) => {
   const {theme, setTheme} = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,32 +47,65 @@ const Header = ({}: HeaderProps) => {
             className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 w-[500px] relative
             flex flex-col gap-4 justify-center items-center outline-none text-center"
             trigger={
-              <button
-                className="flex items-center gap-2 rounded-lg bg-black text-white
+              !user ? (
+                <button
+                  className="flex items-center gap-2 rounded-lg bg-black text-white
                 py-2 px-3 text-sm dark:bg-white dark:text-black"
-              >
-                Sign in
-              </button>
+                >
+                  Sign in
+                </button>
+              ) : (
+                <Image
+                  className="h-8 w-8 rounded-full cursor-pointer"
+                  src={user.image}
+                  height={32}
+                  width={32}
+                  alt={`${user.name} avatar`}
+                />
+              )
             }
           >
-            <>
-              <button className="absolute top-4 right-4" onClick={() => setIsOpen(false)}>
-                <div className="ic-[e-remove]" />
-              </button>
-              <h1 className="text-4xl font-bold">Sign in</h1>
-              <p>Sign in to save and edit your custom color shades.</p>
-              <button
-                className="flex items-center gap-2 px-3 py-2 border border-gray-200
+            {user ? (
+              <>
+                <button className="absolute top-4 right-4" onClick={() => setIsOpen(false)}>
+                  <div className="ic-[e-remove]" />
+                </button>
+                <h1 className="text-4xl font-bold">Sign Out</h1>
+                <p>Are you sure to sign out?</p>
+                <button
+                  className="flex items-center gap-2 px-3 py-2 border border-gray-200
                 dark:border-gray-600 rounded-lg hover:bg-gray-100 hover:dark:bg-gray-700"
-              >
-                <div className="ic-[logo-github]" />
-                Sign in with Github
-              </button>
-              <span className="text-sm opacity-60">
-                By signing in, you ensure that your custom color shades are safely stored and can be
-                accessed and edited at any time.
-              </span>
-            </>
+                  onClick={onSignOut}
+                >
+                  <div className="ic-[logo-github]" />
+                  Sign out
+                </button>
+                <span className="text-sm opacity-60">
+                  By signing in, you ensure that your custom color shades are safely stored and can
+                  be accessed and edited at any time.
+                </span>
+              </>
+            ) : (
+              <>
+                <button className="absolute top-4 right-4" onClick={() => setIsOpen(false)}>
+                  <div className="ic-[e-remove]" />
+                </button>
+                <h1 className="text-4xl font-bold">Sign in</h1>
+                <p>Sign in to save and edit your custom color shades.</p>
+                <button
+                  className="flex items-center gap-2 px-3 py-2 border border-gray-200
+                dark:border-gray-600 rounded-lg hover:bg-gray-100 hover:dark:bg-gray-700"
+                  onClick={onSignIn}
+                >
+                  <div className="ic-[logo-github]" />
+                  Sign in with Github
+                </button>
+                <span className="text-sm opacity-60">
+                  By signing in, you ensure that your custom color shades are safely stored and can
+                  be accessed and edited at any time.
+                </span>
+              </>
+            )}
           </UiDialog>
         </div>
       </div>
