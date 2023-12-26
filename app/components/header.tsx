@@ -11,10 +11,7 @@ const Header = ({}: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header
-      className="sticky top-0 z-40 shrink-0 border-b
-      border-gray-200 bg-white/80 px-8 backdrop-blur dark:border-gray-900 dark:bg-gray-900/80"
-    >
+    <header className="sticky top-0 z-40 shrink-0 bg-white/80 px-8 backdrop-blur dark:bg-gray-900/80">
       <div className="container mx-auto flex h-16 items-center gap-4">
         <div className="flex flex-1 items-center gap-4">
           <div className="rounded bg-black p-1 text-white dark:bg-white dark:text-gray-900">

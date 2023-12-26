@@ -1,7 +1,5 @@
-import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
-import {oneDark, oneLight} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useStore} from "../../store/provider";
 import {formatCode} from "../../utilities";
 
@@ -16,31 +14,25 @@ const CodeHighlighter = ({
   children: React.ReactNode;
   showCodes?: boolean;
 }) => {
-  const {theme} = useTheme();
-
   return (
-    <div className="flex min-h-0 flex-col overflow-y-auto rounded-lg bg-black/5 dark:bg-white/10">
-      <div className="flex items-center gap-4 p-4">
-        <h3 className="flex-grow text-sm">
-          Config
-          <span className="text-xs text-gray-400"> (for use in tailwind.config.js) (colors)</span>
-        </h3>
+    <div className="relative flex h-full min-h-0 flex-col overflow-y-auto">
+      <div className="absolute right-0 top-0 z-20 flex h-12 items-center gap-4 px-4">
         {children}
       </div>
+
       {showCodes && (
         <SyntaxHighlighter
           customStyle={{
             background: "transparent",
-            padding: "1rem",
-            margin: "0px",
+            padding: "2rem 1rem",
+            margin: "48px 0 0 0",
             width: "100%",
-            fontSize: "12px",
+            fontSize: "13px",
             fontFamily: "Roboto Mono, monospace",
             lineHeight: 1.5,
           }}
           className="[&>code]:!bg-transparent"
           language="json"
-          style={theme === "dark" ? oneDark : oneLight}
         >
           {formatCode(code)}
         </SyntaxHighlighter>
@@ -50,7 +42,7 @@ const CodeHighlighter = ({
 };
 
 const Config = ({}: ConfigProps) => {
-  const project = useStore((state) => state.project);
+  const shades = useStore((state) => state.project.shades);
   const shadesConfig = useStore((state) => state.shadesConfig);
   const [copied, setCopied] = useState(false);
 
@@ -77,17 +69,18 @@ const Config = ({}: ConfigProps) => {
     }
   };
 
-  const showCodes = project.shades.length > 0;
+  const showCodes = shades.length > 0;
 
   return (
     <CodeHighlighter code={jsonString} showCodes={showCodes}>
       {copied && <span className="text-xs font-medium text-green-500">Copied!</span>}
       {showCodes && (
         <button
-          className="flex items-center gap-2 opacity-30 hover:opacity-100"
+          className="flex items-center gap-2 text-sm opacity-30 hover:opacity-100"
           onClick={copyToClipboard}
         >
-          <div className="ic-[document-copy]" />
+          <div className="ic-[document-copy] h-3 w-3" />
+          Copy code
         </button>
       )}
     </CodeHighlighter>

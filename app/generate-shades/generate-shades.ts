@@ -15,8 +15,8 @@ const generateShades = ({shades = [], initial = true}: generateShadesProps): Swa
     let {
       name,
       initColor,
-      lightenAmount = 10,
-      darkenAmount = 10,
+      lightenAmount = 20,
+      darkenAmount = 20,
       hueAmount = 0,
       saturationUpAmount = 0,
       saturationDownAmount = 0,

@@ -1,10 +1,3 @@
-export interface WorkspaceProps {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface ProjectProps {
   id: string;
   name: string;

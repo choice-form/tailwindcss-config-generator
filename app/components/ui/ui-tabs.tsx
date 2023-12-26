@@ -1,6 +1,7 @@
 import classNames from "classnames";
 
 interface UiTabsProps {
+  className?: string;
   tabs: {
     label: string;
     checked: boolean;
@@ -8,11 +9,11 @@ interface UiTabsProps {
   }[];
 }
 
-const UiTabs = ({tabs}: UiTabsProps) => {
+const UiTabs = ({tabs, className}: UiTabsProps) => {
   return (
     <div
       role="tablist"
-      className="grid gap-4"
+      className={classNames(className, "grid")}
       style={{
         gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
       }}
@@ -22,10 +23,8 @@ const UiTabs = ({tabs}: UiTabsProps) => {
           role="tab"
           key={tab.label}
           className={classNames(
-            "flex cursor-pointer items-center justify-center rounded-lg border p-2 text-center text-xs uppercase",
-            tab.checked
-              ? "border-gray-500 text-current dark:border-gray-300"
-              : "border-gray-300 hover:bg-gray-200 dark:border-gray-600 dark:hover:bg-gray-800",
+            "flex cursor-pointer items-center justify-center p-2 text-center",
+            tab.checked ? "font-bold opacity-100" : "opacity-60",
           )}
           onClick={tab.onClick}
         >

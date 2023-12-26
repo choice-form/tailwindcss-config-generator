@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import {ColorInput, ColorSlider} from ".";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
-import {formatHSL} from "../../utilities";
 
 interface ShadeControlProps {
   index: number;
@@ -67,7 +66,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
 
   return (
     <div className="mb-1 grid grid-cols-1 items-center gap-2 @5xl:grid-cols-[auto_1fr]">
-      <div className="grid flex-wrap items-center gap-2 self-start @2xl:grid-cols-2">
+      <div className="grid flex-wrap items-center gap-2 self-start @2xl:grid-cols-[auto_1fr]">
         <div className="shade-control-input flex-grow">
           <button
             className="flex h-6 w-6 flex-shrink-0 items-center
@@ -100,21 +99,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         <ColorSlider
           label="Lightness"
           count={10}
-          color={{
-            default: formatHSL(project.shades[index].initColor),
-          }}
           slider={[
             {
               label: "Step up %",
               min: 10,
               max: 50,
               step: 1,
-              start: 10,
+              start: 20,
               connect: true,
               value: project.shades[index].lightenAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
-                  lightenAmount: typeof value === "number" ? value : 10,
+                  lightenAmount: typeof value === "number" ? value : 20,
                 };
                 service.execute(
                   updateProjectShadesCommand(project, ({shades}) => {
@@ -130,12 +126,12 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               min: 10,
               max: 50,
               step: 1,
-              start: 10,
+              start: 20,
               connect: true,
               value: project.shades[index].darkenAmount,
               onChange: (value: number | number[]) => {
                 const newSwatch = {
-                  darkenAmount: typeof value === "number" ? value : 10,
+                  darkenAmount: typeof value === "number" ? value : 20,
                 };
                 service.execute(
                   updateProjectShadesCommand(project, ({shades}) => {
@@ -152,9 +148,6 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         <ColorSlider
           label="Saturation"
           count={10}
-          color={{
-            default: formatHSL(project.shades[index].initColor),
-          }}
           slider={[
             {
               label: "Step up %",
@@ -204,9 +197,6 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         <ColorSlider
           label="Desaturate"
           count={10}
-          color={{
-            default: formatHSL(project.shades[index].initColor),
-          }}
           slider={[
             {
               label: "Step up %",
@@ -256,9 +246,6 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         <ColorSlider
           centerMark={true}
           label="Hue"
-          color={{
-            default: formatHSL(project.shades[index].initColor),
-          }}
           slider={[
             {
               label: "Hue shift",

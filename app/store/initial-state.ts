@@ -14,10 +14,8 @@ export const initialState = {
       apcaContrast: "none",
     },
   },
-  workspaces: [],
   shadesConfig: {},
   shadesCssVariables: {},
   uiIsBusy: false,
-  containerWidth: null,
   contrastTabs: "luminance",
 } satisfies AppState;

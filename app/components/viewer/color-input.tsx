@@ -14,7 +14,8 @@ interface ColorInputProps {
 const ColorInput = ({index}: ColorInputProps) => {
   const service = useService();
   const project = useStore((state) => state.project);
-  const [inputValue, setInputValue] = useState(project.shades[index].initColor || "");
+
+  const [inputValue, setInputValue] = useState(project.shades[index].initColor);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const uuid = useId();
@@ -39,7 +40,7 @@ const ColorInput = ({index}: ColorInputProps) => {
   useEffect(() => {
     if (isInputFocused) return;
     setInputValue(project.shades[index].initColor);
-  }, [project.shades, index]);
+  }, [project.shades]);
 
   return (
     <div className="shade-control-input flex-grow">
@@ -60,7 +61,7 @@ const ColorInput = ({index}: ColorInputProps) => {
       >
         <Colorful
           disableAlpha={true}
-          color={chroma(project.shades[index].initColor).hex()}
+          color={project.shades[index].initColor}
           onChange={(e) => {
             const newSwatch = {
               initColor: e.hex,
@@ -75,6 +76,7 @@ const ColorInput = ({index}: ColorInputProps) => {
           }}
         />
       </UiPopover>
+
       <input
         id={uuid}
         ref={inputRef}

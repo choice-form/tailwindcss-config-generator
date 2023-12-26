@@ -57,6 +57,7 @@ const ColorSlider = ({className, label, slider, count, color, centerMark}: Color
         {slider.map((s, i) => (
           <Fragment key={i}>
             <span className="whitespace-nowrap">{s.label}</span>
+
             <UiSlider
               className={classNames(
                 "min-w-10",

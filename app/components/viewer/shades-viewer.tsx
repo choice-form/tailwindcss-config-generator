@@ -1,27 +1,12 @@
 "use client";
-import {faker} from "@faker-js/faker";
-import chroma from "chroma-js";
-import {memo, useEffect} from "react";
+import {create} from "mutative";
+import {useCallback, useEffect} from "react";
 import {generateShades} from "../../generate-shades";
-import {updateProjectCommand} from "../../store/commands/update-project";
+import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
-import {ShadesProps} from "../../type";
-import {generateShadeStyle, isValidColor} from "../../utilities";
-import {PresetPopover} from "../preset";
-import {ShadesGroup} from "./shades-group";
+import {generateShadeStyle} from "../../utilities";
 
-const MemoedShadesGroup = memo(ShadesGroup, (prevProps, nextProps) => {
-  return (
-    prevProps._initColor === nextProps._initColor &&
-    prevProps._lightenAmount === nextProps._lightenAmount &&
-    prevProps._darkenAmount === nextProps._darkenAmount &&
-    prevProps._hueAmount === nextProps._hueAmount &&
-    prevProps._desaturateUpAmount === nextProps._desaturateUpAmount &&
-    prevProps._desaturateDownAmount === nextProps._desaturateDownAmount &&
-    prevProps._saturationUpAmount === nextProps._saturationUpAmount &&
-    prevProps._saturationDownAmount === nextProps._saturationDownAmount
-  );
-});
+import {ShadesGroup} from "./shades-group";
 
 interface ShadesViewerProps {}
 
@@ -55,32 +40,6 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   const shadesMap = new Map(Object.entries(shadesObject));
   const shadesArray = Array.from(shadesMap);
 
-  // Create a new shade
-  const handleAddShade = () => {
-    let formattedColorName;
-    do {
-      // Generate a random color name
-      let colorName = faker.color.human();
-      // Remove spaces and make it lowercase
-      formattedColorName = colorName.toLowerCase().replace(/ /g, "-");
-    } while (
-      // Check if the color name already exists
-      Object.keys(shadesObject).includes(formattedColorName) ||
-      // Filter out the following names
-      formattedColorName === "white" ||
-      formattedColorName === "black"
-    );
-    const newShade = {
-      name: formattedColorName,
-      // If the name is a legal color name, the color name is used to generate the color.
-      // If it is not legal, the color is randomly generated.
-      initColor: isValidColor(formattedColorName) ? formattedColorName : chroma.random().hex(),
-    };
-    service.execute(
-      updateProjectCommand(project, {shades: [...project.shades, newShade] as ShadesProps[]}),
-    );
-  };
-
   // Convert the color to the corresponding color space
   const shadeSpaces = (color: string, colorSpaces: string) => {
     switch (colorSpaces) {
@@ -97,77 +56,64 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   useEffect(() => {
     let newShadesCssVariables = {};
     let newShadesConfig = {};
-    if (!uiIsBusy) {
-      shadesArray
-        .filter(([colorName]) => colorName !== "DEFAULT")
-        .forEach(([colorName, shades]) => {
-          const shadesStyle = generateShadeStyle(
-            {shades: project.shades, initial: false},
-            colorName,
-          );
-          newShadesCssVariables = {
-            ...newShadesCssVariables,
-            ...shadesStyle,
+    shadesArray
+      .filter(([colorName]) => colorName !== "DEFAULT")
+      .forEach(([colorName, shades]) => {
+        const shadesStyle = generateShadeStyle(
+          {shades: project.shades, initial: project.colorSpaces === "hsl" ? false : true},
+          colorName,
+        );
+        newShadesCssVariables = {
+          ...newShadesCssVariables,
+          ...shadesStyle,
+        };
+        let config = {};
+        const correspondingShade = Object.keys(shades).find(
+          (shadeName) => shades[shadeName] === shades.DEFAULT,
+        );
+        for (let shade in shades) {
+          config = {
+            ...config,
+            [shade]: shadeSpaces(`var(--${colorName}-${shade})`, project.colorSpaces),
+            DEFAULT: shadeSpaces(`var(--${colorName}-${correspondingShade})`, project.colorSpaces),
           };
-          let config = {};
-          const correspondingShade = Object.keys(shades).find(
-            (shadeName) => shades[shadeName] === shades.DEFAULT,
-          );
-          for (let shade in shades) {
-            config = {
-              ...config,
-              [shade]: shadeSpaces(`var(--${colorName}-${shade})`, project.colorSpaces),
-              DEFAULT: shadeSpaces(
-                `var(--${colorName}-${correspondingShade})`,
-                project.colorSpaces,
-              ),
-            };
-          }
-          newShadesConfig = {
-            ...newShadesConfig,
-            [colorName]: config,
-          };
-        });
-
-      service.patch({
-        shadesCssVariables: newShadesCssVariables,
-        shadesConfig: newShadesConfig,
+        }
+        newShadesConfig = {
+          ...newShadesConfig,
+          [colorName]: config,
+        };
       });
-    }
+
+    service.patch({
+      shadesCssVariables: newShadesCssVariables,
+      shadesConfig: newShadesConfig,
+    });
   }, [project.shades, project.colorSpaces]);
+
+  const handleShadeChange = useCallback(
+    (i: number) => (j: number, color: string) => {
+      service.execute(
+        updateProjectShadesCommand(project, ({shades}) => {
+          const [draft, finalize] = create(shades);
+          draft[i].initColor = color;
+          draft[i].defaultIndex = draft[i].defaultIndex === j ? undefined : j;
+          return finalize();
+        }),
+      );
+    },
+    [project],
+  );
 
   return (
     <div className="flex min-w-0 flex-grow flex-col gap-4 @container">
-      <div className="sticky top-16 z-40 flex gap-4 py-8">
-        <button
-          className="hover:bg-light-200 flex items-center gap-1 rounded-lg bg-black px-3 py-2 text-sm
-          text-white ring ring-white/50 dark:bg-white dark:text-black dark:ring-black/50"
-          onClick={handleAddShade}
-        >
-          <div className="ic-[e-add]" />
-          Add shade
-        </button>
-
-        <PresetPopover />
-      </div>
-
       <div className="flex flex-1 flex-col gap-8">
         {shadesArray.map(([_, shades], i) => {
-          const shade = project.shades[i];
           return (
-            <MemoedShadesGroup
+            <ShadesGroup
               key={i}
               index={i}
-              _initColor={shade.initColor}
-              _lightenAmount={shade.lightenAmount}
-              _darkenAmount={shade.darkenAmount}
-              _hueAmount={shade.hueAmount}
-              _desaturateUpAmount={shade.desaturateUpAmount}
-              _desaturateDownAmount={shade.desaturateDownAmount}
-              _saturationUpAmount={shade.saturationUpAmount}
-              _saturationDownAmount={shade.saturationDownAmount}
               shades={shades}
-              project={project}
+              handleShadeChange={handleShadeChange(i)}
             />
           );
         })}

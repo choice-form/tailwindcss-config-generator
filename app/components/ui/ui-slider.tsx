@@ -232,11 +232,7 @@ const UiSlider = ({
         >
           {connect && (
             <div
-              className={classNames(
-                customClassNames?.connect || "bg-current",
-                "absolute h-full",
-                uiIsBusy ? "transition-none" : "transition-[left,width]",
-              )}
+              className={classNames(customClassNames?.connect || "bg-current", "absolute h-full")}
               ref={connectRef}
             />
           )}
@@ -248,7 +244,6 @@ const UiSlider = ({
               customClassNames?.thumb ||
                 "cursor-pointer rounded-full bg-white shadow ring-2 dark:bg-gray-800",
               "absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
-              uiIsBusy ? "transition-none" : "transition-[left]",
               disabled ? "ring-secondary cursor-not-allowed" : "ring-current",
             )}
             ref={handleRef}

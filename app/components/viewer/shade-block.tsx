@@ -10,8 +10,6 @@ interface ShadeBlockProps {
   shadeColorHsl: string;
   shadeColorHex: string;
   defaultShade: boolean;
-  luminanceWarning: boolean;
-  darkenWarning: boolean;
   handleClick: () => void;
   colorCodePopover?: React.ReactNode;
 }
@@ -22,20 +20,23 @@ const ShadeBlock = ({
   shadeColorHsl,
   shadeColorHex,
   defaultShade,
-  luminanceWarning,
-  darkenWarning,
+
   handleClick,
   colorCodePopover,
 }: ShadeBlockProps) => {
-  const project = useStore((state) => state.project);
+  const wcag2Contrast = useStore((state) => state.project.accessibility.wcag2Contrast);
+  const apcaContrast = useStore((state) => state.project.accessibility.apcaContrast);
   const contrastTabs = useStore((state) => state.contrastTabs);
   const [isOpen, setIsOpen] = useState(false);
+
+  const luminanceWarning = chroma(shadeColorHsl).luminance() > 0.99;
+  const darkenWarning = chroma(shadeColorHsl).luminance() < 0.01;
 
   const WCAG2 = chroma.contrast(shadeColorReadable, shadeColorHsl).toFixed(1);
   const APCA = contrastAPCA(shadeColorReadable, shadeColorHsl);
 
-  const isWCAG2 = contrastTabs === "wcag2" && project.accessibility.wcag2Contrast !== "none";
-  const isAPCA = contrastTabs === "apca" && project.accessibility.apcaContrast !== "none";
+  const isWCAG2 = contrastTabs === "wcag2" && wcag2Contrast !== "none";
+  const isAPCA = contrastTabs === "apca" && apcaContrast !== "none";
   const isLuminance = contrastTabs === "luminance" && (luminanceWarning || darkenWarning);
 
   /** WCAG2 stands for Web Content Accessibility Guidelines 2.
@@ -43,16 +44,16 @@ const ShadeBlock = ({
    * These guidelines provide recommendations for making web content perceivable, operable, understandable, and robust.
    */
   const WCAGContrast =
-    (isWCAG2 && project.accessibility.wcag2Contrast === "aa" && Number(WCAG2) < 4.5) ||
-    (isWCAG2 && project.accessibility.wcag2Contrast === "aaa" && Number(WCAG2) < 7);
+    (isWCAG2 && wcag2Contrast === "aa" && Number(WCAG2) < 4.5) ||
+    (isWCAG2 && wcag2Contrast === "aaa" && Number(WCAG2) < 7);
 
   /** APCA stands for Average Picture Complexity Analysis.
    * It is a method used to measure the visual complexity of an image.
    * APCA calculates the average complexity of an image by analyzing its pixel values and determining the level of detail and variation present.
    */
   const APCAContrast =
-    (isAPCA && project.accessibility.apcaContrast === "aa" && Math.abs(Number(APCA)) < 60) ||
-    (isAPCA && project.accessibility.apcaContrast === "aaa" && Math.abs(Number(APCA)) < 80);
+    (isAPCA && apcaContrast === "aa" && Math.abs(Number(APCA)) < 60) ||
+    (isAPCA && apcaContrast === "aaa" && Math.abs(Number(APCA)) < 80);
 
   const warningClass = (color: string) =>
     `linear-gradient(135deg,${color} 10%,#0000 0,#0000 50%,${color} 0,${color} 60%,#0000 0,#0000)`;
