@@ -16,10 +16,10 @@ const Header = ({onSignIn, onSignOut, user}: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 shrink-0 bg-white/80 px-8 backdrop-blur dark:bg-gray-900/80">
+    <header className="sticky top-0 z-40 shrink-0 bg-white/80 px-8 backdrop-blur dark:bg-black/80">
       <div className="container mx-auto flex h-16 items-center gap-4">
         <div className="flex flex-1 items-center gap-4">
-          <div className="rounded bg-black p-1 text-white dark:bg-white dark:text-gray-900">
+          <div className="rounded bg-black p-1 text-white dark:bg-white dark:text-neutral-900">
             <div className="ic-[logo] h-7 w-7" />
           </div>
           <h2 className="text-xl font-medium">@Choiceform/tailwindcss-config-generator</h2>
@@ -42,7 +42,7 @@ const Header = ({onSignIn, onSignOut, user}: HeaderProps) => {
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             className="relative flex w-[500px] flex-col items-center justify-center gap-4
-            rounded-lg bg-white p-8 text-center shadow-lg outline-none dark:bg-gray-900"
+            rounded-lg bg-white p-8 text-center shadow-lg outline-none dark:bg-neutral-900"
             trigger={
               !user ? (
                 <button
@@ -70,8 +70,8 @@ const Header = ({onSignIn, onSignOut, user}: HeaderProps) => {
                 <h1 className="text-4xl font-bold">Sign Out</h1>
                 <p>Are you sure to sign out?</p>
                 <button
-                  className="flex items-center gap-2 px-3 py-2 border border-gray-200
-                dark:border-gray-600 rounded-lg hover:bg-gray-100 hover:dark:bg-gray-700"
+                  className="flex items-center gap-2 px-3 py-2 border border-neutral-200
+                dark:border-neutral-600 rounded-lg hover:bg-neutral-100 hover:dark:bg-neutral-700"
                   onClick={onSignOut}
                 >
                   <div className="ic-[logo-github]" />
@@ -90,8 +90,8 @@ const Header = ({onSignIn, onSignOut, user}: HeaderProps) => {
                 <h1 className="text-4xl font-bold">Sign in</h1>
                 <p>Sign in to save and edit your custom color shades.</p>
                 <button
-                  className="flex items-center gap-2 px-3 py-2 border border-gray-200
-                dark:border-gray-600 rounded-lg hover:bg-gray-100 hover:dark:bg-gray-700"
+                  className="flex items-center gap-2 px-3 py-2 border border-neutral-200
+                dark:border-neutral-600 rounded-lg hover:bg-neutral-100 hover:dark:bg-neutral-700"
                   onClick={onSignIn}
                 >
                   <div className="ic-[logo-github]" />

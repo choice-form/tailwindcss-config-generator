@@ -55,7 +55,12 @@ const ColorInput = ({index}: ColorInputProps) => {
         triggerClassName="flex items-center gap-1 justify-center"
         trigger={
           <button
-            className="relative h-6 w-6 flex-shrink-0 place-self-center rounded-full ring-primary-500/30 hover:ring"
+            className={classNames(
+              "relative h-6 w-6 flex-shrink-0 place-self-center rounded-full border",
+              chroma(inputValue).luminance() > 0.5
+                ? "border-black/30 dark:border-transparent"
+                : "border-transparent dark:border-white/30",
+            )}
             style={{
               backgroundColor: project.shades[index].initColor,
             }}

@@ -49,12 +49,12 @@ const ContrastPopover = ({}: ContrastPopoverProps) => {
         </button>
       }
     >
-      <ul className="w-64 rounded-lg border bg-white p-2 text-sm text-gray-900 shadow-xl">
-        <li className="p-2 text-xs text-gray-300">Web Content Accessibility</li>
+      <ul className="w-64 rounded-lg border bg-white p-2 text-sm text-neutral-900 shadow-xl">
+        <li className="p-2 text-xs text-neutral-300">Web Content Accessibility</li>
         {options.map((option, index) => (
           <li
             key={index}
-            className="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-gray-100"
+            className="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-neutral-100"
             onClick={() => {
               const command = updateProject(project, (draft) => {
                 draft.accessibility.wcag2Contrast = option.wcag2Contrast as W3cContrastType;
@@ -72,7 +72,7 @@ const ContrastPopover = ({}: ContrastPopoverProps) => {
               className={classNames(
                 contrastState === option
                   ? "ic-[radio-btn-checked]"
-                  : "ic-[radio-btn] text-gray-300",
+                  : "ic-[radio-btn] text-neutral-300",
               )}
             />
             <span className="flex-1 uppercase">{option.contrastTab}</span>

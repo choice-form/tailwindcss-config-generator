@@ -24,7 +24,7 @@ const UiSwitch = ({enabled, setEnabled, label}: UiSwitchProps) => {
           aria-hidden="true"
           className={classNames(
             enabled ? "translate-x-3" : "translate-x-0",
-            "pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg dark:bg-gray-900",
+            "pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg dark:bg-neutral-900",
             "ring-0 transition duration-200 ease-in-out",
           )}
         />

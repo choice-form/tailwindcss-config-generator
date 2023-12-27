@@ -81,8 +81,8 @@ const ShadeBlock = ({
           className="order-3 flex flex-row-reverse items-center gap-2
           @2xl:order-1 @2xl:flex-col"
         >
-          {isWCAG2 && <span className="rounded px-1 text-xs">{WCAG2}</span>}
-          {isAPCA && <span className="rounded px-1 text-xs">{APCA}%</span>}
+          {isWCAG2 && <span className="text-xs font-mono">{WCAG2}</span>}
+          {isAPCA && <span className="text-xs font-mono">{APCA}%</span>}
 
           <div
             className={classNames(

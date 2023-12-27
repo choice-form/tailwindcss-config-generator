@@ -33,9 +33,9 @@
 
 .shade-control-input {
   @apply flex h-10 items-center gap-2 rounded-full border-2 border-transparent px-2;
-  @apply bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700;
+  @apply bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700;
   @apply focus-within:border-primary focus-within:bg-white focus-within:hover:bg-white;
-  @apply focus-within:dark:bg-gray-900 focus-within:dark:hover:bg-gray-900;
+  @apply focus-within:dark:bg-neutral-900 focus-within:dark:hover:bg-neutral-900;
 }
 
 .shade-control-input input {
@@ -44,5 +44,5 @@
 
 .shade-control-badge {
   @apply flex h-5 min-w-10 shrink-0 items-center justify-center text-center;
-  @apply rounded-full bg-gray-200 px-2 text-xs uppercase text-gray-500 dark:bg-gray-700 dark:text-gray-400;
+  @apply rounded-full bg-neutral-200 px-2 text-xs uppercase text-neutral-500 dark:bg-neutral-700 dark:text-neutral-400;
 }

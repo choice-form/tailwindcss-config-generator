@@ -74,8 +74,8 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         <div className="shade-control-input flex-grow">
           <button
             className="flex h-6 w-6 flex-shrink-0 items-center
-            justify-center place-self-center rounded-full border border-gray-200 bg-white text-xs hover:bg-primary
-            hover:text-primary-readable-color dark:border-gray-600 dark:bg-gray-600"
+            justify-center place-self-center rounded-full border border-neutral-200 bg-white text-xs hover:bg-primary
+            hover:text-primary-readable-color dark:border-neutral-600 dark:bg-neutral-600"
             onClick={() => handleRemoveSwatch(index)}
           >
             <div className="ic-[e-delete]" />

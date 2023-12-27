@@ -17,7 +17,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="dark:bg-gray-900 dark:text-white">
+      <body className="dark:bg-black dark:text-white">
         <StoreProvider state={initialState}>
           <ThemeProvider>
             <main className="w-screen min-h-screen flex flex-col">

@@ -31,7 +31,7 @@ const PresetPopover = ({}: PresetPopoverProps) => {
         </button>
       }
     >
-      <ul className="max-h-screen overflow-y-auto rounded-lg border bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+      <ul className="max-h-screen overflow-y-auto rounded-lg border bg-white p-2 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
         {preset.map((preset, i) => (
           <li
             key={i}

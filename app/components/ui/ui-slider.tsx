@@ -232,7 +232,8 @@ const UiSlider = ({
       >
         <div
           className={classNames(
-            customClassNames?.track || "overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700",
+            customClassNames?.track ||
+              "overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700",
             "absolute inset-x-[calc(var(--slider-thumb)/-2)] top-[calc(var(--slider-thumb)/4)] h-[calc(var(--slider-thumb)/2)]",
           )}
         >
@@ -248,7 +249,7 @@ const UiSlider = ({
             key={index}
             className={classNames(
               customClassNames?.thumb ||
-                "cursor-pointer rounded-full bg-white shadow ring-2 dark:bg-gray-800",
+                "cursor-pointer rounded-full bg-white shadow ring-2 dark:bg-neutral-800",
               "absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
               disabled ? "ring-secondary cursor-not-allowed" : "ring-current",
             )}

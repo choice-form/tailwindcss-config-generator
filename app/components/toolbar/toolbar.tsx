@@ -44,7 +44,7 @@ const Toolbar = ({}: ToolbarProps) => {
   };
 
   return (
-    <div className="sticky top-16 z-40 bg-white/80 px-8 backdrop-blur dark:bg-gray-900/80">
+    <div className="sticky top-16 z-40 bg-white/80 px-8 backdrop-blur dark:bg-black/80">
       <div className="container mx-auto flex flex-wrap gap-x-8 gap-y-4 py-8">
         <div className="flex flex-1 gap-4">
           <button

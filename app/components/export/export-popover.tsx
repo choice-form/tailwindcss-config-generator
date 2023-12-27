@@ -16,7 +16,7 @@ const ExportPopover = ({}: ExportPopoverProps) => {
     <UiDialog
       isOpen={isExportOpen}
       setIsOpen={setIsExportOpen}
-      className="relative w-[768px] max-w-[90%] rounded-lg bg-white text-center text-gray-900 shadow-lg outline-none"
+      className="relative w-[768px] max-w-[90%] rounded-lg bg-white text-center text-neutral-900 shadow-lg outline-none"
       triggerClassName="flex items-center gap-1 justify-center"
       trigger={<button>Export</button>}
     >
