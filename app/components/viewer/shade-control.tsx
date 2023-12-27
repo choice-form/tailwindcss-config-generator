@@ -1,7 +1,8 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import {ColorInput, ColorSlider} from ".";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
+import {create} from "mutative";
 
 interface ShadeControlProps {
   index: number;
@@ -12,6 +13,14 @@ const ShadeControl = ({index}: ShadeControlProps) => {
   const project = useStore((state) => state.project);
 
   const [nameCheck, setNameCheck] = useState<string>("");
+
+  const lightnessStepUp = useRef<number>(20);
+  const lightnessStepDown = useRef<number>(20);
+  const saturationStepUp = useRef<number>(0);
+  const saturationStepDown = useRef<number>(0);
+  const desaturatedStepUp = useRef<number>(0);
+  const desaturatedStepDown = useRef<number>(0);
+  const hueStep = useRef<number>(0);
 
   const handleRemoveSwatch = (i: number) => {
     service.execute(
@@ -107,17 +116,21 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               start: 20,
               connect: true,
               value: project.shades[index].lightenAmount,
+              onPointerDown: () => {
+                lightnessStepUp.current = project.shades[index].lightenAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].lightenAmount = lightnessStepUp.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
               onChange: (value: number | number[]) => {
-                const newSwatch = {
-                  lightenAmount: typeof value === "number" ? value : 20,
-                };
-                service.execute(
-                  updateProjectShadesCommand(project, ({shades}) => {
-                    return shades.map((swatch, i) =>
-                      index === i ? {...swatch, ...newSwatch} : swatch,
-                    );
-                  }),
-                );
+                const [draft, finalize] = create(project.shades);
+                draft[index].lightenAmount = typeof value === "number" ? value : 20;
+                service.patch({project: {shades: finalize()}});
               },
             },
             {
@@ -128,17 +141,21 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               start: 20,
               connect: true,
               value: project.shades[index].darkenAmount,
+              onPointerDown: () => {
+                lightnessStepDown.current = project.shades[index].darkenAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].darkenAmount = lightnessStepDown.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
               onChange: (value: number | number[]) => {
-                const newSwatch = {
-                  darkenAmount: typeof value === "number" ? value : 20,
-                };
-                service.execute(
-                  updateProjectShadesCommand(project, ({shades}) => {
-                    return shades.map((swatch, i) =>
-                      index === i ? {...swatch, ...newSwatch} : swatch,
-                    );
-                  }),
-                );
+                const [draft, finalize] = create(project.shades);
+                draft[index].darkenAmount = typeof value === "number" ? value : 20;
+                service.patch({project: {shades: finalize()}});
               },
             },
           ]}
@@ -156,17 +173,21 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               start: 0,
               connect: true,
               value: project.shades[index].saturationUpAmount,
+              onPointerDown: () => {
+                saturationStepUp.current = project.shades[index].saturationUpAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].saturationUpAmount = saturationStepUp.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
               onChange: (value: number | number[]) => {
-                const newSwatch = {
-                  saturationUpAmount: typeof value === "number" ? value : 0,
-                };
-                service.execute(
-                  updateProjectShadesCommand(project, ({shades}) => {
-                    return shades.map((swatch, i) =>
-                      index === i ? {...swatch, ...newSwatch} : swatch,
-                    );
-                  }),
-                );
+                const [draft, finalize] = create(project.shades);
+                draft[index].saturationUpAmount = typeof value === "number" ? value : 0;
+                service.patch({project: {shades: finalize()}});
               },
             },
             {
@@ -177,17 +198,21 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               start: 0,
               connect: true,
               value: project.shades[index].saturationDownAmount,
+              onPointerDown: () => {
+                saturationStepDown.current = project.shades[index].saturationDownAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].saturationDownAmount = saturationStepDown.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
               onChange: (value: number | number[]) => {
-                const newSwatch = {
-                  saturationDownAmount: typeof value === "number" ? value : 0,
-                };
-                service.execute(
-                  updateProjectShadesCommand(project, ({shades}) => {
-                    return shades.map((swatch, i) =>
-                      index === i ? {...swatch, ...newSwatch} : swatch,
-                    );
-                  }),
-                );
+                const [draft, finalize] = create(project.shades);
+                draft[index].saturationDownAmount = typeof value === "number" ? value : 0;
+                service.patch({project: {shades: finalize()}});
               },
             },
           ]}
@@ -205,17 +230,21 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               start: 0,
               connect: true,
               value: project.shades[index].desaturateUpAmount,
+              onPointerDown: () => {
+                desaturatedStepUp.current = project.shades[index].desaturateUpAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].desaturateUpAmount = desaturatedStepUp.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
               onChange: (value: number | number[]) => {
-                const newSwatch = {
-                  desaturateUpAmount: typeof value === "number" ? value : 0,
-                };
-                service.execute(
-                  updateProjectShadesCommand(project, ({shades}) => {
-                    return shades.map((swatch, i) =>
-                      index === i ? {...swatch, ...newSwatch} : swatch,
-                    );
-                  }),
-                );
+                const [draft, finalize] = create(project.shades);
+                draft[index].desaturateUpAmount = typeof value === "number" ? value : 0;
+                service.patch({project: {shades: finalize()}});
               },
             },
             {
@@ -226,17 +255,21 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               start: 0,
               connect: true,
               value: project.shades[index].desaturateDownAmount,
+              onPointerDown: () => {
+                desaturatedStepDown.current = project.shades[index].desaturateDownAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].desaturateDownAmount = desaturatedStepDown.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
               onChange: (value: number | number[]) => {
-                const newSwatch = {
-                  desaturateDownAmount: typeof value === "number" ? value : 0,
-                };
-                service.execute(
-                  updateProjectShadesCommand(project, ({shades}) => {
-                    return shades.map((swatch, i) =>
-                      index === i ? {...swatch, ...newSwatch} : swatch,
-                    );
-                  }),
-                );
+                const [draft, finalize] = create(project.shades);
+                draft[index].desaturateDownAmount = typeof value === "number" ? value : 0;
+                service.patch({project: {shades: finalize()}});
               },
             },
           ]}
@@ -254,17 +287,21 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               start: 0,
               connect: true,
               value: project.shades[index].hueAmount,
+              onPointerDown: () => {
+                hueStep.current = project.shades[index].hueAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].hueAmount = hueStep.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
               onChange: (value: number | number[]) => {
-                const newSwatch = {
-                  hueAmount: typeof value === "number" ? value : 0,
-                };
-                service.execute(
-                  updateProjectShadesCommand(project, ({shades}) => {
-                    return shades.map((swatch, i) =>
-                      index === i ? {...swatch, ...newSwatch} : swatch,
-                    );
-                  }),
-                );
+                const [draft, finalize] = create(project.shades);
+                draft[index].hueAmount = typeof value === "number" ? value : 0;
+                service.patch({project: {shades: finalize()}});
               },
             },
           ]}

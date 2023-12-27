@@ -18,7 +18,9 @@ interface ColorSliderProps {
     step: number;
     start: number;
     value: number;
-    onChange: any;
+    onChange: (value: number | number[]) => void;
+    onPointerDown?: (event: React.PointerEvent) => void;
+    onPointerUp?: (event: React.PointerEvent) => void;
     connect: boolean;
   }[];
 }
@@ -46,7 +48,7 @@ const ColorSlider = ({className, label, slider, count, color, centerMark}: Color
             isOpen && "!border-primary !bg-white dark:!bg-gray-900",
           )}
         >
-          <span className="flex-1 text-left opacity-60">{label}:</span>
+          <span className="flex-1 text-left opacity-60 min-w-0 truncate">{label}:</span>
           <span className="shade-control-badge">
             {slider.map((s) => (s.value ?? s.start) / (count || 1)).join(", ")}
           </span>
@@ -76,6 +78,8 @@ const ColorSlider = ({className, label, slider, count, color, centerMark}: Color
               connect={s.connect}
               value={s.value}
               onChange={s.onChange}
+              onPointerDown={s.onPointerDown}
+              onPointerUp={s.onPointerUp}
             />
           </Fragment>
         ))}

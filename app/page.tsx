@@ -1,7 +1,7 @@
 "use client";
 
 import {useCallback, useLayoutEffect} from "react";
-import Toolbar from "./components/toolbar";
+import Toolbar from "./components/toolbar/toolbar";
 import {ShadesViewer} from "./components/viewer";
 import {useService} from "./store/provider";
 

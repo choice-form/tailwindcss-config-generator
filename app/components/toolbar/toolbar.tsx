@@ -1,13 +1,13 @@
 import {faker} from "@faker-js/faker";
 import chroma from "chroma-js";
 import classNames from "classnames";
-import {updateProjectShadesCommand} from "../store/commands/update-project";
-import {useService, useStore} from "../store/provider";
-import {ShadesProps} from "../type";
-import {isValidColor} from "../utilities";
-import ExportPopover from "./export/export-popover";
-import {PresetPopover} from "./preset";
-import ContrastPopover from "./viewer/contrast-popover";
+import {updateProjectShadesCommand} from "../../store/commands/update-project";
+import {useService, useStore} from "../../store/provider";
+import {ShadesProps} from "../../type";
+import {isValidColor} from "../../utilities";
+import ExportPopover from "../export/export-popover";
+import {PresetPopover} from "../preset";
+import ContrastPopover from "./contrast-popover";
 
 interface ToolbarProps {}
 
@@ -38,7 +38,7 @@ const Toolbar = ({}: ToolbarProps) => {
     };
     service.execute(
       updateProjectShadesCommand(project, ({shades}) => {
-        return [...shades, newShade] as ShadesProps[];
+        return [newShade, ...shades] as ShadesProps[];
       }),
     );
   };

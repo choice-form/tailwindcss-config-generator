@@ -16,6 +16,21 @@
   }
 }
 
+:root {
+  font-family: Inter, sans-serif;
+  font-feature-settings: "liga" 1, "calt" 1, /* Contextual Alternates */ "dlig" 1,
+    /* Discretionary Ligatures */ "ss07" 1, /* fSquare punctuation */ "ss08" 1,
+    /* Square quotes */ "zero" 1, /* Slashed zero */ "tnum" 1, /* Tabular numbers */ "cv03" 1,
+    /* Open six */ "cv04" 1, /* Open nine */ "cv01" 1, /* Alternate one */ "cv09",
+    /* Flat-top three */ "cv02" 1; /* Open 4 */
+}
+@supports (font-variation-settings: normal) {
+  /* Use variable font if supported */
+  :root {
+    font-family: InterVariable, sans-serif;
+  }
+}
+
 .shade-control-input {
   @apply flex h-10 items-center gap-2 rounded-full border-2 border-transparent px-2;
   @apply bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700;
@@ -24,7 +39,7 @@
 }
 
 .shade-control-input input {
-  @apply flex w-32 flex-grow appearance-none items-center bg-transparent focus:outline-none;
+  @apply flex w-28 flex-grow appearance-none items-center bg-transparent focus:outline-none;
 }
 
 .shade-control-badge {

@@ -14,6 +14,8 @@ export interface UiSliderProps {
   };
   value?: number | number[];
   onChange?: (value: number | number[]) => void;
+  onPointerDown?: (event: React.PointerEvent) => void;
+  onPointerUp?: (event: React.PointerEvent) => void;
   tooltip?: "always" | "drag";
   connect?: boolean;
   disabled?: boolean;
@@ -42,6 +44,8 @@ const UiSlider = ({
   customClassNames,
   overflowLabelVisible = false,
   onChange,
+  onPointerDown,
+  onPointerUp,
 }: UiSliderProps) => {
   // 创建引用来存储滑动条和滑动条的值
   const connectRef = useRef<HTMLDivElement>(null);
@@ -213,6 +217,8 @@ const UiSlider = ({
         "relative w-full pl-[calc(var(--slider-thumb)/2)] pr-[calc(var(--slider-thumb)/2)]",
         className,
       )}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
     >
       {/* 值超出最大限制时，给一个超出的提示 */}
       {overflowLabelVisible && <div className="-top-6.5 absolute right-0">{max}+</div>}

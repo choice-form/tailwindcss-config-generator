@@ -22,7 +22,7 @@ function determineColorType(color: string) {
     if (/^hsva?\((\d{1,3}),(\d{1,3}%),(\d{1,3}%)(,(0?\.?\d+|1))?\)$/.test(color)) return "hsv";
     if (/^cmyk?\((\d{1,3}%),(\d{1,3}%),(\d{1,3}%),(\d{1,3}%)\)$/.test(color)) return "cmyk";
     if (/^lab\((\d{1,3}(\.\d+)?),(\d{1,3}(\.\d+)?),(\d{1,3}(\.\d+)?)\)$/.test(color)) return "lab";
-    if (/^lch\((\d{1,3}(\.\d+)?),(\d{1,3}(\.\d+)?),(\d{1,3}(\.\d+)?)\)$/.test(color)) return "lch";
+    if (/^lch\((\d{1,2}(\.\d+)?),(\d{1,3}(\.\d+)?),(\d{1,3}(\.\d+)?)\)$/.test(color)) return "lch";
     // Add more checks here for other color spaces
 
     return "unknown";

@@ -40,6 +40,7 @@ const ContrastPopover = ({}: ContrastPopoverProps) => {
       setIsOpen={setIsAccessibilityOpen}
       placeOffset={16}
       placement="bottom-end"
+      className="z-50"
       triggerClassName="flex items-center gap-1 justify-center"
       trigger={
         <button className="flex items-center gap-1 whitespace-nowrap">

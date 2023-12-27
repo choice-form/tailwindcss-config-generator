@@ -29,7 +29,7 @@ const ShadeBlock = ({
   const contrastTabs = useStore((state) => state.contrastTabs);
   const [isOpen, setIsOpen] = useState(false);
 
-  const luminanceWarning = chroma(shadeColorHsl).luminance() > 0.99;
+  const luminanceWarning = chroma(shadeColorHsl).luminance() > 0.9;
   const darkenWarning = chroma(shadeColorHsl).luminance() < 0.01;
 
   const WCAG2 = chroma.contrast(shadeColorReadable, shadeColorHsl).toFixed(1);
@@ -68,11 +68,11 @@ const ShadeBlock = ({
           backgroundColor: shadeColorHsl,
           backgroundImage:
             WCAGContrast || APCAContrast
-              ? warningClass("rgba(255,255,255,0.5)")
+              ? warningClass(chroma(shadeColorHsl).brighten(1).alpha(0.8).css())
               : contrastTabs === "luminance" && luminanceWarning
-              ? warningClass("rgba(0,0,0,0.2)")
+              ? warningClass(chroma(shadeColorHsl).darken(1).alpha(0.8).css())
               : contrastTabs === "luminance" && darkenWarning
-              ? warningClass("rgba(255,255,255,0.3)")
+              ? warningClass(chroma(shadeColorHsl).brighten(1).alpha(0.8).css())
               : "none",
           backgroundSize: "7.07px 7.07px",
         }}
@@ -108,7 +108,7 @@ const ShadeBlock = ({
           className="group/info relative order-1 col-span-2 flex min-w-0 items-center gap-4
           @2xl:order-3 @2xl:col-span-1 @2xl:flex-col @2xl:gap-1"
         >
-          <strong className="@2xl:text-xl">{shadeName}</strong>
+          <div className="@2xl:text-xl font-mono font-light">{shadeName}</div>
 
           <UiPopover
             isOpen={isOpen}
@@ -118,7 +118,7 @@ const ShadeBlock = ({
               <>
                 <span
                   className={classNames(
-                    "pointer-events-none visible min-w-0 truncate text-xs @2xl:absolute @2xl:bottom-0 @2xl:leading-4",
+                    "pointer-events-none visible min-w-0 truncate text-xs font-mono uppercase @2xl:absolute @2xl:bottom-0 @2xl:leading-4",
                     isOpen ? "invisible" : "@2xl:group-hover/info:invisible",
                   )}
                 >
