@@ -22,7 +22,7 @@ export const SignInModal = ({user, onSignIn, onSignOut}: SignInModalProps) => {
 
   return (
     <>
-      <Button onPress={onOpen}>
+      <Button onPress={onOpen} isIconOnly={user ? true : false} radius={user ? "full" : "md"}>
         {user ? <Avatar src={user?.image ?? ""} name={user?.name ?? ""} /> : "Sign in"}
       </Button>
 
@@ -47,8 +47,6 @@ export const SignInModal = ({user, onSignIn, onSignOut}: SignInModalProps) => {
                     : "Sign in to save and edit your custom color shades."}
                 </p>
                 <Button
-                  isIconOnly={user ? true : false}
-                  radius={user ? "full" : "md"}
                   className="self-center"
                   variant="bordered"
                   startContent={<div className="ic-[logo-github]" />}
