@@ -47,6 +47,8 @@ export const SignInModal = ({user, onSignIn, onSignOut}: SignInModalProps) => {
                     : "Sign in to save and edit your custom color shades."}
                 </p>
                 <Button
+                  isIconOnly={user ? true : false}
+                  radius={user ? "full" : "md"}
                   className="self-center"
                   variant="bordered"
                   startContent={<div className="ic-[logo-github]" />}
