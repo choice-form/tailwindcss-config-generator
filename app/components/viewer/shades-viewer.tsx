@@ -120,7 +120,10 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
       </div>
     </div>
   ) : (
-    <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed p-8">
+    <div
+      className="flex flex-1 items-center justify-center rounded-2xl
+      border-2 border-dashed p-8 dark:border-neutral-800"
+    >
       <div className="ic-[pantone] h-32 w-32 self-center text-neutral-200 dark:text-neutral-800" />
     </div>
   );
