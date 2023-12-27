@@ -21,7 +21,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
       <body>
         <StoreProvider state={initialState}>
           <Providers>
-            <main className="bg-background text-foreground">
+            <main className="flex min-h-screen flex-col bg-background text-foreground">
               <Header user={session?.user} />
               {children}
               <Footer />

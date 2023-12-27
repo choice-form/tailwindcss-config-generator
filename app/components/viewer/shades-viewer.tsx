@@ -104,7 +104,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
     [project],
   );
 
-  return (
+  return shadesArray.length > 0 ? (
     <div className="flex min-w-0 flex-grow flex-col gap-4 @container">
       <div className="flex flex-1 flex-col gap-8">
         {shadesArray.map(([_, shades], i) => {
@@ -118,6 +118,10 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
           );
         })}
       </div>
+    </div>
+  ) : (
+    <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed p-8">
+      <div className="ic-[pantone] h-32 w-32 self-center text-neutral-200 dark:text-neutral-800" />
     </div>
   );
 };

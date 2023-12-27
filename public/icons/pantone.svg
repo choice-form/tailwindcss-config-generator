@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 64 64"
+     stroke="currentColor">
+  <g stroke-linecap="round"
+     fill="none"
+     stroke-width="2"
+     stroke-linejoin="round"
+     class="nc-icon-wrapper">
+    <polyline data-cap="butt"
+              points="44.32,15.581 54,24 35.252,45.047 "></polyline>
+    <polyline data-cap="butt"
+              points="34,6.43 46,10.123 34,49.115 "></polyline>
+    <rect x="10"
+          y="2"
+          width="24"
+          height="60"></rect>
+    <circle cx="22"
+            cy="52"
+            r="3"></circle>
+    <line x1="10"
+          y1="42"
+          x2="34"
+          y2="42"></line>
+  </g>
+</svg>
