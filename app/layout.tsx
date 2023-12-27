@@ -20,7 +20,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
       <body>
         <StoreProvider state={initialState}>
           <Providers>
-            <main className="text-foreground bg-background">
+            <main className="bg-background text-foreground">
               <HeaderBar user={session?.user} />
               {children}
             </main>

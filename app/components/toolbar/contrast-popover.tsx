@@ -1,8 +1,8 @@
+import {Button, Kbd} from "@nextui-org/react";
+import {useState} from "react";
 import {updateProject} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
 import {ContrastTabsType, W3cContrastType} from "../../type";
-import classNames from "classnames";
-import {useState} from "react";
 import {UiPopover} from "../ui";
 
 interface ContrastPopoverProps {}
@@ -31,31 +31,35 @@ const options = [
 const ContrastPopover = ({}: ContrastPopoverProps) => {
   const service = useService();
   const project = useStore((state) => state.project);
-  const [isAccessibilityOpen, setIsAccessibilityOpen] = useState(false);
   const [contrastState, setContrastState] = useState(options[1]);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <UiPopover
-      isOpen={isAccessibilityOpen}
-      setIsOpen={setIsAccessibilityOpen}
-      placeOffset={16}
-      placement="bottom-end"
-      className="z-50"
-      triggerClassName="flex items-center gap-1 justify-center"
-      trigger={
-        <button className="flex items-center gap-1 whitespace-nowrap">
-          <span className="capitalize">{contrastState.contrastTab}</span>
-          {contrastState.label && <span className="opacity-50">{contrastState.label}</span>}
-        </button>
-      }
-    >
-      <ul className="w-64 rounded-lg border bg-white p-2 text-sm text-neutral-900 shadow-xl">
-        <li className="p-2 text-xs text-neutral-300">Web Content Accessibility</li>
+    <>
+      <UiPopover
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        className="z-50 flex flex-col gap-2 rounded-lg bg-background p-2 shadow-xl ring-1 ring-black/5"
+        placement="bottom-end"
+        trigger={
+          <Button
+            variant="light"
+            endContent={
+              contrastState.label && <Kbd className="whitespace-nowrap">{contrastState.label}</Kbd>
+            }
+            onPress={() => setIsOpen(!isOpen)}
+          >
+            <span className="capitalize">{contrastState.contrastTab}</span>
+          </Button>
+        }
+      >
         {options.map((option, index) => (
-          <li
+          <Button
             key={index}
-            className="flex cursor-pointer items-center gap-2 rounded-lg p-2 hover:bg-neutral-100"
-            onClick={() => {
+            className="w-full justify-start px-2 text-left"
+            variant={option.label === contrastState.label ? "solid" : "light"}
+            size="sm"
+            onPress={() => {
               const command = updateProject(project, (draft) => {
                 draft.accessibility.wcag2Contrast = option.wcag2Contrast as W3cContrastType;
                 draft.accessibility.apcaContrast = option.apcaContrast as W3cContrastType;
@@ -65,26 +69,17 @@ const ContrastPopover = ({}: ContrastPopoverProps) => {
               service.execute(command);
               service.patch({contrastTabs: option.contrastTab as ContrastTabsType});
               setContrastState(option);
-              setIsAccessibilityOpen(false);
+              setIsOpen(false);
             }}
           >
-            <div
-              className={classNames(
-                contrastState === option
-                  ? "ic-[radio-btn-checked]"
-                  : "ic-[radio-btn] text-neutral-300",
-              )}
-            />
-            <span className="flex-1 uppercase">{option.contrastTab}</span>
-            {option.label && (
-              <span className="shade-control-badge">
-                <span className="text-xs">{option.label}</span>
-              </span>
-            )}
-          </li>
+            <div className="flex flex-1 items-center gap-2">
+              <span className="w-24 flex-1 uppercase">{option.contrastTab}</span>
+              {option.label && <Kbd className="m-px whitespace-nowrap text-xs">{option.label}</Kbd>}
+            </div>
+          </Button>
         ))}
-      </ul>
-    </UiPopover>
+      </UiPopover>
+    </>
   );
 };
 

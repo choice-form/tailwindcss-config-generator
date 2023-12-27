@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import {Button} from "@nextui-org/react";
 import {useService, useStore} from "../../store/provider";
 
 interface SidebarProps {}
@@ -12,13 +12,12 @@ const Sidebar = ({}: SidebarProps) => {
   return (
     <ul className="flex min-h-0 flex-col gap-4 whitespace-nowrap border-r p-4 text-sm">
       {exportOptions.map((type, index) => (
-        <li
+        <Button
           key={type}
-          className={classNames(
-            "flex cursor-pointer items-center gap-2",
-            type === colorSpaces ? "font-bold" : "opacity-60",
-          )}
-          onClick={() => {
+          size="sm"
+          className="justify-start text-left"
+          variant={type === colorSpaces ? "solid" : "light"}
+          onPress={() => {
             const prevColorSpaces = colorSpaces;
             service.execute({
               prev: {
@@ -35,7 +34,7 @@ const Sidebar = ({}: SidebarProps) => {
           }}
         >
           Tailwind <span className="uppercase">{type}</span>
-        </li>
+        </Button>
       ))}
     </ul>
   );

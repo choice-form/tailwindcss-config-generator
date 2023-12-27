@@ -1,6 +1,6 @@
 import {faker} from "@faker-js/faker";
+import {Button} from "@nextui-org/react";
 import chroma from "chroma-js";
-import classNames from "classnames";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
 import {ShadesProps} from "../../type";
@@ -8,7 +8,6 @@ import {isValidColor} from "../../utilities";
 import ExportPopover from "../export/export-popover";
 import {PresetPopover} from "../preset";
 import ContrastPopover from "./contrast-popover";
-import {Button} from "@nextui-org/react";
 
 interface ToolbarProps {}
 
@@ -46,7 +45,7 @@ const Toolbar = ({}: ToolbarProps) => {
 
   return (
     <div className="sticky top-16 z-40 bg-white/80 px-8 backdrop-blur dark:bg-black/80">
-      <div className="container mx-auto flex flex-wrap gap-x-8 gap-y-4 py-8">
+      <div className="container mx-auto flex flex-wrap gap-2 py-8">
         <div className="flex flex-1 gap-4">
           <Button startContent={<div className="ic-[e-add]" />} onClick={handleAddShade}>
             Add shade
@@ -55,24 +54,22 @@ const Toolbar = ({}: ToolbarProps) => {
           <PresetPopover />
         </div>
 
-        <button
-          className={classNames(!service.canUndo && "opacity-30")}
-          disabled={!service.canUndo}
-          onPointerDown={() => service.undo()}
-        >
-          Undo
-        </button>
-        <button
-          className={classNames(!service.canRedo && "opacity-30")}
-          disabled={!service.canRedo}
-          onPointerDown={() => service.redo()}
-        >
-          Redo
-        </button>
-        <ContrastPopover />
+        <div className="flex gap-2">
+          <Button variant="light" isDisabled={!service.canUndo} onPress={() => service.undo()}>
+            Undo
+          </Button>
+          <Button variant="light" isDisabled={!service.canRedo} onPress={() => service.redo()}>
+            Redo
+          </Button>
 
-        <ExportPopover />
-        <button>Save</button>
+          <ContrastPopover />
+
+          <ExportPopover />
+
+          <Button variant="light" isDisabled={project.shades.length === 0}>
+            Save
+          </Button>
+        </div>
       </div>
     </div>
   );

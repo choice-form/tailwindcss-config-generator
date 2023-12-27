@@ -4,6 +4,7 @@ import {useState} from "react";
 import {useStore} from "../../store/provider";
 import {contrastAPCA} from "../../utilities";
 import {UiPopover} from "../ui";
+
 interface ShadeBlockProps {
   shadeName: string;
   shadeColorReadable: string;
@@ -81,8 +82,13 @@ const ShadeBlock = ({
           className="order-3 flex flex-row-reverse items-center gap-2
           @2xl:order-1 @2xl:flex-col"
         >
-          {isWCAG2 && <span className="text-xs font-mono">{WCAG2}</span>}
-          {isAPCA && <span className="text-xs font-mono">{APCA}%</span>}
+          {isWCAG2 && <span className="font-mono text-xs">{WCAG2}</span>}
+          {isAPCA && <span className="font-mono text-xs">{APCA}%</span>}
+          {contrastTabs === "luminance" && (
+            <span className="font-mono text-xs">
+              {chroma(shadeColorHsl).luminance().toFixed(2)}
+            </span>
+          )}
 
           <div
             className={classNames(
@@ -108,7 +114,7 @@ const ShadeBlock = ({
           className="group/info relative order-1 col-span-2 flex min-w-0 items-center gap-4
           @2xl:order-3 @2xl:col-span-1 @2xl:flex-col @2xl:gap-1"
         >
-          <div className="@2xl:text-xl font-mono font-light">{shadeName}</div>
+          <div className="font-mono font-light @2xl:text-xl">{shadeName}</div>
 
           <UiPopover
             isOpen={isOpen}
@@ -118,7 +124,7 @@ const ShadeBlock = ({
               <>
                 <span
                   className={classNames(
-                    "pointer-events-none visible min-w-0 truncate text-xs font-mono uppercase @2xl:absolute @2xl:bottom-0 @2xl:leading-4",
+                    "pointer-events-none visible min-w-0 truncate font-mono text-xs uppercase @2xl:absolute @2xl:bottom-0 @2xl:leading-4",
                     isOpen ? "invisible" : "@2xl:group-hover/info:invisible",
                   )}
                 >

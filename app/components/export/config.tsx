@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {useStore} from "../../store/provider";
 import {formatCode} from "../../utilities";
+import {Button} from "@nextui-org/react";
 
 interface ConfigProps {}
 
@@ -16,9 +17,7 @@ const CodeHighlighter = ({
 }) => {
   return (
     <div className="relative flex h-full min-h-0 flex-col overflow-y-auto">
-      <div className="absolute right-0 top-0 z-20 flex h-12 items-center gap-4 px-4">
-        {children}
-      </div>
+      <div className="absolute right-2 top-0 z-20 flex h-12 items-center gap-4">{children}</div>
 
       {showCodes && (
         <SyntaxHighlighter
@@ -75,13 +74,14 @@ const Config = ({}: ConfigProps) => {
     <CodeHighlighter code={jsonString} showCodes={showCodes}>
       {copied && <span className="text-xs font-medium text-green-500">Copied!</span>}
       {showCodes && (
-        <button
-          className="flex items-center gap-2 text-sm opacity-30 hover:opacity-100"
+        <Button
+          startContent={<div className="ic-[document-copy] h-3 w-3" />}
+          variant="light"
+          size="sm"
           onClick={copyToClipboard}
         >
-          <div className="ic-[document-copy] h-3 w-3" />
           Copy code
-        </button>
+        </Button>
       )}
     </CodeHighlighter>
   );

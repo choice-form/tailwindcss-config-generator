@@ -3,6 +3,7 @@ import {ColorInput, ColorSlider} from ".";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
 import {create} from "mutative";
+import {Button, Input, Tooltip} from "@nextui-org/react";
 
 interface ShadeControlProps {
   index: number;
@@ -71,35 +72,30 @@ const ShadeControl = ({index}: ShadeControlProps) => {
   return (
     <div className="mb-1 grid grid-cols-1 items-center gap-2 @5xl:grid-cols-[auto_1fr]">
       <div className="grid flex-wrap items-center gap-2 self-start @2xl:grid-cols-[auto_1fr]">
-        <div className="shade-control-input flex-grow">
-          <button
-            className="flex h-6 w-6 flex-shrink-0 items-center
-            justify-center place-self-center rounded-full border border-neutral-200 bg-white text-xs hover:bg-primary
-            hover:text-primary-readable-color dark:border-neutral-600 dark:bg-neutral-600"
-            onClick={() => handleRemoveSwatch(index)}
-          >
-            <div className="ic-[e-delete]" />
-          </button>
-          <div className="relative flex flex-grow">
-            {nameCheck && (
-              <span className="absolute -left-8 -top-8 whitespace-nowrap text-xs opacity-50">
-                {nameCheck}
-              </span>
-            )}
-            <input
-              className="flex-grow"
-              type="text"
-              value={project.shades[index].name}
-              onBlur={(e) => {
-                handleNameChange(e.target.value);
-              }}
-              onChange={(e) => {
-                handleNameChange(e.target.value);
-              }}
-              placeholder="Enter name"
-            />
-          </div>
-        </div>
+        <Input
+          classNames={{
+            inputWrapper: "px-2",
+          }}
+          labelPlacement="outside"
+          placeholder="Enter name"
+          value={project.shades[index].name}
+          onChange={(e) => {
+            handleNameChange(e.target.value);
+          }}
+          startContent={
+            <Tooltip content="Delete shade" delay={500}>
+              <Button
+                className="h-6 w-6 min-w-6"
+                size="sm"
+                isIconOnly
+                startContent={<div className="ic-[e-delete]" />}
+                onPress={() => handleRemoveSwatch(index)}
+              />
+            </Tooltip>
+          }
+          description={nameCheck}
+        />
+
         <ColorInput index={index} />
       </div>
 

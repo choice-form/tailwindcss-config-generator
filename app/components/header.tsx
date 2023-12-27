@@ -66,7 +66,7 @@ const Header = ({onSignIn, onSignOut, user}: HeaderProps) => {
                   <ModalHeader className="flex flex-col gap-1">
                     {user ? "Sign Out" : "Sign in"}
                   </ModalHeader>
-                  <ModalBody className="py-4 gap-4">
+                  <ModalBody className="gap-4 py-4">
                     <p>
                       {user
                         ? "Are you sure to sign out?"

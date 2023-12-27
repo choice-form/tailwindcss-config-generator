@@ -251,7 +251,7 @@ const UiSlider = ({
               customClassNames?.thumb ||
                 "cursor-pointer rounded-full bg-white shadow ring-2 dark:bg-neutral-800",
               "absolute top-0 h-[var(--slider-thumb)] w-[var(--slider-thumb)]",
-              disabled ? "ring-secondary cursor-not-allowed" : "ring-current",
+              disabled ? "cursor-not-allowed ring-secondary" : "ring-current",
             )}
             ref={handleRef}
             onMouseDown={handleMouseDown(index)}

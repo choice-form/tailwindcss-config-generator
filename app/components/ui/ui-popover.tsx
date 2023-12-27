@@ -1,18 +1,18 @@
-import {useState} from "react";
 import {
-  useFloating,
-  autoUpdate,
-  offset,
-  flip,
-  shift,
-  useDismiss,
-  useRole,
-  useClick,
-  useInteractions,
   FloatingFocusManager,
-  useId,
   FloatingPortal,
   Placement,
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useClick,
+  useDismiss,
+  useFloating,
+  useId,
+  useInteractions,
+  useRole,
+  useTransitionStyles,
 } from "@floating-ui/react";
 
 interface UiPopoverProps {
@@ -55,6 +55,7 @@ const UiPopover = ({
   const {getReferenceProps, getFloatingProps} = useInteractions([click, dismiss, role]);
 
   const headingId = useId();
+  const {styles} = useTransitionStyles(context);
 
   return (
     <>
@@ -68,7 +69,7 @@ const UiPopover = ({
             <div
               className={className}
               ref={refs.setFloating}
-              style={{...floatingStyles, ...style}}
+              style={{...floatingStyles, ...styles, ...style}}
               aria-labelledby={headingId}
               {...getFloatingProps()}
             >

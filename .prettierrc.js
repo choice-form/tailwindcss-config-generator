@@ -9,5 +9,5 @@ module.exports = {
   endOfLine: "auto",
   arrowParens: "always",
   trailingComma: "all",
-  // plugins: ["prettier-plugin-tailwindcss"],
+  plugins: ["prettier-plugin-tailwindcss"],
 };
