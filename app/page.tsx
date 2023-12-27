@@ -1,7 +1,6 @@
 "use client";
 
 import {useCallback, useLayoutEffect} from "react";
-import Header from "./components/header";
 import Toolbar from "./components/toolbar";
 import {ShadesViewer} from "./components/viewer";
 import {useService} from "./store/provider";
@@ -26,9 +25,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen w-screen flex-col">
-      <Header />
-
+    <>
       <div className="mt-8 min-w-0 p-8">
         <div className="container mx-auto">
           <h1 className="mb-4 text-4xl font-bold">Tailwind CSS Config Generator</h1>
@@ -47,6 +44,6 @@ export default function Home() {
           <ShadesViewer />
         </div>
       </div>
-    </main>
+    </>
   );
 }

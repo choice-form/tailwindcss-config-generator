@@ -4,6 +4,7 @@ import type {Metadata} from "next";
 import {initialState} from "./store/initial-state";
 import {StoreProvider} from "./store/provider";
 import ThemeProvider from "./theme/providers";
+import Header from "./header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +16,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="en" suppressHydrationWarning>
       <body className="dark:bg-gray-900 dark:text-white">
         <StoreProvider state={initialState}>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <main className="w-screen min-h-screen flex flex-col">
+              <Header />
+              {children}
+            </main>
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>
