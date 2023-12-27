@@ -2,7 +2,6 @@
 
 import {createContext, useContext, useEffect, useState, type PropsWithChildren} from "react";
 import {useStoreWithEqualityFn} from "zustand/traditional";
-import {derivedState} from "./derived-state";
 import {Service, type AppState} from "./service";
 
 type Flatten<T> = T extends object ? {[K in keyof T]: T[K]} : T;
@@ -20,7 +19,7 @@ export function useService() {
 }
 
 export function useStore<T>(
-  selector: (state: Flatten<AppState & ReturnType<typeof derivedState>>) => T,
+  selector: (state: Flatten<AppState>) => T,
   equals: (prev: T, next: T) => boolean = Object.is,
 ) {
   const service = useService();
@@ -28,7 +27,7 @@ export function useStore<T>(
 }
 
 export function StoreProvider({children, state}: PropsWithChildren<{state: AppState}>) {
-  const [service] = useState(() => new Service(state, derivedState));
+  const [service] = useState(() => new Service(state));
 
   useEffect(() => {
     return service.store.subscribe((state) => {

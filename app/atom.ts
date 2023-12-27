@@ -1,7 +1,7 @@
 import {atom} from "jotai";
-import {ContrastTabsType, ProjectProps, WorkspaceProps} from "./type";
+import {ContrastTabsType, ProjectProps /* , WorkspaceProps */} from "./type";
 
-export const workspaceAtom = atom<WorkspaceProps[]>([]);
+// export const workspaceAtom = atom<WorkspaceProps[]>([]);
 
 export const projectsAtom = atom<ProjectProps>({
   id: "",

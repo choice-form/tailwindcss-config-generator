@@ -84,7 +84,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
         };
       });
 
-    service.patch({
+    service.shallowPatch({
       shadesCssVariables: newShadesCssVariables,
       shadesConfig: newShadesConfig,
     });

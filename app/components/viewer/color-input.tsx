@@ -4,8 +4,9 @@ import classNames from "classnames";
 import {ChangeEvent, useEffect, useId, useRef, useState} from "react";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
-import {determineColorType, isValidColor} from "../../utilities";
+import {determineColorType, isValidColor, normalizeColorfulValue} from "../../utilities";
 import {UiPopover} from "../ui";
+import {create} from "mutative";
 
 interface ColorInputProps {
   index: number;
@@ -42,6 +43,8 @@ const ColorInput = ({index}: ColorInputProps) => {
     setInputValue(project.shades[index].initColor);
   }, [project.shades]);
 
+  const initColorRef = useRef<string | null>(null);
+
   return (
     <div className="shade-control-input flex-grow">
       <UiPopover
@@ -61,18 +64,22 @@ const ColorInput = ({index}: ColorInputProps) => {
       >
         <Colorful
           disableAlpha={true}
-          color={project.shades[index].initColor}
+          color={normalizeColorfulValue(project.shades[index].initColor)}
+          onPointerDown={() => {
+            initColorRef.current = project.shades[index].initColor;
+          }}
+          onPointerUp={() => {
+            const [draft, finalize] = create(project.shades);
+            draft[index].initColor = initColorRef.current!;
+            service.execute({
+              prev: {project: {shades: finalize()}},
+              next: {project: {shades: project.shades}},
+            });
+          }}
           onChange={(e) => {
-            const newSwatch = {
-              initColor: e.hex,
-            };
-            service.execute(
-              updateProjectShadesCommand(project, ({shades}) => {
-                return shades.map((swatch, i) =>
-                  index === i ? {...swatch, ...newSwatch} : swatch,
-                );
-              }),
-            );
+            const [draft, finalize] = create(project.shades);
+            draft[index].initColor = e.hex;
+            service.patch({project: {shades: finalize()}});
           }}
         />
       </UiPopover>

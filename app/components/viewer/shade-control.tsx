@@ -11,7 +11,6 @@ const ShadeControl = ({index}: ShadeControlProps) => {
   const service = useService();
   const project = useStore((state) => state.project);
 
-  const [tempName, setTempName] = useState(project.shades[index].name);
   const [nameCheck, setNameCheck] = useState<string>("");
 
   const handleRemoveSwatch = (i: number) => {
@@ -34,9 +33,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
     };
   }, [nameCheck]);
 
-  const handleBlur = () => {
-    let newName = tempName;
-
+  const handleNameChange = (newName: string) => {
     // Check if the name is a number
     if (/^\d+$/.test(newName)) {
       newName = `color-${newName}`;
@@ -54,8 +51,6 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         'Name already exists. We have added a suffix "-${index}" to your name automatically.',
       );
     }
-
-    setTempName(newName);
 
     service.execute(
       updateProjectShadesCommand(project, ({shades}) => {
@@ -85,9 +80,13 @@ const ShadeControl = ({index}: ShadeControlProps) => {
             <input
               className="flex-grow"
               type="text"
-              value={tempName}
-              onChange={(e) => setTempName(e.target.value)}
-              onBlur={handleBlur}
+              value={project.shades[index].name}
+              onBlur={(e) => {
+                handleNameChange(e.target.value);
+              }}
+              onChange={(e) => {
+                handleNameChange(e.target.value);
+              }}
               placeholder="Enter name"
             />
           </div>

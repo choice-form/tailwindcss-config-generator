@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@choiceform/zeit':
-    specifier: 0.1.2
-    version: 0.1.2(zustand@4.4.7)
+    specifier: 0.2.0
+    version: 0.2.0(zustand@4.4.7)
   jotai:
     specifier: ^2.6.0
     version: 2.6.0(@types/react@18.2.45)(react@18.2.0)
@@ -142,8 +142,8 @@ packages:
       tailwindcss: 3.4.0
     dev: true
 
-  /@choiceform/zeit@0.1.2(zustand@4.4.7):
-    resolution: {integrity: sha512-lN9LcSVuYIN5IOauETV4apeDvrgaMM6sUfACalKPMc14lrOFmLNJODIYvLs7x8/DOa3DkNH1ks1Uoqwm8vnR7g==}
+  /@choiceform/zeit@0.2.0(zustand@4.4.7):
+    resolution: {integrity: sha512-iILEos6YhwO6gBb0/fG7alt8G5E9cG3tXJNL9ron7KANzyY98+G6j5yKHD3B2YdWfjftvw/Eq8dIhMU2TFbOzQ==}
     peerDependencies:
       zustand: 4.4.6
     dependencies:
