@@ -13,7 +13,7 @@ import {ProjectProps} from "../../type";
 
 interface PresetPopoverProps {}
 
-const PresetPopover = ({}: PresetPopoverProps) => {
+export const PresetPopover = ({}: PresetPopoverProps) => {
   const service = useService();
   const project = useStore((state) => state.project);
 
@@ -80,5 +80,3 @@ const PresetPopover = ({}: PresetPopoverProps) => {
     </>
   );
 };
-
-export default PresetPopover;

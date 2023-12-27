@@ -1,1 +1,1 @@
-export {default as PresetPopover} from "./preset-popover";
+export * from "./preset-popover";
