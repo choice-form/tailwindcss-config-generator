@@ -18,6 +18,7 @@
     "url": "https://github.com/choice-form/tailwindcss-config-generator"
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "build": "next build",
     "dev": "next dev",
     "format": "prettier --write .",
