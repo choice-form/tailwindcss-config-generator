@@ -21,7 +21,8 @@ export default async function RootLayout({children}: {children: React.ReactNode}
         <StoreProvider state={initialState}>
           <ThemeProvider>
             <main className="w-screen min-h-screen flex flex-col">
-              <HeaderBar user={session?.user} />;{children}
+              <HeaderBar user={session?.user} />
+              {children}
             </main>
           </ThemeProvider>
         </StoreProvider>
