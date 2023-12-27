@@ -5,6 +5,7 @@ import {updateProjectCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
 import {ProjectProps} from "../../type";
 import {UiPopover} from "../ui";
+import {Button} from "@nextui-org/react";
 
 interface PresetPopoverProps {}
 
@@ -20,15 +21,9 @@ const PresetPopover = ({}: PresetPopoverProps) => {
       placement="bottom-start"
       className="z-50"
       trigger={
-        <button
-          className={classNames(
-            "flex items-center gap-2 whitespace-nowrap rounded-lg bg-black px-3 py-2 text-sm text-white ring ring-white/50 dark:bg-white dark:text-black dark:ring-black/50",
-            isOpen && "ring ring-black/30 dark:ring-white/30",
-          )}
-        >
-          <div className="ic-[shapes]" />
+        <Button startContent={<div className="ic-[shapes]" />} onClick={() => setIsOpen(true)}>
           Select Preset
-        </button>
+        </Button>
       }
     >
       <ul className="max-h-screen overflow-y-auto rounded-lg border bg-white p-2 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">

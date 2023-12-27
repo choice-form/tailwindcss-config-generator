@@ -1,12 +1,12 @@
+import {Popover, PopoverContent, PopoverTrigger} from "@nextui-org/react";
 import {Colorful} from "@uiw/react-color";
 import chroma from "chroma-js";
 import classNames from "classnames";
+import {create} from "mutative";
 import {ChangeEvent, useEffect, useId, useRef, useState} from "react";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
 import {determineColorType, isValidColor, normalizeColorfulValue} from "../../utilities";
-import {UiPopover} from "../ui";
-import {create} from "mutative";
 
 interface ColorInputProps {
   index: number;
@@ -47,16 +47,19 @@ const ColorInput = ({index}: ColorInputProps) => {
 
   return (
     <div className="shade-control-input flex-grow">
-      <UiPopover
+      <Popover
         isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        placeOffset={16}
+        onOpenChange={(open) => setIsOpen(open)}
         placement="bottom-start"
-        triggerClassName="flex items-center gap-1 justify-center"
-        trigger={
+        offset={16}
+        classNames={{
+          content: "bg-transparent p-0 shadow-xl",
+        }}
+      >
+        <PopoverTrigger>
           <button
             className={classNames(
-              "relative h-6 w-6 flex-shrink-0 place-self-center rounded-full border",
+              "relative h-6 w-6 flex-shrink-0 place-self-center rounded-full border !opacity-100",
               chroma(inputValue).luminance() > 0.5
                 ? "border-black/30 dark:border-transparent"
                 : "border-transparent dark:border-white/30",
@@ -65,29 +68,30 @@ const ColorInput = ({index}: ColorInputProps) => {
               backgroundColor: project.shades[index].initColor,
             }}
           />
-        }
-      >
-        <Colorful
-          disableAlpha={true}
-          color={normalizeColorfulValue(project.shades[index].initColor)}
-          onPointerDown={() => {
-            initColorRef.current = project.shades[index].initColor;
-          }}
-          onPointerUp={() => {
-            const [draft, finalize] = create(project.shades);
-            draft[index].initColor = initColorRef.current!;
-            service.execute({
-              prev: {project: {shades: finalize()}},
-              next: {project: {shades: project.shades}},
-            });
-          }}
-          onChange={(e) => {
-            const [draft, finalize] = create(project.shades);
-            draft[index].initColor = e.hex;
-            service.patch({project: {shades: finalize()}});
-          }}
-        />
-      </UiPopover>
+        </PopoverTrigger>
+        <PopoverContent>
+          <Colorful
+            disableAlpha={true}
+            color={normalizeColorfulValue(project.shades[index].initColor)}
+            onPointerDown={() => {
+              initColorRef.current = project.shades[index].initColor;
+            }}
+            onPointerUp={() => {
+              const [draft, finalize] = create(project.shades);
+              draft[index].initColor = initColorRef.current!;
+              service.execute({
+                prev: {project: {shades: finalize()}},
+                next: {project: {shades: project.shades}},
+              });
+            }}
+            onChange={(e) => {
+              const [draft, finalize] = create(project.shades);
+              draft[index].initColor = e.hex;
+              service.patch({project: {shades: finalize()}});
+            }}
+          />
+        </PopoverContent>
+      </Popover>
 
       <input
         id={uuid}

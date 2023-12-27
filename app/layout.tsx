@@ -5,7 +5,7 @@ import {auth} from "./auth";
 import HeaderBar from "./header-bar";
 import {initialState} from "./store/initial-state";
 import {StoreProvider} from "./store/provider";
-import ThemeProvider from "./theme/providers";
+import {Providers} from "./theme/providers";
 
 export const metadata: Metadata = {
   title: "Tailwindcss Config Generator",
@@ -17,14 +17,14 @@ export default async function RootLayout({children}: {children: React.ReactNode}
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="dark:bg-black dark:text-white">
+      <body>
         <StoreProvider state={initialState}>
-          <ThemeProvider>
-            <main className="w-screen min-h-screen flex flex-col">
+          <Providers>
+            <main className="text-foreground bg-background">
               <HeaderBar user={session?.user} />
               {children}
             </main>
-          </ThemeProvider>
+          </Providers>
         </StoreProvider>
       </body>
     </html>

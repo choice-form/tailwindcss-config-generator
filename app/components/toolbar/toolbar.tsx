@@ -8,6 +8,7 @@ import {isValidColor} from "../../utilities";
 import ExportPopover from "../export/export-popover";
 import {PresetPopover} from "../preset";
 import ContrastPopover from "./contrast-popover";
+import {Button} from "@nextui-org/react";
 
 interface ToolbarProps {}
 
@@ -47,14 +48,9 @@ const Toolbar = ({}: ToolbarProps) => {
     <div className="sticky top-16 z-40 bg-white/80 px-8 backdrop-blur dark:bg-black/80">
       <div className="container mx-auto flex flex-wrap gap-x-8 gap-y-4 py-8">
         <div className="flex flex-1 gap-4">
-          <button
-            className="flex items-center gap-1 whitespace-nowrap rounded-lg bg-black px-3 py-2 text-sm
-            text-white ring ring-white/50 dark:bg-white dark:text-black dark:ring-black/50"
-            onClick={handleAddShade}
-          >
-            <div className="ic-[e-add]" />
+          <Button startContent={<div className="ic-[e-add]" />} onClick={handleAddShade}>
             Add shade
-          </button>
+          </Button>
 
           <PresetPopover />
         </div>
