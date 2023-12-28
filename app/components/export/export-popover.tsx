@@ -35,6 +35,7 @@ const ExportPopover = ({}: ExportPopoverProps) => {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         backdrop="opaque"
+        className="light"
         classNames={{
           backdrop: "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
         }}

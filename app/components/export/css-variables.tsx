@@ -1,8 +1,9 @@
+import {Button} from "@nextui-org/react";
 import chroma from "chroma-js";
 import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import {coy} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useStore} from "../../store/provider";
-import {Button} from "@nextui-org/react";
 
 interface CssVariablesProps {}
 
@@ -22,16 +23,12 @@ const CodeHighlighter = ({
       {showCodes && (
         <SyntaxHighlighter
           customStyle={{
-            background: "transparent",
             padding: "2rem 1rem",
-            margin: "48px 0 0 0",
-            width: "100%",
-            fontSize: "13px",
-            fontFamily: "Roboto Mono, monospace",
-            lineHeight: 1.5,
+            margin: "3rem 0 0 0",
+            fontSize: "0.875rem",
           }}
-          className="[&>code]:!bg-transparent"
-          language="css"
+          language="sass"
+          style={coy}
         >
           {code}
         </SyntaxHighlighter>
