@@ -20,7 +20,6 @@ type CodeTabsType = "config" | "css-variables";
 
 const ExportPopover = ({}: ExportPopoverProps) => {
   const project = useStore((state) => state.project);
-  const [isExportOpen, setIsExportOpen] = useState(false);
   const [codeTabs, setCodeTabs] = useState<CodeTabsType>("css-variables");
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
@@ -48,9 +47,10 @@ const ExportPopover = ({}: ExportPopoverProps) => {
                 <div className="grid h-[512px] min-h-0 grid-cols-[200px_1fr]">
                   <Sidebar />
                   <div className="relative grid min-h-0 grid-cols-1">
-                    <div className="absolute inset-x-0 top-0 z-10 col-span-2 flex h-12 items-center border-b bg-white px-2">
+                    <div className="absolute inset-x-0 top-0 z-10 col-span-2 flex h-16 items-center border-b bg-white px-2">
                       <Tabs
                         size="sm"
+                        variant="light"
                         aria-label="Code Tabs"
                         selectedKey={codeTabs}
                         onSelectionChange={setCodeTabs as any}
