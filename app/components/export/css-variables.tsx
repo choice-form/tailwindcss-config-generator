@@ -19,12 +19,11 @@ const CodeHighlighter = ({
   return (
     <>
       <div className="absolute right-2 top-0 z-20 flex h-14 items-center gap-4">{children}</div>
-      <div className="relative flex h-full min-h-0 flex-col overflow-y-auto">
+      <div className="relative mt-16 flex min-h-0 flex-col overflow-y-auto">
         {showCodes && (
           <SyntaxHighlighter
             customStyle={{
               padding: "2rem 1rem",
-              margin: "3.5rem 0 0 0",
               fontSize: "0.875rem",
             }}
             language="sass"

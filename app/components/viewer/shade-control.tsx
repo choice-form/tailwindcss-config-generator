@@ -15,12 +15,9 @@ const ShadeControl = ({index}: ShadeControlProps) => {
 
   const [nameCheck, setNameCheck] = useState<string>("");
 
-  const lightnessStepUp = useRef<number>(20);
-  const lightnessStepDown = useRef<number>(20);
-  const saturationStepUp = useRef<number>(0);
-  const saturationStepDown = useRef<number>(0);
-  const desaturatedStepUp = useRef<number>(0);
-  const desaturatedStepDown = useRef<number>(0);
+  const luminanceAmount = useRef<number[]>([0, 1]);
+  const saturationAmount = useRef<number[]>([0, 1]);
+  const desaturateAmount = useRef<number[]>([0, 1]);
   const hueStep = useRef<number>(0);
 
   const handleRemoveSwatch = (i: number) => {
@@ -102,22 +99,20 @@ const ShadeControl = ({index}: ShadeControlProps) => {
       <div className="grid flex-1 gap-2 @lg:grid-cols-1 @xl:w-full @xl:grid-cols-2 @2xl:grid-cols-4">
         <ColorSlider
           label="Lightness"
-          count={10}
           slider={[
             {
-              label: "Step up %",
-              min: 10,
-              max: 50,
-              step: 1,
-              start: 20,
-              connect: true,
-              value: project.shades[index].lightenAmount,
+              label: "Lightness",
+              min: 0,
+              max: 1,
+              step: 0.01,
+              defaultValue: [0, 1],
+              value: project.shades[index].luminanceAmount,
               onPointerDown: () => {
-                lightnessStepUp.current = project.shades[index].lightenAmount;
+                luminanceAmount.current = project.shades[index].luminanceAmount;
               },
               onPointerUp: () => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].lightenAmount = lightnessStepUp.current!;
+                draft[index].luminanceAmount = luminanceAmount.current!;
                 service.execute({
                   prev: {project: {shades: finalize()}},
                   next: {project: {shades: project.shades}},
@@ -125,32 +120,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               },
               onChange: (value: number | number[]) => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].lightenAmount = typeof value === "number" ? value : 20;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-            {
-              label: "Step down %",
-              min: 10,
-              max: 50,
-              step: 1,
-              start: 20,
-              connect: true,
-              value: project.shades[index].darkenAmount,
-              onPointerDown: () => {
-                lightnessStepDown.current = project.shades[index].darkenAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].darkenAmount = lightnessStepDown.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].darkenAmount = typeof value === "number" ? value : 20;
+                draft[index].luminanceAmount = value as number[];
                 service.patch({project: {shades: finalize()}});
               },
             },
@@ -159,22 +129,20 @@ const ShadeControl = ({index}: ShadeControlProps) => {
 
         <ColorSlider
           label="Saturation"
-          count={10}
           slider={[
             {
-              label: "Step up %",
+              label: "Saturation",
               min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].saturationUpAmount,
+              max: 1,
+              step: 0.01,
+              defaultValue: [0, 1],
+              value: project.shades[index].saturationAmount,
               onPointerDown: () => {
-                saturationStepUp.current = project.shades[index].saturationUpAmount;
+                saturationAmount.current = project.shades[index].saturationAmount;
               },
               onPointerUp: () => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].saturationUpAmount = saturationStepUp.current!;
+                draft[index].saturationAmount = saturationAmount.current!;
                 service.execute({
                   prev: {project: {shades: finalize()}},
                   next: {project: {shades: project.shades}},
@@ -182,32 +150,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               },
               onChange: (value: number | number[]) => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].saturationUpAmount = typeof value === "number" ? value : 0;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-            {
-              label: "Step down %",
-              min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].saturationDownAmount,
-              onPointerDown: () => {
-                saturationStepDown.current = project.shades[index].saturationDownAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].saturationDownAmount = saturationStepDown.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].saturationDownAmount = typeof value === "number" ? value : 0;
+                draft[index].saturationAmount = value as number[];
                 service.patch({project: {shades: finalize()}});
               },
             },
@@ -216,22 +159,20 @@ const ShadeControl = ({index}: ShadeControlProps) => {
 
         <ColorSlider
           label="Desaturate"
-          count={10}
           slider={[
             {
-              label: "Step up %",
+              label: "Desaturate",
               min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].desaturateUpAmount,
+              max: 1,
+              step: 0.01,
+              defaultValue: [0, 1],
+              value: project.shades[index].desaturateAmount,
               onPointerDown: () => {
-                desaturatedStepUp.current = project.shades[index].desaturateUpAmount;
+                desaturateAmount.current = project.shades[index].desaturateAmount;
               },
               onPointerUp: () => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].desaturateUpAmount = desaturatedStepUp.current!;
+                draft[index].desaturateAmount = desaturateAmount.current!;
                 service.execute({
                   prev: {project: {shades: finalize()}},
                   next: {project: {shades: project.shades}},
@@ -239,32 +180,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               },
               onChange: (value: number | number[]) => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].desaturateUpAmount = typeof value === "number" ? value : 0;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-            {
-              label: "Step down %",
-              min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].desaturateDownAmount,
-              onPointerDown: () => {
-                desaturatedStepDown.current = project.shades[index].desaturateDownAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].desaturateDownAmount = desaturatedStepDown.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].desaturateDownAmount = typeof value === "number" ? value : 0;
+                draft[index].desaturateAmount = value as number[];
                 service.patch({project: {shades: finalize()}});
               },
             },
@@ -277,11 +193,11 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           slider={[
             {
               label: "Hue shift",
-              min: -20,
-              max: 20,
+              min: -45,
+              max: 45,
               step: 1,
-              start: 0,
-              connect: true,
+              defaultValue: 0,
+              fillOffset: 0,
               value: project.shades[index].hueAmount,
               onPointerDown: () => {
                 hueStep.current = project.shades[index].hueAmount;
@@ -296,7 +212,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               },
               onChange: (value: number | number[]) => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].hueAmount = typeof value === "number" ? value : 0;
+                draft[index].hueAmount = value as number;
                 service.patch({project: {shades: finalize()}});
               },
             },

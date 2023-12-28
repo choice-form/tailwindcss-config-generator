@@ -17,7 +17,7 @@ const ColorInput = ({index}: ColorInputProps) => {
   const service = useService();
   const project = useStore((state) => state.project);
 
-  const [inputValue, setInputValue] = useState(project.shades[index].initColor);
+  const [inputValue, setInputValue] = useState<string>(project.shades[index].initColor);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,8 +25,7 @@ const ColorInput = ({index}: ColorInputProps) => {
     const newColor = event.target.value;
     setInputValue(newColor);
     if (isValidColor(newColor)) {
-      let colorHex = chroma(newColor).hex();
-      const newSwatch = {initColor: colorHex};
+      const newSwatch = {initColor: newColor};
 
       service.execute(
         updateProjectShadesCommand(project, ({shades}) => {
@@ -72,14 +71,14 @@ const ColorInput = ({index}: ColorInputProps) => {
                   : "border-transparent dark:border-white/30",
               )}
               style={{
-                backgroundColor: project.shades[index].initColor,
+                backgroundColor: chroma(project.shades[index].initColor).hex(),
               }}
             />
           }
         >
           <Colorful
             disableAlpha={true}
-            color={normalizeColorfulValue(project.shades[index].initColor)}
+            color={normalizeColorfulValue(chroma(project.shades[index].initColor).hex())}
             onPointerDown={() => {
               initColorRef.current = project.shades[index].initColor;
             }}
