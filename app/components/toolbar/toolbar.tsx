@@ -8,7 +8,7 @@ import {isValidColor} from "../../utilities";
 import ExportPopover from "../export/export-popover";
 import {PresetPopover} from "../preset";
 import ContrastPopover from "./contrast-popover";
-import { saveConfig } from "../../config";
+import {saveConfig} from "../../config";
 
 interface ToolbarProps {}
 
@@ -67,16 +67,20 @@ const Toolbar = ({}: ToolbarProps) => {
 
           <ExportPopover />
 
-          <Button variant="light" isDisabled={project.shades.length === 0} onClick={async () => {
-            const res = await saveConfig(JSON.stringify(service.state))
-            if (res) {
-              // TODO 显示成功
-              alert('Success')
-            } else {
-              // TODO 显示失败
-              alert('Error')
-            }
-          }}>
+          <Button
+            variant="light"
+            isDisabled={project.shades.length === 0}
+            onClick={async () => {
+              const res = await saveConfig(JSON.stringify(service.state));
+              if (res) {
+                // TODO 显示成功
+                alert("Success");
+              } else {
+                // TODO 显示失败
+                alert("Error");
+              }
+            }}
+          >
             Save
           </Button>
         </div>

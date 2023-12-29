@@ -10,6 +10,6 @@ datasource db {
 
 model config {
   id      Int     @id @default(autoincrement())
-  email   String?
+  email   String? @unique
   content String?
 }
