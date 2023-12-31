@@ -5,7 +5,7 @@ import {create} from "mutative";
 import {ChangeEvent, useEffect, useId, useRef, useState} from "react";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
-import {determineColorType, isValidColor} from "../../utilities";
+import {determineColorType, isValidColor, normalizeColorfulValue} from "../../utilities";
 
 interface ColorInputProps {
   index: number;
@@ -72,7 +72,7 @@ const ColorInput = ({index}: ColorInputProps) => {
             className="absolute inset-0 cursor-pointer appearance-none opacity-0 focus:cursor-auto"
             id={uuid}
             type="color"
-            value={inputValue}
+            value={normalizeColorfulValue(chroma(project.shades[index].initColor).hex())}
             onPointerDown={() => {
               initColorRef.current = project.shades[index].initColor;
             }}

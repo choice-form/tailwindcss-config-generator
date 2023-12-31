@@ -6,7 +6,7 @@ import {Header} from "./components/header";
 import {initialState} from "./store/initial-state";
 import {StoreProvider} from "./store/provider";
 import {Providers} from "./theme/providers";
-import {Footer} from "./footer";
+import {Footer} from "./components/footer";
 import {getConfig} from "./config";
 import {Inter} from "next/font/google";
 
