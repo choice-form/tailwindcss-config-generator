@@ -36,7 +36,7 @@ const Toolbar = ({}: ToolbarProps) => {
       // If the name is a legal color name, the color name is used to generate the color.
       // If it is not legal, the color is randomly generated.
       initColor: isValidColor(formattedColorName) ? formattedColorName : chroma.random().hex(),
-      scaleMode: "rgb",
+      scaleMode: "lrgb",
     };
     service.execute(
       updateProjectShadesCommand(project, ({shades}) => {
