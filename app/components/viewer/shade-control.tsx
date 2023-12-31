@@ -119,7 +119,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
       </div>
 
       <div
-        className="grid flex-1 gap-2 @lg:grid-cols-1 @xl:w-full @xl:grid-cols-2 @2xl:grid-cols-[1fr_1fr_1fr_auto]
+        className="grid flex-1 gap-2 @lg:grid-cols-1 @xl:w-full @xl:grid-cols-2 @2xl:grid-cols-custom-layout
         "
       >
         <ColorSlider
@@ -152,6 +152,62 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           ]}
         />
 
+        <ColorSlider
+          centerMark={true}
+          label="Hue"
+          slider={[
+            {
+              label: "Hue shift",
+              min: -45,
+              max: 45,
+              step: 1,
+              defaultValue: 0,
+              fillOffset: 0,
+              value: project.shades[index].hueAmount,
+              onPointerDown: () => {
+                hueStep.current = project.shades[index].hueAmount;
+              },
+              onPointerUp: () => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].hueAmount = hueStep.current!;
+                service.execute({
+                  prev: {project: {shades: finalize()}},
+                  next: {project: {shades: project.shades}},
+                });
+              },
+              onChange: (value: number | number[]) => {
+                const [draft, finalize] = create(project.shades);
+                draft[index].hueAmount = value as number;
+                service.patch({project: {shades: finalize()}});
+              },
+            },
+          ]}
+        />
+
+        <Button
+          className="w-full min-w-0 bg-default-100 px-2"
+          onPress={() => {
+            const [draft, finalize] = create(project.shades);
+            draft[index].scaleCorrectLightness = !project.shades[index].scaleCorrectLightness;
+            service.execute({
+              prev: {project: {shades: project.shades}},
+              next: {project: {shades: finalize()}},
+            });
+          }}
+        >
+          <span title="Correct lightness" className="min-w-0 flex-1 truncate text-left opacity-60">
+            Correct lightness:
+          </span>
+          <Kbd
+            className={classNames(
+              "uppercase",
+              project.shades[index].scaleCorrectLightness && "text-success-500",
+            )}
+          >
+            {project.shades[index].scaleCorrectLightness ? "true" : "false"}
+          </Kbd>
+        </Button>
+
         <UiPopover
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -159,16 +215,18 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           className={classNames([
             "z-50 bg-background",
             "grid w-64 grid-cols-4 gap-2",
-            "rounded-lg p-4 text-xs",
+            "rounded-lg p-2 text-xs",
             "shadow-xl ring-1 ring-black/5",
           ])}
           triggerClassName="w-full min-w-0"
           trigger={
             <Button
-              className="w-full min-w-0 bg-default-100 pr-2"
+              className="w-full min-w-0 bg-default-100 px-2"
               onPress={() => setIsOpen(!isOpen)}
             >
-              <span className="min-w-0 flex-1 truncate text-left opacity-60">Mode:</span>
+              <span title="Mode" className="min-w-0 flex-1 truncate text-left opacity-60">
+                Mode:
+              </span>
               <Kbd className="uppercase">{project.shades[index].scaleMode ?? "rgb"}</Kbd>
             </Button>
           }
@@ -203,60 +261,6 @@ const ShadeControl = ({index}: ShadeControlProps) => {
             </Button>
           ))}
         </UiPopover>
-
-        <Button
-          className="w-full min-w-0 bg-default-100 pr-2"
-          onPress={() => {
-            const [draft, finalize] = create(project.shades);
-            draft[index].scaleCorrectLightness = !project.shades[index].scaleCorrectLightness;
-            service.execute({
-              prev: {project: {shades: project.shades}},
-              next: {project: {shades: finalize()}},
-            });
-          }}
-        >
-          <span className="min-w-0 flex-1 truncate text-left opacity-60">Correct lightness:</span>
-          <Kbd
-            className={classNames(
-              "uppercase",
-              project.shades[index].scaleCorrectLightness && "text-success-500",
-            )}
-          >
-            {project.shades[index].scaleCorrectLightness ? "true" : "false"}
-          </Kbd>
-        </Button>
-
-        <ColorSlider
-          centerMark={true}
-          label="Hue"
-          slider={[
-            {
-              label: "Hue shift",
-              min: -45,
-              max: 45,
-              step: 1,
-              defaultValue: 0,
-              fillOffset: 0,
-              value: project.shades[index].hueAmount,
-              onPointerDown: () => {
-                hueStep.current = project.shades[index].hueAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].hueAmount = hueStep.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].hueAmount = value as number;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-          ]}
-        />
       </div>
     </div>
   );

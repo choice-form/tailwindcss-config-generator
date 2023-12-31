@@ -14,6 +14,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {},
+      gridTemplateColumns: {
+        "custom-layout": "minmax(10rem, 1fr) 1fr 1fr minmax(7rem, 1fr)",
+      },
     },
   },
   plugins: [

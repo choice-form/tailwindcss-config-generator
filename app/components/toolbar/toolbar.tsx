@@ -50,7 +50,7 @@ const Toolbar = ({}: ToolbarProps) => {
       <div className="container mx-auto flex flex-wrap gap-2 py-8">
         <div className="flex flex-1 gap-4">
           <Button startContent={<div className="ic-[e-add]" />} onClick={handleAddShade}>
-            Add shade
+            Add Random Color
           </Button>
 
           <PresetPopover />

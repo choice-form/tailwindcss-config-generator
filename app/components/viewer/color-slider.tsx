@@ -43,11 +43,13 @@ const ColorSlider = ({className, label, slider}: ColorSliderProps) => {
       triggerClassName="w-full min-w-0"
       trigger={
         <Button
-          className="w-full min-w-0 bg-default-100 pr-2"
+          className="w-full min-w-0 bg-default-100 px-2"
           endContent={<Kbd>{slider.map((s) => s.value ?? s.defaultValue).join(" - ")}</Kbd>}
           onPress={() => setIsOpen(!isOpen)}
         >
-          <span className="min-w-0 flex-1 truncate text-left opacity-60">{label}:</span>
+          <span title={label} className="min-w-0 flex-1 truncate text-left opacity-60">
+            {label}:
+          </span>
         </Button>
       }
     >
