@@ -7,6 +7,9 @@ import {initialState} from "./store/initial-state";
 import {StoreProvider} from "./store/provider";
 import {Providers} from "./theme/providers";
 import {Footer} from "./footer";
+import {Inter} from "next/font/google";
+
+const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
   title: "Tailwindcss Config Generator",
@@ -18,7 +21,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={inter.className}>
         <StoreProvider state={initialState}>
           <Providers>
             <main className="flex min-h-screen flex-col bg-background text-foreground">

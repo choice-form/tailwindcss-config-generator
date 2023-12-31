@@ -1,13 +1,11 @@
 import {Input, Kbd} from "@nextui-org/react";
-import {Colorful} from "@uiw/react-color";
 import chroma from "chroma-js";
 import classNames from "classnames";
 import {create} from "mutative";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
+import {ChangeEvent, useEffect, useId, useRef, useState} from "react";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
-import {determineColorType, isValidColor, normalizeColorfulValue} from "../../utilities";
-import {UiPopover} from "../ui";
+import {determineColorType, isValidColor} from "../../utilities";
 
 interface ColorInputProps {
   index: number;
@@ -19,7 +17,8 @@ const ColorInput = ({index}: ColorInputProps) => {
 
   const [inputValue, setInputValue] = useState<string>(project.shades[index].initColor);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
+
+  const uuid = useId();
 
   function handleColorChange(event: ChangeEvent<HTMLInputElement>) {
     const newColor = event.target.value;
@@ -50,35 +49,30 @@ const ColorInput = ({index}: ColorInputProps) => {
       classNames={{
         inputWrapper: "px-2",
       }}
+      color={!isValidColor(inputValue) ? "danger" : "default"}
       labelPlacement="outside"
-      placeholder="Enter color"
+      placeholder="Enter color value"
       value={inputValue}
       onChange={handleColorChange}
       startContent={
-        <UiPopover
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          placement="bottom-start"
-          placeOffset={16}
-          className="rounded-lg shadow-xl ring-1 ring-black/10"
-          triggerClassName="flex"
-          trigger={
-            <button
-              className={classNames(
-                "relative h-6 w-6 flex-shrink-0 place-self-center rounded-small border !opacity-100",
-                isValidColor(inputValue) && chroma(inputValue).luminance() > 0.5
-                  ? "border-black/30 dark:border-transparent"
-                  : "border-transparent dark:border-white/30",
-              )}
-              style={{
-                backgroundColor: chroma(project.shades[index].initColor).hex(),
-              }}
-            />
-          }
-        >
-          <Colorful
-            disableAlpha={true}
-            color={normalizeColorfulValue(chroma(project.shades[index].initColor).hex())}
+        <div className="relative h-6 w-6 flex-none">
+          <label
+            htmlFor={uuid}
+            className={classNames(
+              "absolute inset-0 flex-shrink-0 place-self-center rounded-small border",
+              isValidColor(inputValue) && chroma(inputValue).luminance() > 0.5
+                ? "border-black/30 dark:border-transparent"
+                : "border-transparent dark:border-white/30",
+            )}
+            style={{
+              backgroundColor: chroma(project.shades[index].initColor).hex(),
+            }}
+          />
+          <input
+            className="absolute inset-0 cursor-pointer appearance-none opacity-0 focus:cursor-auto"
+            id={uuid}
+            type="color"
+            value={inputValue}
             onPointerDown={() => {
               initColorRef.current = project.shades[index].initColor;
             }}
@@ -92,11 +86,11 @@ const ColorInput = ({index}: ColorInputProps) => {
             }}
             onChange={(e) => {
               const [draft, finalize] = create(project.shades);
-              draft[index].initColor = e.hex;
+              draft[index].initColor = e.target.value;
               service.patch({project: {shades: finalize()}});
             }}
           />
-        </UiPopover>
+        </div>
       }
       endContent={<Kbd className="uppercase">{determineColorType(inputValue)}</Kbd>}
     />

@@ -1,3 +1,4 @@
+import chroma from "chroma-js";
 import {generateShades, generateShadesProps} from "../generate-shades";
 
 const generateShadeStyle = (
@@ -6,7 +7,7 @@ const generateShadeStyle = (
   index?: number,
 ): React.CSSProperties => {
   const shades = generateShades(props);
-  let shade: {[key: string]: string} | undefined;
+  let shade: {[key: string]: chroma.Color} | undefined;
 
   if (index !== undefined) {
     const colorKeys = Object.keys(shades);
@@ -16,7 +17,7 @@ const generateShadeStyle = (
     shade = shades[colorName] || shades["DEFAULT"];
   }
 
-  let styles: {[key: string]: string} = {};
+  let styles: {[key: string]: chroma.Color} = {};
 
   if (!shade || colorName === "DEFAULT") return styles;
 

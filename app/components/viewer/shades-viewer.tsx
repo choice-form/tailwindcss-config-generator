@@ -38,8 +38,6 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
   const shadesObject = generateShades({
     shades: project.shades.map((swatch) => swatch),
   });
-  console.log("🚀 ~ file: shades-viewer.tsx:40 ~ ShadesViewer ~ shadesObject:", shadesObject);
-
   const shadesMap = new Map(Object.entries(shadesObject));
   const shadesArray = Array.from(shadesMap);
 
@@ -62,10 +60,7 @@ const ShadesViewer = ({}: ShadesViewerProps) => {
     shadesArray
       .filter(([colorName]) => colorName !== "DEFAULT")
       .forEach(([colorName, shades]) => {
-        const shadesStyle = generateShadeStyle(
-          {shades: project.shades, initial: project.colorSpaces === "hsl" ? false : true},
-          colorName,
-        );
+        const shadesStyle = generateShadeStyle({shades: project.shades}, colorName);
         newShadesCssVariables = {
           ...newShadesCssVariables,
           ...shadesStyle,

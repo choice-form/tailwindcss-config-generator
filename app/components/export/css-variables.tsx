@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import {coy} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useStore} from "../../store/provider";
+import {ColorSpacesType} from "../../type";
 
 interface CssVariablesProps {}
 
@@ -42,14 +43,14 @@ const CssVariables = ({}: CssVariablesProps) => {
   const shadesCssVariables = useStore((state) => state.shadesCssVariables);
   const [copied, setCopied] = useState(false);
 
-  const formatColor = (color: string, format: "hex" | "hsl" | "rgb") => {
+  const formatColor = (color: string, format: ColorSpacesType) => {
     switch (format) {
       case "hex":
-        return chroma(`hsl(${color})`).hex();
+        return chroma(color).hex();
       case "rgb":
-        return chroma(`hsl(${color})`).rgb();
+        return chroma(color).css();
       default:
-        return color;
+        return chroma(color).css("hsl");
     }
   };
 

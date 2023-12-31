@@ -16,9 +16,11 @@ export interface ShadesProps {
   name: string;
   initColor: string;
   luminanceAmount: number[];
-  saturationAmount: number[];
-  desaturateAmount: number[];
+  // saturationAmount: number[];
+  // desaturateAmount: number[];
   hueAmount: number;
+  scaleMode: scaleModeType;
+  scaleCorrectLightness: boolean;
   defaultIndex?: number | undefined;
 }
 
@@ -42,6 +44,17 @@ export interface SwatchColorMap {
   [key: string]: SwatchColorProps;
 }
 
+export type scaleModeType =
+  | "rgb"
+  | "hsl"
+  | "hsv"
+  | "hsi"
+  | "lab"
+  | "oklab"
+  | "lch"
+  | "oklch"
+  | "hcl"
+  | "lrgb";
 export type ColorSpacesType = "hex" | "hsl" | "rgb";
 export type ContrastTabsType = "luminance" | "wcag2" | "apca";
 export type LuminanceWarningType = {brighten: boolean; darken: boolean};
