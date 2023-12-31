@@ -1,8 +1,10 @@
+import {Button} from "@nextui-org/react";
 import chroma from "chroma-js";
 import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import {coy} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useStore} from "../../store/provider";
-import {Button} from "@nextui-org/react";
+import {ColorSpacesType} from "../../type";
 
 interface CssVariablesProps {}
 
@@ -16,27 +18,23 @@ const CodeHighlighter = ({
   showCodes?: boolean;
 }) => {
   return (
-    <div className="relative flex h-full min-h-0 flex-col overflow-y-auto">
-      <div className="absolute right-2 top-0 z-20 flex h-12 items-center gap-4">{children}</div>
-
-      {showCodes && (
-        <SyntaxHighlighter
-          customStyle={{
-            background: "transparent",
-            padding: "2rem 1rem",
-            margin: "48px 0 0 0",
-            width: "100%",
-            fontSize: "13px",
-            fontFamily: "Roboto Mono, monospace",
-            lineHeight: 1.5,
-          }}
-          className="[&>code]:!bg-transparent"
-          language="css"
-        >
-          {code}
-        </SyntaxHighlighter>
-      )}
-    </div>
+    <>
+      <div className="absolute right-2 top-0 z-20 flex h-14 items-center gap-4">{children}</div>
+      <div className="relative mt-16 flex min-h-0 flex-col overflow-y-auto">
+        {showCodes && (
+          <SyntaxHighlighter
+            customStyle={{
+              padding: "2rem 1rem",
+              fontSize: "0.875rem",
+            }}
+            language="sass"
+            style={coy}
+          >
+            {code}
+          </SyntaxHighlighter>
+        )}
+      </div>
+    </>
   );
 };
 
@@ -45,14 +43,14 @@ const CssVariables = ({}: CssVariablesProps) => {
   const shadesCssVariables = useStore((state) => state.shadesCssVariables);
   const [copied, setCopied] = useState(false);
 
-  const formatColor = (color: string, format: "hex" | "hsl" | "rgb") => {
+  const formatColor = (color: string, format: ColorSpacesType) => {
     switch (format) {
       case "hex":
-        return chroma(`hsl(${color})`).hex();
+        return chroma(color).hex();
       case "rgb":
-        return chroma(`hsl(${color})`).rgb();
+        return chroma(color).css();
       default:
-        return color;
+        return chroma(color).css("hsl");
     }
   };
 

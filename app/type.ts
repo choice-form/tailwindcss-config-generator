@@ -15,36 +15,46 @@ export interface ProjectProps {
 export interface ShadesProps {
   name: string;
   initColor: string;
-  lightenAmount: number;
-  darkenAmount: number;
+  luminanceAmount: number[];
+  // saturationAmount: number[];
+  // desaturateAmount: number[];
   hueAmount: number;
-  desaturateUpAmount: number;
-  desaturateDownAmount: number;
-  saturationUpAmount: number;
-  saturationDownAmount: number;
+  scaleMode: scaleModeType;
+  scaleCorrectLightness: boolean;
   defaultIndex?: number | undefined;
 }
 
 export interface SwatchColorProps {
-  50: string;
-  100: string;
-  200: string;
-  300: string;
-  400: string;
-  500: string;
-  600: string;
-  700: string;
-  800: string;
-  900: string;
-  950: string;
-  DEFAULT: string;
-  [index: string]: string;
+  50: chroma.Color;
+  100: chroma.Color;
+  200: chroma.Color;
+  300: chroma.Color;
+  400: chroma.Color;
+  500: chroma.Color;
+  600: chroma.Color;
+  700: chroma.Color;
+  800: chroma.Color;
+  900: chroma.Color;
+  950: chroma.Color;
+  DEFAULT: chroma.Color;
+  [index: string]: chroma.Color;
 }
 
 export interface SwatchColorMap {
   [key: string]: SwatchColorProps;
 }
 
+export type scaleModeType =
+  | "rgb"
+  | "hsl"
+  | "hsv"
+  | "hsi"
+  | "lab"
+  | "oklab"
+  | "lch"
+  | "oklch"
+  | "hcl"
+  | "lrgb";
 export type ColorSpacesType = "hex" | "hsl" | "rgb";
 export type ContrastTabsType = "luminance" | "wcag2" | "apca";
 export type LuminanceWarningType = {brighten: boolean; darken: boolean};

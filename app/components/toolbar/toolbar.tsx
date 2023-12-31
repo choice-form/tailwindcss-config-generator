@@ -26,7 +26,7 @@ const Toolbar = ({}: ToolbarProps) => {
       formattedColorName = colorName.toLowerCase().replace(/ /g, "-");
     } while (
       // Check if the color name already exists
-      Object.keys(project.shades.map((shade) => shade.name)).includes(formattedColorName) ||
+      project.shades.map((shade) => shade.name).includes(formattedColorName) ||
       // Filter out the following names
       formattedColorName === "white" ||
       formattedColorName === "black"
@@ -36,6 +36,7 @@ const Toolbar = ({}: ToolbarProps) => {
       // If the name is a legal color name, the color name is used to generate the color.
       // If it is not legal, the color is randomly generated.
       initColor: isValidColor(formattedColorName) ? formattedColorName : chroma.random().hex(),
+      scaleMode: "rgb",
     };
     service.execute(
       updateProjectShadesCommand(project, ({shades}) => {

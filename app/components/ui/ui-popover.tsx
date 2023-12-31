@@ -44,7 +44,7 @@ const UiPopover = ({
     open: isOpen,
     placement: placement,
     onOpenChange: setIsOpen,
-    middleware: [offset(placeOffset), flip({fallbackAxisSideDirection: "end"}), shift()],
+    middleware: [offset(placeOffset), flip(), shift()],
     whileElementsMounted: autoUpdate,
   });
 

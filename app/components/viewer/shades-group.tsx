@@ -8,7 +8,7 @@ import ShadeControl from "./shade-control";
 type Props = {
   index: number;
   shades: SwatchColorProps;
-  handleShadeChange: (j: number, color: string) => void;
+  handleShadeChange: (j: number, color: chroma.Color) => void;
 };
 
 export function ShadesGroup({index, shades, handleShadeChange}: Props) {
@@ -20,7 +20,7 @@ export function ShadesGroup({index, shades, handleShadeChange}: Props) {
         {Object.entries(shades)
           .filter(([shadeName]) => shadeName !== "DEFAULT")
           .map(([shadeName, shadeValue], j) => {
-            const shadeColor = chroma(`hsl(${shadeValue})`);
+            const shadeColor = chroma(shadeValue);
             const shadeColorHex = shadeColor.hex();
             const shadeColorReadable = readableColor(shadeColor).hex();
             const defaultShade = shadeValue === shades.DEFAULT;
@@ -36,13 +36,14 @@ export function ShadesGroup({index, shades, handleShadeChange}: Props) {
                     }}
                   />
                 }
+                shadeValue={shadeValue}
                 shadeName={shadeName}
-                shadeColorReadable={shadeColorReadable}
-                shadeColorHsl={`hsl(${shadeValue})`}
-                shadeColorHex={shadeColorHex}
-                defaultShade={defaultShade}
+                // shadeColorReadable={shadeColorReadable}
+                // shadeColorHsl={shadeValue}
+                // shadeColorHex={shadeColorHex}
+                defaultShade={shades.DEFAULT}
                 handleClick={() => {
-                  handleShadeChange(j, shadeColorHex);
+                  handleShadeChange(j, shadeValue);
                 }}
               />
             );

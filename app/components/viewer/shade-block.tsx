@@ -2,26 +2,21 @@ import chroma from "chroma-js";
 import classNames from "classnames";
 import {useState} from "react";
 import {useStore} from "../../store/provider";
-import {contrastAPCA} from "../../utilities";
+import {contrastAPCA, readableColor} from "../../utilities";
 import {UiPopover} from "../ui";
 
 interface ShadeBlockProps {
   shadeName: string;
-  shadeColorReadable: string;
-  shadeColorHsl: string;
-  shadeColorHex: string;
-  defaultShade: boolean;
+  defaultShade: chroma.Color;
   handleClick: () => void;
   colorCodePopover?: React.ReactNode;
+  shadeValue: chroma.Color;
 }
 
 const ShadeBlock = ({
   shadeName,
-  shadeColorReadable,
-  shadeColorHsl,
-  shadeColorHex,
+  shadeValue,
   defaultShade,
-
   handleClick,
   colorCodePopover,
 }: ShadeBlockProps) => {
@@ -30,8 +25,13 @@ const ShadeBlock = ({
   const contrastTabs = useStore((state) => state.contrastTabs);
   const [isOpen, setIsOpen] = useState(false);
 
-  const luminanceWarning = chroma(shadeColorHsl).luminance() > 0.9;
-  const darkenWarning = chroma(shadeColorHsl).luminance() < 0.01;
+  const shadeColorHsl = chroma(shadeValue).css("hsl");
+  const shadeColorHex = chroma(shadeValue).hex();
+  const shadeColorReadable = readableColor(shadeValue).css("hsl");
+  const defaultValue = chroma(shadeValue).hex() === chroma(defaultShade).hex();
+
+  const luminanceWarning = chroma(shadeValue).luminance() > 0.9;
+  const darkenWarning = chroma(shadeValue).luminance() < 0.01;
 
   const WCAG2 = chroma.contrast(shadeColorReadable, shadeColorHsl).toFixed(1);
   const APCA = contrastAPCA(shadeColorReadable, shadeColorHsl);
@@ -59,14 +59,20 @@ const ShadeBlock = ({
   const warningClass = (color: string) =>
     `linear-gradient(135deg,${color} 10%,#0000 0,#0000 50%,${color} 0,${color} 60%,#0000 0,#0000)`;
 
+  const styles = {
+    "--foreground": shadeColorReadable,
+    "--background": shadeColorHsl,
+  };
+
   return (
     <div className="flex-0 w-full min-w-0 p-1 @2xl:w-[calc(100%/11)]">
       <div
         className="relative grid w-full min-w-0 select-none grid-cols-4 items-center gap-4 whitespace-nowrap rounded-lg px-4 py-2
         @2xl:aspect-[9/18] @2xl:grid-cols-1 @2xl:grid-rows-3 @2xl:place-content-center @2xl:gap-0 @2xl:p-2"
         style={{
-          color: shadeColorReadable,
-          backgroundColor: shadeColorHsl,
+          ...styles,
+          color: "var(--foreground)",
+          backgroundColor: "var(--background)",
           backgroundImage:
             WCAGContrast || APCAContrast
               ? warningClass(chroma(shadeColorHsl).brighten(1).alpha(0.8).css())
@@ -102,11 +108,11 @@ const ShadeBlock = ({
           onClick={handleClick}
           className="group/default relative order-2 flex w-full flex-1 items-center justify-center @2xl:h-12"
         >
-          {defaultShade && (
+          {defaultValue && (
             <div className="ic-[lock] absolute inset-0 m-auto group-hover/default:invisible" />
           )}
           <span className="invisible text-xs group-hover/default:visible">
-            {defaultShade ? "Unlock" : "Lock"}
+            {defaultValue ? "Unlock" : "Lock"}
           </span>
         </button>
 

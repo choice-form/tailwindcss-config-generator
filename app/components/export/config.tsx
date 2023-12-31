@@ -1,8 +1,9 @@
+import {Button} from "@nextui-org/react";
 import {useEffect, useState} from "react";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import {coy} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {useStore} from "../../store/provider";
 import {formatCode} from "../../utilities";
-import {Button} from "@nextui-org/react";
 
 interface ConfigProps {}
 
@@ -16,27 +17,23 @@ const CodeHighlighter = ({
   showCodes?: boolean;
 }) => {
   return (
-    <div className="relative flex h-full min-h-0 flex-col overflow-y-auto">
-      <div className="absolute right-2 top-0 z-20 flex h-12 items-center gap-4">{children}</div>
-
-      {showCodes && (
-        <SyntaxHighlighter
-          customStyle={{
-            background: "transparent",
-            padding: "2rem 1rem",
-            margin: "48px 0 0 0",
-            width: "100%",
-            fontSize: "13px",
-            fontFamily: "Roboto Mono, monospace",
-            lineHeight: 1.5,
-          }}
-          className="[&>code]:!bg-transparent"
-          language="json"
-        >
-          {formatCode(code)}
-        </SyntaxHighlighter>
-      )}
-    </div>
+    <>
+      <div className="absolute right-2 top-0 z-20 flex h-14 items-center gap-4">{children}</div>
+      <div className="relative mt-16 flex min-h-0 flex-col overflow-y-auto">
+        {showCodes && (
+          <SyntaxHighlighter
+            customStyle={{
+              padding: "2rem 1rem",
+              fontSize: "0.875rem",
+            }}
+            language="json"
+            style={coy}
+          >
+            {formatCode(code)}
+          </SyntaxHighlighter>
+        )}
+      </div>
+    </>
   );
 };
 

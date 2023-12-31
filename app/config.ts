@@ -1,8 +1,8 @@
 "use server";
 
-import { Session } from "next-auth";
-import { auth } from "./auth";
-import { prisma } from "./prisma";
+import {Session} from "next-auth";
+import {auth} from "./auth";
+import {prisma} from "./prisma";
 
 export async function getConfig(session: Session | null) {
   if (session && session.user && session.user.email) {
@@ -28,7 +28,7 @@ export async function saveConfig(config: string) {
         where: {
           id: content.id,
           email: session.user.email,
-        }
+        },
       });
     } else {
       res = await prisma.config.create({

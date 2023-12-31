@@ -3,11 +3,27 @@ import {ColorInput, ColorSlider} from ".";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
 import {create} from "mutative";
-import {Button, Input, Tooltip} from "@nextui-org/react";
+import {Button, Input, Kbd, Tooltip} from "@nextui-org/react";
+import {UiPopover} from "../ui";
+import classNames from "classnames";
+import {scaleModeType} from "../../type";
 
 interface ShadeControlProps {
   index: number;
 }
+
+const scaleModeOptions = [
+  "rgb",
+  "hsl",
+  "hsv",
+  "hsi",
+  "lab",
+  "oklab",
+  "lch",
+  "oklch",
+  "hcl",
+  "lrgb",
+];
 
 const ShadeControl = ({index}: ShadeControlProps) => {
   const service = useService();
@@ -15,13 +31,14 @@ const ShadeControl = ({index}: ShadeControlProps) => {
 
   const [nameCheck, setNameCheck] = useState<string>("");
 
-  const lightnessStepUp = useRef<number>(20);
-  const lightnessStepDown = useRef<number>(20);
-  const saturationStepUp = useRef<number>(0);
-  const saturationStepDown = useRef<number>(0);
-  const desaturatedStepUp = useRef<number>(0);
-  const desaturatedStepDown = useRef<number>(0);
+  const luminanceAmount = useRef<number[]>([0, 1]);
+  const saturationAmount = useRef<number[]>([0, 1]);
+  const desaturateAmount = useRef<number[]>([0, 1]);
   const hueStep = useRef<number>(0);
+  const scaleMode = useRef<scaleModeType>("rgb");
+  const scaleCorrectLightness = useRef<boolean>(false);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleRemoveSwatch = (i: number) => {
     service.execute(
@@ -74,7 +91,9 @@ const ShadeControl = ({index}: ShadeControlProps) => {
       <div className="grid flex-wrap items-center gap-2 self-start @2xl:grid-cols-[auto_1fr]">
         <Input
           classNames={{
+            mainWrapper: "relative",
             inputWrapper: "px-2",
+            helperWrapper: "absolute h-0 -top-6 whitespace-nowrap left-0 text-xs text-danger-500",
           }}
           labelPlacement="outside"
           placeholder="Enter name"
@@ -99,25 +118,26 @@ const ShadeControl = ({index}: ShadeControlProps) => {
         <ColorInput index={index} />
       </div>
 
-      <div className="grid flex-1 gap-2 @lg:grid-cols-1 @xl:w-full @xl:grid-cols-2 @2xl:grid-cols-4">
+      <div
+        className="grid flex-1 gap-2 @lg:grid-cols-1 @xl:w-full @xl:grid-cols-2 @2xl:grid-cols-[1fr_1fr_1fr_auto]
+        "
+      >
         <ColorSlider
           label="Lightness"
-          count={10}
           slider={[
             {
-              label: "Step up %",
-              min: 10,
-              max: 50,
-              step: 1,
-              start: 20,
-              connect: true,
-              value: project.shades[index].lightenAmount,
+              label: "Lightness",
+              min: 0,
+              max: 1,
+              step: 0.01,
+              defaultValue: [0.04, 0.98],
+              value: project.shades[index].luminanceAmount,
               onPointerDown: () => {
-                lightnessStepUp.current = project.shades[index].lightenAmount;
+                luminanceAmount.current = project.shades[index].luminanceAmount;
               },
               onPointerUp: () => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].lightenAmount = lightnessStepUp.current!;
+                draft[index].luminanceAmount = luminanceAmount.current!;
                 service.execute({
                   prev: {project: {shades: finalize()}},
                   next: {project: {shades: project.shades}},
@@ -125,151 +145,86 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               },
               onChange: (value: number | number[]) => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].lightenAmount = typeof value === "number" ? value : 20;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-            {
-              label: "Step down %",
-              min: 10,
-              max: 50,
-              step: 1,
-              start: 20,
-              connect: true,
-              value: project.shades[index].darkenAmount,
-              onPointerDown: () => {
-                lightnessStepDown.current = project.shades[index].darkenAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].darkenAmount = lightnessStepDown.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].darkenAmount = typeof value === "number" ? value : 20;
+                draft[index].luminanceAmount = value as number[];
                 service.patch({project: {shades: finalize()}});
               },
             },
           ]}
         />
 
-        <ColorSlider
-          label="Saturation"
-          count={10}
-          slider={[
-            {
-              label: "Step up %",
-              min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].saturationUpAmount,
-              onPointerDown: () => {
-                saturationStepUp.current = project.shades[index].saturationUpAmount;
-              },
-              onPointerUp: () => {
+        <UiPopover
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          placement="bottom"
+          className={classNames([
+            "z-50 bg-background",
+            "grid w-64 grid-cols-4 gap-2",
+            "rounded-lg p-4 text-xs",
+            "shadow-xl ring-1 ring-black/5",
+          ])}
+          triggerClassName="w-full min-w-0"
+          trigger={
+            <Button
+              className="w-full min-w-0 bg-default-100 pr-2"
+              onPress={() => setIsOpen(!isOpen)}
+            >
+              <span className="min-w-0 flex-1 truncate text-left opacity-60">Mode:</span>
+              <Kbd className="uppercase">{project.shades[index].scaleMode ?? "rgb"}</Kbd>
+            </Button>
+          }
+        >
+          {scaleModeOptions.map((mode, i) => (
+            <Button
+              key={i}
+              className="w-full min-w-0 uppercase"
+              size="sm"
+              variant={mode === project.shades[index].scaleMode ? "solid" : "light"}
+              onPointerDown={() => {
+                scaleMode.current = project.shades[index].scaleMode;
+              }}
+              onPointerUp={() => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].saturationUpAmount = saturationStepUp.current!;
+                draft[index].scaleMode = scaleMode.current!;
                 service.execute({
                   prev: {project: {shades: finalize()}},
                   next: {project: {shades: project.shades}},
                 });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].saturationUpAmount = typeof value === "number" ? value : 0;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-            {
-              label: "Step down %",
-              min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].saturationDownAmount,
-              onPointerDown: () => {
-                saturationStepDown.current = project.shades[index].saturationDownAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].saturationDownAmount = saturationStepDown.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].saturationDownAmount = typeof value === "number" ? value : 0;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-          ]}
-        />
+              }}
+              onPress={() => {
+                {
+                  const [draft, finalize] = create(project.shades);
+                  draft[index].scaleMode = mode as scaleModeType;
+                  service.patch({project: {shades: finalize()}});
+                }
+                setIsOpen(false);
+              }}
+            >
+              {mode}
+            </Button>
+          ))}
+        </UiPopover>
 
-        <ColorSlider
-          label="Desaturate"
-          count={10}
-          slider={[
-            {
-              label: "Step up %",
-              min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].desaturateUpAmount,
-              onPointerDown: () => {
-                desaturatedStepUp.current = project.shades[index].desaturateUpAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].desaturateUpAmount = desaturatedStepUp.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].desaturateUpAmount = typeof value === "number" ? value : 0;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-            {
-              label: "Step down %",
-              min: 0,
-              max: 50,
-              step: 1,
-              start: 0,
-              connect: true,
-              value: project.shades[index].desaturateDownAmount,
-              onPointerDown: () => {
-                desaturatedStepDown.current = project.shades[index].desaturateDownAmount;
-              },
-              onPointerUp: () => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].desaturateDownAmount = desaturatedStepDown.current!;
-                service.execute({
-                  prev: {project: {shades: finalize()}},
-                  next: {project: {shades: project.shades}},
-                });
-              },
-              onChange: (value: number | number[]) => {
-                const [draft, finalize] = create(project.shades);
-                draft[index].desaturateDownAmount = typeof value === "number" ? value : 0;
-                service.patch({project: {shades: finalize()}});
-              },
-            },
-          ]}
-        />
+        <Button
+          className="w-full min-w-0 bg-default-100 pr-2"
+          onPress={() => {
+            const [draft, finalize] = create(project.shades);
+            draft[index].scaleCorrectLightness = !project.shades[index].scaleCorrectLightness;
+            service.execute({
+              prev: {project: {shades: project.shades}},
+              next: {project: {shades: finalize()}},
+            });
+          }}
+        >
+          <span className="min-w-0 flex-1 truncate text-left opacity-60">Correct lightness:</span>
+          <Kbd
+            className={classNames(
+              "uppercase",
+              project.shades[index].scaleCorrectLightness && "text-success-500",
+            )}
+          >
+            {project.shades[index].scaleCorrectLightness ? "true" : "false"}
+          </Kbd>
+        </Button>
 
         <ColorSlider
           centerMark={true}
@@ -277,11 +232,11 @@ const ShadeControl = ({index}: ShadeControlProps) => {
           slider={[
             {
               label: "Hue shift",
-              min: -20,
-              max: 20,
+              min: -45,
+              max: 45,
               step: 1,
-              start: 0,
-              connect: true,
+              defaultValue: 0,
+              fillOffset: 0,
               value: project.shades[index].hueAmount,
               onPointerDown: () => {
                 hueStep.current = project.shades[index].hueAmount;
@@ -296,7 +251,7 @@ const ShadeControl = ({index}: ShadeControlProps) => {
               },
               onChange: (value: number | number[]) => {
                 const [draft, finalize] = create(project.shades);
-                draft[index].hueAmount = typeof value === "number" ? value : 0;
+                draft[index].hueAmount = value as number;
                 service.patch({project: {shades: finalize()}});
               },
             },
