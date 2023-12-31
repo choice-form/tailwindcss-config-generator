@@ -43,7 +43,7 @@ const generateShades = ({shades = []}: generateShadesProps): SwatchColorMap => {
     // Calculate the ratio for color scale domain only when "defaultIndex" is defined
     let colors: chroma.Color[];
     if (defaultIndex !== undefined) {
-      let ratio = defaultIndex / 11; // len is the length of your color array
+      let ratio = defaultIndex / 10; // len is the length of your color array
       colors = chroma
         .scale([lightenColor, keyColor, darkenColor])
         .mode(scaleMode)
