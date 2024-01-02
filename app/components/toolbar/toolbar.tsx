@@ -1,5 +1,5 @@
 import {faker} from "@faker-js/faker";
-import {Button} from "@nextui-org/react";
+import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 import chroma from "chroma-js";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
@@ -9,13 +9,16 @@ import ExportPopover from "../export/export-popover";
 import {PresetPopover} from "../preset";
 import ContrastPopover from "./contrast-popover";
 import {saveConfig} from "../../config";
+import { useState } from "react";
 
 interface ToolbarProps {}
 
 const Toolbar = ({}: ToolbarProps) => {
   const service = useService();
   const project = useStore((state) => state.project);
-
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [isSucceeded, setIsSucceeded] = useState(true);
+  
   // Create a new shade
   const handleAddShade = () => {
     let formattedColorName;
@@ -71,19 +74,30 @@ const Toolbar = ({}: ToolbarProps) => {
           <Button
             variant="light"
             isDisabled={project.shades.length === 0}
-            onClick={async () => {
+            onPress={async () => {
               const res = await saveConfig(JSON.stringify(service.state));
               if (res) {
-                // TODO 显示成功
-                alert("Success");
+                setIsSucceeded(true)
+                onOpen()
               } else {
-                // TODO 显示失败
-                alert("Error");
+                setIsSucceeded(false)
+                console.log(res)
+                onOpen()
               }
             }}
           >
             Save
           </Button>
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <ModalContent>
+              <ModalHeader className="flex flex-col gap-1">{ isSucceeded ? 'Success' : 'Error' }</ModalHeader>
+              <ModalBody>
+                <p className="mb-2"> 
+                  {isSucceeded ? 'You have successfully saved your configuration.' : 'Unknown Error, save configuration failed.' }
+                </p>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
         </div>
       </div>
     </div>
