@@ -1,5 +1,12 @@
 import {faker} from "@faker-js/faker";
-import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 import chroma from "chroma-js";
 import {updateProjectShadesCommand} from "../../store/commands/update-project";
 import {useService, useStore} from "../../store/provider";
@@ -9,7 +16,7 @@ import ExportPopover from "../export/export-popover";
 import {PresetPopover} from "../preset";
 import ContrastPopover from "./contrast-popover";
 import {saveConfig} from "../../config";
-import { useState } from "react";
+import {useState} from "react";
 
 interface ToolbarProps {}
 
@@ -18,7 +25,7 @@ const Toolbar = ({}: ToolbarProps) => {
   const project = useStore((state) => state.project);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [isSucceeded, setIsSucceeded] = useState(true);
-  
+
   // Create a new shade
   const handleAddShade = () => {
     let formattedColorName;
@@ -77,12 +84,12 @@ const Toolbar = ({}: ToolbarProps) => {
             onPress={async () => {
               const res = await saveConfig(JSON.stringify(service.state));
               if (res) {
-                setIsSucceeded(true)
-                onOpen()
+                setIsSucceeded(true);
+                onOpen();
               } else {
-                setIsSucceeded(false)
-                console.log(res)
-                onOpen()
+                setIsSucceeded(false);
+                console.log(res);
+                onOpen();
               }
             }}
           >
@@ -90,10 +97,14 @@ const Toolbar = ({}: ToolbarProps) => {
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
             <ModalContent>
-              <ModalHeader className="flex flex-col gap-1">{ isSucceeded ? 'Success' : 'Error' }</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                {isSucceeded ? "Success" : "Error"}
+              </ModalHeader>
               <ModalBody>
-                <p className="mb-2"> 
-                  {isSucceeded ? 'You have successfully saved your configuration.' : 'Unknown Error, save configuration failed.' }
+                <p className="mb-2">
+                  {isSucceeded
+                    ? "You have successfully saved your configuration."
+                    : "Unknown Error, save configuration failed."}
                 </p>
               </ModalBody>
             </ModalContent>
