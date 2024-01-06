@@ -4,6 +4,7 @@ import {useCallback, useLayoutEffect} from "react";
 import Toolbar from "./components/toolbar/toolbar";
 import {ShadesViewer} from "./components/viewer";
 import {useService} from "./store/provider";
+import {Gemini} from "./components/gemini";
 
 export default function Home() {
   const service = useService();
@@ -26,6 +27,7 @@ export default function Home() {
 
   return (
     <>
+      <Gemini />
       <div className="mt-8 min-w-0 p-8">
         <div className="container mx-auto">
           <h1 className="mb-4 text-4xl font-bold">Tailwind CSS Config Generator</h1>
