@@ -1,17 +1,33 @@
-import {GoogleGenerativeAI, HarmCategory, HarmBlockThreshold} from "@google/generative-ai";
+import {GoogleGenerativeAI, HarmBlockThreshold, HarmCategory} from "@google/generative-ai";
 import {Button, Input} from "@nextui-org/react";
 import {reject} from "lodash";
 import {useState} from "react";
+import {UiPieChart} from "../ui";
+import {DataTypes} from "../ui/ui-pie-chart";
+import chroma from "chroma-js";
 
 interface GeminiProps {}
+
+type colorHarmonyType =
+  | "analogous"
+  | "monochromatic"
+  | "triad"
+  | "complementary"
+  | "split complementary"
+  | "double complementary"
+  | "square"
+  | "compound"
+  | "shades";
 
 export const Gemini = ({}: GeminiProps) => {
   const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || "";
 
   const [data, setData] = useState<string | undefined>();
+  console.log("🚀 ~ file: gemini.tsx:59 ~ Gemini ~ data:", data);
 
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [colorHarmony, setColorHarmony] = useState<colorHarmonyType>("analogous");
 
   async function fetchDataFromGeminiProAPI() {
     try {
@@ -50,21 +66,15 @@ export const Gemini = ({}: GeminiProps) => {
       ];
 
       const parts = [
-        {text: "Generate the color palette from the input description."},
-        {text: "input: 秋天的河边"},
-        {text: "output: ['#606C38','#283618','#FEFAE0','#DDA15E','#BC6C25']"},
-        {text: "input: 可爱的小猪佩奇"},
-        {text: "output: ['#CDB4DB','#FFC8DD','#FFAFCC','#BDE0FE','#A2D2FF']"},
-        {text: "input: 古巴风情"},
-        {text: "output: ['#8ECAE6','#219EBC','#023047','#FFB703','#FB8500']"},
-        {text: "input: 古典油画"},
-        {text: "output:  ['#C08243','#7E5119','#5C3712','#3D230D','#271609'] "},
-        {text: "input: Shanghai Night"},
-        {text: "output: ['#000C40','#000080','#4B0082','#8B00FF','#5F9EA0']"},
-        {text: "input: Tokyo Night"},
-        {text: "output: ['#282C34','#4F5D75','#FDF2F7','#FF8A80','#FFD166']"},
         {
-          text: `input: ${inputText}, example: ['#hex', '#hex', '#hex',...], min 3 colors, max 8 colors.`,
+          text: "Generate the color palette from the input description",
+        },
+        {text: "input: 秋天的河边"},
+        {
+          text: "output: [{name: '柳垂翠影', color:'#606C38', ratio: 10},{name:'深林之墨', color:'#283618', ratio: 40},{name: '晓光之金', color:'#FEFAE0', ratio: 10},{name: '秋叶褐', color:'#DDA15E', ratio: 10},{name: '古铜棕', color:'#BC6C25', ratio: 30}]",
+        },
+        {
+          text: `input: ${inputText}, ration of each color according to the primary or secondary color. The sum of all colors ration is 100. Give each color a poetic and elegant Chinese name that fits the color. The name should be as elegant as a Chinese poem. example: [{name:'name', color:'hex', ratio: number},{name:'name', color:'hex', ratio: number},{name:'name', color:'hex', ratio: number},{name:'name', color:'hex', ratio: number},{name:'name', color:'hex', ratio: number}], min 3 colors, max 8 colors.`,
         },
         {text: "output: "},
       ];
@@ -128,7 +138,7 @@ export const Gemini = ({}: GeminiProps) => {
       }
       const imageParts = await Promise.all([...fileInputEl.files].map(fileToGenerativePart));
       const result = await model.generateContent([
-        `${inputText}, Analyze the image color and generate the color palette. example: ['#hex', '#hex', '#hex',...], min 3 colors, max 8 colors.`,
+        `${inputText}, First, analyze the scene, content and atmosphere of this picture. Then analyze the color of this picture to obtain the main color, auxiliary color and contrast color of the picture. Combine the scene, content and atmosphere of the picture. Generate the corresponding color palette. example: ['#hex', '#hex', '#hex',...], min 3 colors, max 8 colors.`,
         ...imageParts,
       ]);
       const text = result.response.text();
@@ -158,8 +168,39 @@ export const Gemini = ({}: GeminiProps) => {
     };
   }
 
-  const hexColors: string[] = data?.match(/#([0-9a-fA-F]{6})/g) || [];
-  const colorArray: string[] = hexColors.map((color) => `${color}`);
+  let matchedData = data?.match(/(?<=\[).+(?=\])/);
+
+  let dataString = "";
+  if (matchedData != null) {
+    dataString = "[" + matchedData[0] + "]";
+  }
+
+  // 替换键和值中的单引号到双引号，产生合法的 JSON 字符串
+  const validJsonString = dataString.replace(/'{|}'|','|color|name|ratio/g, (match) => {
+    switch (match) {
+      case "{":
+        return '{"';
+      case "}":
+        return '}"';
+      case ",":
+        return '","';
+      case "name":
+        return '"name"';
+      case "color":
+        return '"color"';
+      case "ratio":
+        return '"ratio"';
+      default:
+        return match;
+    }
+  });
+
+  let dataJSON;
+  try {
+    dataJSON = JSON.parse(validJsonString.replace(/'/g, '"'));
+  } catch (e) {
+    console.error(e);
+  }
 
   return (
     <div className="flex items-center gap-4 flex-wrap">
@@ -181,24 +222,75 @@ export const Gemini = ({}: GeminiProps) => {
       >
         Get PRO Vision data
       </Button>
-
+      <select
+        value={colorHarmony}
+        onChange={(e) => setColorHarmony(e.target.value as colorHarmonyType)}
+        disabled={loading}
+        defaultValue={colorHarmony}
+      >
+        <option value="analogous">Analogous</option>
+        <option value="monochromatic">Monochromatic</option>
+        <option value="triad">Triad</option>
+        <option value="complementary">Complementary</option>
+        <option value="split complementary">Split Complementary</option>
+        <option value="double complementary">Double Complementary</option>
+        <option value="square">Square</option>
+        <option value="compound">Compound</option>
+        <option value="shades">Shades</option>
+      </select>
       <div className="w-full">Response: {data}</div>
+      {dataJSON && (
+        <>
+          <UiPieChart data={dataJSON} size={256} colorSummary={true} colorSpace="rgb" />
+          <div className="grid grid-cols-[16rem_20rem_16rem] gap-4">
+            <div
+              className="p-8 rounded-xl overflow-hidden"
+              style={{
+                backgroundImage: `linear-gradient(to bottom, ${dataJSON
+                  .slice(dataJSON.length - 2, dataJSON.length)
+                  .map((item: DataTypes) => item.color)
+                  .join(",")})`,
+              }}
+            ></div>
 
-      {colorArray?.map((color) => (
-        <div
-          key={color}
-          style={
-            {
-              "--color": color,
-              width: 100,
-              height: 100,
-              backgroundColor: color,
-              display: "inline-block",
-              margin: 10,
-            } as React.CSSProperties
-          }
-        />
-      ))}
+            <div
+              className="grid rounded-xl overflow-hidden"
+              style={{
+                gridTemplateRows: `repeat(${dataJSON.length}, 1fr)`,
+              }}
+            >
+              {dataJSON.map((item: DataTypes) => {
+                const shadeColorReadable = chroma(item.color).luminance() > 0.5 ? "#000" : "#fff";
+                return (
+                  <div
+                    className="p-8 grid grid-cols-[1fr_auto] gap-2 items-center text-sm"
+                    style={{
+                      color: shadeColorReadable,
+                      backgroundColor: item.color,
+                    }}
+                  >
+                    <span>{item.name}</span>
+                    <span>{chroma.contrast(shadeColorReadable, item.color).toFixed(2)}:1</span>
+                    <span>{item.color}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div
+              className="p-8 rounded-xl overflow-hidden"
+              style={{
+                backgroundImage: `linear-gradient(to bottom, ${dataJSON
+                  .slice(0, 2)
+                  .map((item: DataTypes) => item.color)
+                  .join(",")})`,
+              }}
+            >
+              <div className="w-64 h-64 rounded-xl overflow-hidden" />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

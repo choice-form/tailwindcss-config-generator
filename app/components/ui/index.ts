@@ -4,3 +4,5 @@ export {default as UiMenu} from "./ui-menu";
 export {default as UiPopover} from "./ui-popover";
 export {default as UiTabs} from "./ui-tabs";
 export {default as UiDialog} from "./ui-dialog";
+
+export {default as UiPieChart} from "./ui-pie-chart";
