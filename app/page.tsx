@@ -27,7 +27,6 @@ export default function Home() {
 
   return (
     <>
-      <Gemini />
       <div className="mt-8 min-w-0 p-8">
         <div className="container mx-auto">
           <h1 className="mb-4 text-4xl font-bold">Tailwind CSS Config Generator</h1>
